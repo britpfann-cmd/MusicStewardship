@@ -1,0 +1,1 @@
+Music Stewardship is an open reference architecture for the long-term stewardship of recorded music and musical knowledge. It is intended as a collaborative resource for collectors, archivists, DJs, performers, educators, and software developers who share an interest in preserving not only recordings, but also the knowledge and experience that surround them.
