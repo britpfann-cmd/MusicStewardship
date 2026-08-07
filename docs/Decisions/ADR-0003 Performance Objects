@@ -1,0 +1,19 @@
+# ADR-0003
+
+## Status
+
+Accepted
+
+## Context
+
+Playback applications need organizational objects that are not musical recordings.
+
+## Decision
+
+Performance Objects are first-class canonical entities.
+
+## Consequences
+
+Applications may implement them differently.
+
+Canonical stewardship remains unchanged.
