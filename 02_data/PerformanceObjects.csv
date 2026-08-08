@@ -1,0 +1,8 @@
+| ObjectID | Name          | DataType        | Required | Cardinality | Vocabulary | Description                |
+| -------- | ------------- | --------------- | -------- | ----------- | ---------- | -------------------------- |
+| PO0001   | Orchestra     | PersonReference | Yes      | 1           | Orchestra  | Performing orchestra       |
+| PO0002   | Singer        | PersonReference | No       | 0..n        | Singer     | Vocalist(s)                |
+| PO0003   | Genre         | Enumeration     | Yes      | 1           | Genre      | Tango, Vals, Milonga       |
+| PO0004   | RecordingDate | Date            | No       | 0..1        |            | Recording date             |
+| PO0005   | Duration      | Duration        | Yes      | 1           |            | Playing time               |
+| PO0006   | Source        | Text            | Yes      | 1           | SourceType | Where this file originated |
