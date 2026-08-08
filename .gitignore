@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/settings.json
+.vscode/*.log
+
+# Generated artifacts
+05_generated/
+generated/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
