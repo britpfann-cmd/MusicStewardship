@@ -194,6 +194,9 @@ An ordered sequence may occur within an Arc or elsewhere in the model. An Arc
 adds the concept of a meaningful musical or programmatic trajectory to that
 ordering.
 
+> The distinction between **Sequence** as a structural ordering and **Arc** as
+> a meaningful musical or programmatic trajectory is established by ADR-0005.
+
 ### Track Reference
 
 A reference from a curated element to a canonical recording.
