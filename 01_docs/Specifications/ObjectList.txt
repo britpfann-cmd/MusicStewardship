@@ -1,0 +1,7 @@
+# Base interlude hierarchy
+
+InterludeObject
+CortinaObject
+AnnouncementObject
+BreakObject
+DemonstrationObject
