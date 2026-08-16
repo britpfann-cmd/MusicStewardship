@@ -1,0 +1,5 @@
+Containers were selected as the primary implementation mechanism because they provide a natural representation for the recursive information structures of the stewardship model. Each container encapsulates an information object together with its metadata, provenance, observations, and relationships to other stewardship objects.
+
+Containers also provide stable handles that allow navigation between related objects. These relationships enable progressive discovery of context, supporting information, derived knowledge, and associated stewardship artifacts without requiring all information to reside in a single structure.
+
+The container model therefore supports both hierarchical composition and networked relationships, making it well suited for the long-term accumulation and organization of stewardship knowledge.

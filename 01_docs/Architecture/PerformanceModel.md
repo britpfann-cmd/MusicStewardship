@@ -270,14 +270,12 @@ destroying the underlying detail.
 
 ---
 
-## Relationship to TangoDJ
+## Relationship to DJ Software
 
-The Performance Model is **not intended to reproduce TangoDJ's internal
-organization**.
+The Performance Model bridges music collections and live performance, organizing recordings into intentional performance structures and ultimately producing the sequences delivered through DJ software. Performance structures and their constituent components are preserved for subsequent reuse, adaptation, and study, enabling knowledge and experience gained from past performances to inform future performances.
 
-Instead:
+While DJ software focuses on preparing and delivering performances, the Performance Model focuses on the creation, preservation, and evolution of performance knowledge. Together, they support both the execution of performances and the ongoing stewardship of the musical and experiential knowledge that informs them.
 
-```text
 MusicStewardship
     │
     │  curated program structure
@@ -293,8 +291,7 @@ Playback
 ```
 
 MusicStewardship remains the canonical source for the meaning and structure of
-the program. TangoDJ receives the subset and representation necessary to
-perform it.
+the program. DJ applications receive a subset and representation necessary for performance.
 
 This permits the MusicStewardship model to grow beyond the capabilities or
 terminology of any particular playback application.
