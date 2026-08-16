@@ -13,7 +13,7 @@ preserving the semantic meaning of each Performance Object.
 
 Rather than manually creating individual audio files, the generator
 produces them automatically from structured canonical data. This
-approach ensures consistency, repeatability, and synchronization between
+approach ensures consistency, repeatability, and synchronization betweenv
 the canonical repository and all generated artifacts.
 
 ---

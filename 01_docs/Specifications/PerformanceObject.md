@@ -2,21 +2,13 @@
 
 ## Purpose
 
-Performance Objects are canonical entities that represent functional,
-organizational, or informational elements of a musical performance.
+Performance Objects provide visual structure, semantic meaning, and workflow support within the performance model.
 
-Unlike musical recordings, Performance Objects exist to support the
-presentation, navigation, organization, and documentation of a live
-performance.
+Performance Objects are abstract model elements whose realization depends on the capabilities of the target playback environment. Initially, they are exported using a lowest-common-denominator approach, typically as ordinary non-danceable or "quiet" audio tracks compatible with existing DJ software. Future integrations may map Performance Objects to richer application-specific features while preserving the same underlying semantics.
 
-When exported to playback applications, they appear as ordinary playable
-tracks compatible with the capabilities of the destination application.
+## Implementation
 
-Their purpose is to provide visual structure, semantic meaning, and
-workflow support while allowing uninterrupted playlist execution.
-
-Performance Objects are first-class canonical entities within the Music
-Stewardship architecture.
+Performance Objects are canonical model entities whose meaning is independent of any specific playback application. Different playback environments may implement them differently while preserving the same underlying semantics.
 
 ## Rationale
 
@@ -29,22 +21,21 @@ Every major section should have a short rationale explaining the design choice. 
 A Performance Object shall:
 
 • possess canonical metadata.
-
 • be uniquely identifiable.
+• possess a defined Performance Object type.
+• preserve semantic meaning independent of playback application.
+• support application-specific metadata mapping.
+• support future extension without redesign.
+• remain distinguishable from musical recordings.
+
+## Default Playback Export Requirements
+
+The default playback export shall:
 
 • contain valid playable audio.
-
-• be accepted by ordinary music library software.
-
-• participate in playlists.
-
-• export to multiple applications.
-
-• support application-specific metadata mapping.
-
-• support future extension without redesign.
-
-• remain distinguishable from musical recordings.
+• be accepted by ordinary music library and playlist management software.
+• support participation in playlists.
+• support export to multiple applications.
 
 ## Terminology
 
