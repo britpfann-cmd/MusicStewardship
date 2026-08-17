@@ -1,40 +1,29 @@
-# Cortina Object Specification
+# Cortina Architecture
 
 ## Purpose
 
-A Cortina Object represents an interlude used to separate dance units within a performance structure. A cortina signals the end of one dance unit and provides a transition before the next begins.
+The Cortina Architecture defines the components and processes required to create, manage, assemble, store, and deploy Cortina Objects within the MusicStewardship Performance Model.
 
-## Relationship to Performance Object
+The architecture separates semantic intent from implementation details. A Cortina Object represents the performance purpose of a cortina, while supporting systems manage the resources, assembly rules, and export representations used to realize that purpose within DJ software and other playback environments.
 
-Cortina Object is a specialization of Interlude Object and therefore inherits all Interlude Object and Performance Object requirements and canonical metadata.
+## Architectural Overview
 
-## Rationale
+A Cortina is modeled as a Performance Object with a defined performance function. The object itself does not contain audio content. Instead, it references definitions, assets, and assembly rules that can be used to construct one or more playable representations.
 
-Cortinas are among the most common interludes used in tango social dancing. Modeling cortinas explicitly preserves their distinct social and performance function and enables implementations to recognize and manage them separately from other interlude types.
+The architecture supports both simple implementations using ordinary audio files and future implementations that may leverage application-specific cortina capabilities.
 
-## Types
-
-No specialized Cortina Object types are currently defined.
-
-## Requirements
-
-A Cortina Object shall:
-
-- satisfy all Interlude Object requirements.
-- represent a boundary between dance units.
-- support use between tandas or other dance units.
-- preserve its function as a transition element independent of playback application.
-- support optional audio, spoken content, or silence.
-
-## Representation
-
-A Cortina Object is represented as a specialized Interlude Object. Implementations may realize a cortina using recorded audio, spoken announcements, silence, or application-specific mechanisms while preserving the same performance semantics.
-
-## Terminology
-
-### Cortina
-
-An interlude whose primary purpose is to separate dance units and provide a transition between them. For example, in tango social dancing, a cortina typically signals the end of one tanda and provides an opportunity for partner rotation before the next tanda begins.
+```text
+Cortina Object
+        ↓
+Cortina Definition
+        ↓
+Assembly Pipeline
+        ↓
+Canonical Cortina
+        ↓
+Export Model
+        ↓
+DJ Application
 
 ## Architectural Strategy
 
