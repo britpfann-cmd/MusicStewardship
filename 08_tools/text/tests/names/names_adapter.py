@@ -62,3 +62,20 @@ class NamesAdapter:
 
         self.records[corrected_text] = record
         return record
+
+    def authorize(
+        self,
+        name_ref: str,
+        canonical_name: str,
+        authority_source: str,
+    ) -> dict:
+        """Authorize an existing provisional Names record."""
+
+        for record in self.records.values():
+            if record["name_ref"] == name_ref:
+                record["name_value"] = canonical_name
+                record["authority_status"] = "AUTHORIZED"
+                record["authority_source"] = authority_source
+                return record
+
+        raise KeyError(f"Names record not found: {name_ref}")

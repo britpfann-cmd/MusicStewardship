@@ -27,3 +27,20 @@ show(
     "VERIFY AGAIN: José María Contursi",
     adapter.verify_or_create("José María Contursi"),
 )
+print("\nPROVISIONAL → AUTHORIZED")
+
+provisional = adapter.verify_or_create("José María Contursi")
+print("before:", provisional)
+
+authorized = adapter.authorize(
+    provisional["name_ref"],
+    "José María Contursi",
+    "TEST-AUTHORITY",
+)
+print("after:", authorized)
+
+print("\nREFERENCE PRESERVED")
+print(
+    "same ref:",
+    provisional["name_ref"] == authorized["name_ref"],
+)
