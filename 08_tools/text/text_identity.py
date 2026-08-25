@@ -30,10 +30,11 @@ Examples:
 
 import argparse
 import json
+import re
 import sys
 import unicodedata
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 
 def correct_text(text: str) -> tuple[str, list[str]]:
@@ -56,6 +57,15 @@ def correct_text(text: str) -> tuple[str, list[str]]:
         changes.append("Unicode NFC normalization")
 
     corrected = normalized
+
+    # Deterministic whitespace normalization for identity text:
+    # remove leading/trailing whitespace and collapse ordinary
+    # spaces/tabs between words to a single ASCII space.
+    whitespace_normalized = re.sub(r"[ \t]+", " ", corrected).strip()
+
+    if whitespace_normalized != corrected:
+        corrected = whitespace_normalized
+        changes.append("WHITESPACE NORMALIZATION")
 
     replacements = {
         "’": "'",
