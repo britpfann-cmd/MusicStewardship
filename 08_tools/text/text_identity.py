@@ -36,6 +36,9 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
+sys.stdout.reconfigure(encoding="utf-8")
+
+
 
 def correct_text(text: str) -> tuple[str, list[str]]:
     """Apply deterministic text corrections.
