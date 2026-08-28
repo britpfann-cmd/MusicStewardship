@@ -1,0 +1,393 @@
+
+#manual p#enjoy {
+	font-weight: bold;
+}
+#manual p#signature {
+	font-variant: small-caps;
+	/* font-style: italic; */
+	font-size: 11pt;
+}
+
+#manual p.rightnavhead {
+	color: #f00;
+	text-align:center;
+	font-weight: normal;
+	font-size: 1.05em;
+	margin: 10px 0 5px 0;
+}
+
+#manual dl.rightnav, dl.rightnav {
+	list-style: none;
+	border-top: 1px solid #AFAFAF;
+	border-left: 1px solid #AFAFAF;
+	margin-bottom: 20px;
+	font-size: 0.8em;
+}
+#manual dd.rightnav a:link, dd.rightnav a:visited {
+	width: 200px;
+	display: block;
+	background-color: transparent;
+	text-decoration: none;
+	text-align:center;
+	border-right: 1px solid #AFAFAF;
+	border-bottom: 1px solid #AFAFAF;
+	padding: 2px 0 2px 0;
+	color: var(--visited);
+}
+
+#manual dd.rightnav a:hover, dt.rightnav a:hover {
+	color: #FF0000;
+	text-decoration: underline;
+	background-color: #FFE08F;
+}
+
+#manual {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	padding-left: 5px;
+	padding-right: 5px;
+	background-color: var(--white);
+	position: relative; /* ie peek-a-boo bug workaround */
+	text-align: justify;
+	margin-top: 5px;
+}
+
+#manual h1 {
+	font-size: 1em;
+	text-align: center;
+	margin: 0 0 0.5em 0;
+	padding: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid var(--dark-red);
+}
+#manual h1.oben {
+	padding: 10px 10px 0 10px;
+	border-top: 1px dashed #CCC;
+	border-bottom: none;
+}
+
+
+#manual h2 {
+	font-size: 0.9em;
+	text-align: left;
+	padding: 10px 10px 0.5em 10px;
+}
+#manual h2.unten {
+	border-bottom: 1px dashed #CCC;
+}
+#manual .oben {
+	padding: 10px 10px 10px 10px;
+	border-top: 1px dashed #CCC;
+	border-bottom: none;
+}
+#manual h2.obengrau {
+	padding: 10px 10px 10px 10px;
+	border-top: 1px dashed #CCC;
+	border-bottom: none;
+	color: #999999;
+}
+
+#manual h3 {
+	font-size: 0.9em;
+	text-align: left;
+	padding: 0 10px 0.5em 10px;
+}
+#manual h3.sterne {
+	padding: 10px 10px 10px 10px;
+	border-bottom: none;
+	float: right;
+}
+#manual h4 {
+	font-size: 0.75em;
+	text-align: left;
+	padding: 10px 10px 0px 10px;
+	font-weight: normal;
+	text-decoration: underline;
+}
+#manual h5 {
+	margin-left: 50px;
+	margin-bottom: 10px;
+}
+#manual img.illustration {
+	float: right;
+	margin: 5px 5px 5px 5px;
+	display: block;
+}
+
+#manual .noborder {
+	border: none;
+}
+
+#manual ul {
+	list-style-position: outside;
+	list-style-image: url('../images/aufzaehlung.png');
+	text-align:justify;
+}
+#manual ul, #manual ol {
+	margin: 10px 10px 1em 60px;
+	font-size: 12px;
+}
+
+#manual ul.ok {
+	list-style-position: outside;
+	list-style-image: url('../images/aufzaehlung_ok.png');
+}
+
+#manual ul.x {
+	list-style-position: outside;
+	list-style-image: url('../images/aufzaehlung_x.png');
+}
+#manual ul.ausruf {
+	list-style-position: outside;
+	list-style-image: url('../images/aufzaehlung_ausruf.png');
+	padding-top: 0px;
+}
+
+#manual li {
+	margin-bottom: 8px;
+}
+
+#manual p {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	padding: 0 10px 1em 10px;
+	font-size: 12px;
+	text-align: justify;
+	color: #333333;
+}
+
+#manual p.blocktext {
+	text-align: justify;
+}
+
+#manual p.newsbanner {
+	display: block;
+	width: 80%;
+	background-color: #FFF;
+	text-align:center;
+	font-weight: bold;
+	font-size:0.9em;
+	margin-left: 10%;
+	border: 1px solid #000;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+#manual p.newsbanner a:link, #manual a p.newsbanner a:visited {
+	text-decoration: none;
+	color: var(--visited);
+	font-weight: bold;
+}
+#manual p.newsbanner a:hover {
+	color: #f00;
+	text-decoration: none;
+}
+#manual p.newsbanner a:link, #manual p.newsbanner a:visited {
+	text-decoration: none;
+	color: var(--visited);
+	font-weight: bold;
+}
+#manual p.newsbanner a:hover {
+	color: #f00;
+	text-decoration: none;
+}
+
+#manual p.language {
+	float: right;
+	margin: 10px 0 0 0;
+}
+#manual p.eingerueckt {
+	padding-left: 60px;
+}
+
+#manual p.zitat {
+	text-align: center;
+	color: #666666;
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	font-style: italic;
+}
+
+#manual p.copyright {
+	text-align:right;
+	font-size: 0.7em;
+	color: #666;
+}
+#manual p.portrait img {
+	float: left;
+	padding: 10px 20px 10px 10px;
+}
+
+#manual .red {
+	color: red;
+}
+
+#manual p.redbox {
+	margin: 0 10% 20px 10%;
+	border: 1px solid #000;
+	background-color: #EDB1B1;
+	text-align:center;
+	padding: 10px 10px 10px 10px;
+	font-weight: normal;
+}
+
+#manual p.updateinfo {
+	text-align: right;
+	padding: 10px 10px 0 10px;
+	border-top: 1px dashed #CCC;
+	border-bottom: 10px;
+}
+
+#manual table.dj-ing-archive {
+	margin: 0 0 20px 0;
+	padding: 0 5% 0 5%;
+	font-size: 0.95em;
+}
+
+#manual table.dj-ing-archive td {
+	border: 1px solid #000;
+	padding: 0 5px 0 5px;
+}
+#manual table.dj-ing-archive th {
+	border: 1px solid #000;
+	background-color: #FFF7DF;
+}
+#manual a:link, a:visited {
+	text-decoration: none;
+	color: var(--visited);
+}
+#manual a:hover {
+	text-decoration: underline;
+	color: var(--bright-red);
+}
+
+#manual img a:link, img a:visited {border: none;}
+#manual img a:hover {border:none;}
+
+
+#pic-right {
+	float: right;
+	width: 200px;
+	text-align:right;
+	margin: 40px 20px 0 40px;
+}
+
+#manual p.contact {
+	text-align: center;
+	border: 1px solid #333;
+	padding: 3px;
+}
+
+#manual table td {
+	font-size: 12px;
+}
+#manual table th {
+	font-size: 12px;
+	text-align: left;
+}
+#manual form, input, textarea, select {
+	border: 1px solid #666666;
+}
+
+/*
+form#search, form#form1 {
+margin-left: 50px;
+padding: 20px 20px 0 20px;
+width: 25em;
+}
+
+form#search input {
+margin: 4px 0 4px 0;
+}
+*/
+
+#manual form input.radio {
+	width: 2em;
+	border: none;
+	margin-top: 5px;
+}
+#manual form label {
+	width: 7em;
+}
+#manual form input#send {
+	width: 10em;
+	margin: 10px 0 0 30%;
+	border: 1px solid #000;
+}
+#manual form textarea {
+	margin-top: 10px;
+	width: 97%;
+	font-size: 0.9em;
+}
+
+#manual form#comment input#submit {
+	width: 100px;
+	margin: 10px 0 0 45%;
+	border: 1px solid #000;
+}
+#manual form#comment {
+	margin: 0 20px 10px 20px;
+	padding: 20px 20px 0 20px
+}
+#manual form#comment textarea {
+	font-family: 'Lato', Arial, Helvetica, sans-serif;
+	width: 97%;
+}
+
+
+#manual abbr {font-style: italic;}
+
+#manual .bold {font-weight: bold;}
+#manual .boldcenter {text-align: center; font-weight: bold;}
+#manual .center {text-align: center;}
+#manual .hide {display: none;}
+
+
+
+#xhtml {
+	/*	position: relative;
+	clear: right;
+	margin-left: 40px; */
+	position: absolute;
+	left: 50px;
+	z-index: 15;
+	margin-top: -40px;
+}
+
+/* v3.3.0: Footer-Regeln entfernt – bereits in gehberger.css definiert */
+
+#manual .searchform {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	display: inline;
+}
+
+#manual .sform {font-size: 10px; color: #000000; width: 80px; height: 15px; border-left: 1px solid #999999; border-bottom: 1px solid #999999; border-right: 1px solid #999999; border-top: 1px solid #999999; padding: 0; margin: 0 5px 0 0; }
+#manual .sbutton { font-size: 10px; width: 50px; color: #000; background-color: #E8E8E8; border-left: 1px solid #576675; border-bottom: 1px solid #576675; border-right: 1px solid #576675; border-top: 1px solid #576675; padding: 0; margin: 0;}
+
+#manual p.audioplayer_container {
+	text-align: center;
+	margin-left: 20px;
+}
+
+#manual .hidden { display: none; }
+#manual .unhidden { display: block; }
+
+#manual .column {
+	float: left;
+	padding: 0px;
+}
+
+#manual .left {
+	width: 30%;
+}
+
+#manual .right {
+	width: 70%;
+}
+
+/* Clear floats after the columns */
+#manual .row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+/* end of gehberger css */

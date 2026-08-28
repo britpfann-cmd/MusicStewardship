@@ -1,0 +1,17 @@
+
+:root {
+  --dark-red:     #5f0000; /*                                              */
+  --soft-red:     #a12523; /*                                              */
+  --bright-red:   #cd1719; /* -> Hoover/Mouseover highlight color          */
+  --grey:         #c6c6c6; /* -> Search form background color              */
+  --light-beige:  #f8f5f3; /*                                              */
+  --light-grey:   #dadada; /* Ich lieb' dich nicht du liebst mich nicht... */
+  --dark-grey:    #606060; /* for disabled text                            */
+  --footer-grey:  #999999; /* footer and login button                      */
+  --green:        #96c11f; /* -> Members button                            */
+  --white:        #ffffff; /*                                              */
+  --black:        #000000; /*                                              */
+  --link:         #990000; /*                                              */
+  --visited:      #990000; /*                                              */
+  --hover:        #ff0000; /*                                              */
+}
