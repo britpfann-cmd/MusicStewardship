@@ -1,34 +1,33 @@
 # TTT Source Ingest — Implementation Notes
 
-**Status:** Validated against real TTT files and a complete TANGO-DJ/TTT reference snapshot  
-**Validation date:** 2026-08-28  
-**Source:** Tango Time Travel (TTT) FLAC collections  
-**Reference:** TANGO-DJ.AT snapshot captured 2026-08-28
+**Status:** Baseline validated implementation notes  
+**Validation date:** 2026-08-29  
+**Source:** Tango Time Travel (TTT) audio collections  
+**Reference:** TANGO-DJ.AT TTT snapshot captured 2026-08-28
 
-## Purpose
+## 1. Conclusion
 
-TTT has now been tested as a direct source for MusicStewardship ingestion.
+TTT has been validated as a viable direct source for MusicStewardship ingest.
 
-The governing pattern is:
+The source itself supplies enough embedded information to support direct canonical staging without using TANGO-DJ as the primary metadata supplier.
+
+The operational pattern is:
 
 ```text
 TTT audio file
     ↓
-source-specific TTT translator
+TTT source-specific extraction/decomposition
     ↓
-MusicStewardship canonical staging record
+MusicStewardship canonical staging
     ↓
-independent reference authentication
-    ├── TANGO-DJ.AT
-    ├── other trusted sources
-    └── acoustic matching when necessary
+external reference comparison
+    ↓
+reconciliation / annotation
 ```
 
-TANGO-DJ.AT is **not** the primary metadata supplier for a TTT ingest. It is an independent reference used to authenticate identity, discover omissions, and expose discrepancies.
+## 2. Embedded TTT metadata observed
 
-## Evidence from the TTT files
-
-A 33-file regression set was probed directly from the TTT audio collection. The files contained these embedded tags:
+The tested files contain:
 
 - `TITLE`
 - `ARTIST`
@@ -44,329 +43,192 @@ A 33-file regression set was probed directly from the TTT audio collection. The 
 - `COMMENT`
 - `ENCODED-BY`
 
-The tags carry substantially more information than simple playback labels.
+Compound fields are significant source evidence rather than simple display labels.
 
-### Compound fields
+## 3. TTT compound fields
 
-`ARTIST` is a source-specific compound field. Examples include:
+`ARTIST` may combine:
 
 ```text
-Aníbal Troilo / F. Fiorentino y A. Mandarino
-Carlos Di Sarli / Roberto Rufino
-Rodolfo Biagi / Instr. (solo de piano)
+ensemble / singer
+ensemble / Instr.
+ensemble / singer / singer
 ```
 
-The translator therefore treats the field as evidence from which to derive:
+The source translator may decompose these into:
 
-- ensemble / primary performing entity
-- vocalist or other performer(s), when present
-- instrumental indication
-- performance note
+- ensemble;
+- singer/performer;
+- instrumental status;
+- performance note.
 
-`album_artist` is retained separately as the primary ensemble/leader representation.
+The raw ARTIST value remains preserved.
 
-`COMPOSER` may contain more than the composer. Examples include:
+`COMPOSER` may contain composer, lyricist, and other credit material.
+
+The raw value remains preserved while recognizable components may be decomposed.
+
+`CATALOGNUMBER` may contain:
 
 ```text
-Antonio Bonavena, Lyrics: Lito Bayardo
-Miguel Bucino, Lyrics: Miguel Bucino
-M. Mores - P. Cour - Vers. cast.: A. L. Martínez
+Record
+Matrix
+Take
 ```
 
-The translator therefore preserves the raw value while deriving composer, lyricist, and other credit information where recognizable.
+in one source field. These may be decomposed into separate canonical concepts while retaining the original compound value.
 
-`CATALOGNUMBER` is not a simple catalog-number field in the TTT files. It commonly bundles several pieces of recording evidence:
+`COMMENT` contains meaningful transfer and historical information including pitch, key, score key, instrumentation, arrangement, and restoration observations.
 
-```text
-Record: 39299-B, Matrix: 39981, Take: 1
-```
+## 4. TTT reference snapshot
 
-or:
+The 2026-08-28 TANGO-DJ TTT query snapshot contained:
 
 ```text
-Record: LDS 103 (55539), Matrix L.D. 35015 (18024/1)
-```
-
-The translator derives:
-
-- record number
-- matrix number
-- take number
-
-while retaining the original compound value as source evidence.
-
-### COMMENT is structured source evidence
-
-TTT `COMMENT` is not merely miscellaneous notes. The tested files contain:
-
-- transfer pitch (`A4:435Hz`, `A4:440Hz`, `A4:442Hz`)
-- key
-- score key
-- solo/instrumentation information
-- arrangement/tempo observations
-- recording-context observations
-- historical notes and qualifications
-
-The implementation therefore preserves `COMMENT` verbatim and extracts selected structured observations such as pitch and key.
-
-## Reference authentication
-
-A complete TTT/TANGO-DJ reference snapshot was captured on 2026-08-28.
-
-The original TANGO-DJ TTT query reported:
-
-```text
-2,770 results
+2,770 recording rows
 678 albums
 781 unique titles
 ```
 
-The result was captured as two non-overlapping date ranges because the display limit was 1,500 records:
+It was saved as two non-overlapping date ranges:
 
 ```text
-1930–1942    1,450 records
-1943–2027    1,320 records
--------------------------
-             2,770 records
+1930–1942    1,450
+1943–2027    1,320
+-----------------
+             2,770
 ```
 
-The two saved HTML pages are the immutable source snapshots. The extracted 2,770-row CSV is a machine-readable validation snapshot.
+The HTML pages are historical source snapshots. The extracted CSV is the machine-readable reference snapshot.
 
-## Authentication result
+## 5. Direct validation results
 
-The 33-file TTT regression corpus produced:
+A 33-file regression set produced:
 
 ```text
-TTT files:                 33
-Authenticated:             32
-Ambiguous references:       0
-No reference record:        1
+33 TTT files
+32 matched
+0 ambiguous
+1 no-reference
 ```
 
-The full Edgardo Donato 1940–1945 TTT release was then validated:
+A complete Edgardo Donato release produced:
 
 ```text
-Files examined:            42
-Authenticated:             42
-No reference record:        0
-Ambiguous references:       0
-Probe errors:               0
-Date transpositions:        0
+42 examined
+42 authenticated
+0 missing
+0 ambiguous
+0 probe errors
 ```
 
-This is sufficient evidence to treat the basic TTT translator as a viable direct-ingest implementation, subject to continued regression testing.
+A complete Orquesta Típica Victor release produced 239 examined files. The matching experiments showed that TANGO-DJ may contain multiple reference representations for one TTT performance, including TTT and TTT-Transfer records.
 
-## Reference differences are not automatically errors
+This led to the architectural decision to treat external rows as reference assertions, not as the recording identity.
 
-The tests show that source and reference representations can legitimately differ.
+## 6. Whole-tree baseline
 
-Examples:
+After excluding macOS AppleDouble sidecar files (`._*`), the full TTT tree scan found:
 
 ```text
-TTT:
-Aníbal Troilo / Alberto Marino
-
-TANGO-DJ:
-Orquesta Aníbal Troilo con Alberto Marino
+Audio files examined:                 1,095
+Probe errors:                             0
+Missing required metadata:               0
+TANGO-DJ reference candidates:        1,070
+No TANGO-DJ reference candidate:         25
 ```
 
-and:
+Therefore the scanned TTT tree is technically and structurally ready for direct ingest.
+
+The 25 reference gaps are not source-ingest failures.
+
+## 7. Source/artifact distinction
+
+The scanner recognizes actual audio formats rather than assuming FLAC is the only valid input.
+
+Current recognized formats include:
 
 ```text
-TTT:
-Record: 39299-B, Matrix: 39981,Take: 1
-
-TANGO-DJ:
-39299B
+FLAC
+WAV
+MP3
+M4A
+ALAC
+AIFF / AIF
+CAF
+OGG
+OPUS
 ```
 
-These are representation differences and should not cause the source-derived canonical record to be overwritten.
-
-The canonical model should preserve the richer source evidence and represent the underlying concepts separately.
-
-## Date discrepancy rule
-
-A tested example:
+Known filesystem artifacts such as:
 
 ```text
-TTT:      1938-07-03
-TANGO-DJ: 1938-03-07
+._*
+.DS_Store
 ```
 
-This is consistent with a month/day transposition.
+are excluded from audio-asset discovery.
 
-The implementation therefore flags:
+Real non-FLAC audio remains eligible for ingest.
+
+## 8. Provenance rule
+
+TTT native values are primary.
+
+TANGO-DJ is used to:
+
+- confirm;
+- enrich;
+- identify divergences;
+- expose omissions;
+- provide external identifiers;
+- support later human review.
+
+A missing TANGO-DJ reference does not reject a valid TTT file.
+
+## 9. Normalization rule
+
+TTT source values may receive deterministic housekeeping and semantic normalization.
+
+The goal is:
+
+> semantic consistency with reduced ambiguity, while retaining original source evidence.
+
+External TANGO-DJ transposition conventions are not reverse-engineered merely to force agreement.
+
+## 10. Whole-tree source structure
+
+The TTT tree contains nested release packaging and multiple release representations.
+
+Examples include nested Pedro Laurenz release directories and multiple Pugliese releases.
+
+Directory hierarchy is source context and provenance; it should not be flattened destructively.
+
+## 11. Current implementation capability
+
+Current tested tooling supports:
 
 ```text
-DATE_TRANSPOSITION_SUSPECTED
+ffprobe-based audio inspection
+TTT metadata extraction
+TTT compound-field decomposition
+reference snapshot extraction
+source/reference comparison
+whole-tree validation
+per-release validation
+canonical staging
+resumable processing ledger
+human-readable ledger export
 ```
 
-but does **not** silently change the TTT value.
+## 12. Current boundary
 
-The record retains:
+The validated implementation stops before permanent database catalog creation.
+
+Current next action after reconciliation is:
 
 ```text
-recording_date       = TTT value
-reference_date       = TANGO-DJ value
-authentication_flag  = DATE_TRANSPOSITION_SUSPECTED
+CATALOG
 ```
 
-Human review can establish the eventual authoritative interpretation.
-
-A precision difference is handled differently. For example:
-
-```text
-TTT:      1968-12-01
-TANGO-DJ: 1968
-```
-
-is not treated as a conflict merely because one source supplies greater date precision.
-
-## Alternate titles
-
-TANGO-DJ can contain title enrichment not present in the TTT file.
-
-Example:
-
-```text
-TTT:      Nació en Pompeya
-TANGO-DJ: Nací en Pompeya (Nació en Pompeya)
-```
-
-and:
-
-```text
-TTT:      Por la güella
-TANGO-DJ: Por la güella (Por la huella)
-```
-
-These should be represented as alternate/reference title evidence, not used to overwrite the TTT source title.
-
-## Reference gaps
-
-One TTT regression file, `Chiqué`, had no TANGO-DJ record in the 2,770-record TTT snapshot.
-
-This does **not** invalidate the TTT source record. It identifies a gap in the reference database that should be recorded for follow-up/errata work.
-
-## Provenance requirements
-
-Every source ingest should retain:
-
-- original source file path
-- original filename
-- source/provider
-- source release/package
-- original embedded values
-- deterministic corrections, if any
-- derived canonical values
-- reference assertions
-- reference snapshot identifier
-- authentication result
-- review flags
-- date of processing
-
-Original source values must never be silently replaced.
-
-## Processing stages
-
-An audio asset may move through several physical/logical locations during its life:
-
-```text
-1. New-file ingest location
-       ↓
-2. Purgatory / absorption staging
-       ↓
-3. Cataloged asset
-       ↓
-4. DJ reference / playable structure
-```
-
-The database record is persistent even when the physical audio file changes location.
-
-A file may therefore change its "clothing" while retaining its identity and historical breadcrumbs.
-
-Source processing must be non-destructive to the original source audio.
-
-## TTT translator implementation
-
-The current reusable TTT translator is:
-
-```text
-08_tools/text/build_ttt_canonical_staging.py
-```
-
-Supporting tools:
-
-```text
-08_tools/text/probe_ttt_test_set.py
-08_tools/text/compare_ttt_tags_to_reference.py
-08_tools/text/validate_ttt_release.py
-```
-
-The test corpus is:
-
-```text
-08_tools/text/tests/TTT_test_set.csv
-```
-
-The complete TTT/TANGO-DJ reference snapshot is:
-
-```text
-03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-28/TTT/
-    source/
-    extracted/TTT_TANGO-DJ_2026-08-28.csv
-```
-
-## Design conclusion
-
-TTT is suitable for direct population of MusicStewardship canonical staging records.
-
-The preferred architecture is:
-
-```text
-                  ┌──────────────────────┐
-                  │    TTT audio file    │
-                  └──────────┬───────────┘
-                             │
-                             ▼
-                  ┌──────────────────────┐
-                  │   TTT translator    │
-                  │  source-specific    │
-                  └──────────┬───────────┘
-                             │
-                             ▼
-                  ┌──────────────────────┐
-                  │ canonical staging    │
-                  │      record          │
-                  └──────────┬───────────┘
-                             │
-            ┌────────────────┼─────────────────┐
-            ▼                ▼                 ▼
-      TANGO-DJ          other sources     acoustic match
-      reference         / authorities     when needed
-            │                │                 │
-            └────────────────┼─────────────────┘
-                             ▼
-                  ┌──────────────────────┐
-                  │ authentication /    │
-                  │ exception handling  │
-                  └──────────┬───────────┘
-                             ▼
-                  ┌──────────────────────┐
-                  │ MusicStewardship    │
-                  │ catalog + asset     │
-                  │ + DJ overlay        │
-                  └──────────────────────┘
-```
-
-The reference systems authenticate and enrich the record; they do not become the source-of-truth for the TTT ingest itself.
-
-## Next validation
-
-Before applying the translator to the entire TTT collection, run another complete-release test using an early acoustic-oriented collection, such as:
-
-```text
-M:\TangoTimeTravel\Todos de la Orquesta Típica Victor 1925-1930
-```
-
-This provides a different historical and recording-medium case and tests whether the rules generalize beyond the successful Donato release.
+Materialization is a separate downstream operation.

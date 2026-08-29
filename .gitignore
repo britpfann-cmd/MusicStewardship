@@ -25,4 +25,14 @@ generated/
 # Operating system
 .DS_Store
 Thumbs.db
-desktop.ini
+desktop.ini# MusicStewardship ephemeral working area
+99_sandbox/
+# Generated Python runtime artifacts
+*.pyc
+# Local ingest ledgers / working databases
+08_tools/text/tests/*.db
+# Generated validation/report output
+08_tools/text/tests/*_validation.csv
+08_tools/text/tests/*_summary.csv
+08_tools/text/tests/*_issues.csv
+08_tools/text/tests/*_comparison*.csv
