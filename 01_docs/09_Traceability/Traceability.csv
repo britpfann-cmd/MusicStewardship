@@ -1,0 +1,6 @@
+From_Level,From_ID,To_Level,To_ID,Status,Notes
+PRN,PRN-002,REQ,REQ-NORM-001,LINKED,Cross-source normalization requirement
+REQ,REQ-NORM-001,DES,DES-NORM-001,LINKED,Common normalization design
+DES,DES-NORM-001,SPEC,SPEC-NORM-001,LINKED,Behavioral specification
+SPEC,SPEC-NORM-001,IMPL,IMPL-NORM-001,LINKED,Implementation boundary
+IMPL,IMPL-NORM-001,TEST,TEST-NORM-001,LINKED,Verification cases
