@@ -1,0 +1,31 @@
+
+.play-button, .play-button.play {
+	background-image: url(../assets/play.png);
+	background-repeat: no-repeat;
+	display:inline-block;
+	vertical-align:middle;
+	height: 37px;
+	width: 37px;
+}
+
+.play-button.pause {
+	background-image: url(../assets/pause.png);
+}
+
+.missing-audio {
+	background-image: url(../assets/missing-audio.png);
+	background-repeat: no-repeat;
+	display:inline-block;
+	vertical-align:middle;
+	height: 37px;
+	width: 37px;
+}
+
+.play-disabled {
+	background-image: url(../assets/play-disabled.png);
+	background-repeat: no-repeat;
+	display:inline-block;
+	vertical-align:middle;
+	height: 37px;
+	width: 37px;
+}

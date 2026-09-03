@@ -1,0 +1,251 @@
+# ADR-0006 - Structural Markers for Performance Orientation
+
+## Status
+
+Proposed
+
+## Context
+
+MusicStewardship models performance structure at levels above individual recordings. A performance is not merely a sequence of tracks, but an intentional arrangement of performance objects including tandas, cortinas, sets, thematic sections, energy arcs, transitions, announcements, demonstrations, breaks, and other forms of content.
+
+Many playback and playlist-management systems represent a performance as a flat list of playable items. While sufficient for playback, such representations often obscure the higher-level structure that guided the performance's design.
+
+Experiments suggest that simple visual structural markers can make this structure visible without requiring specialized support from playback applications. These markers act as headings, landmarks, and navigational aids within an otherwise linear playlist.
+
+## Structural Marker Grammar
+
+A structural marker is a named object whose primary purpose is to communicate structure rather than content.
+
+Structural markers form a lightweight visual grammar that allows higher-level performance concepts to be represented within systems that only understand linear sequences.
+
+The grammar consists of:
+
+* Visual delimiters
+* Optional graphic symbols
+* Structural vocabulary
+* Human-readable names
+
+Examples:
+
+```text id="1sp24f"
+=== TANDA: DI SARLI ===
+
+=== CORTINA: SURF GUITAR ===
+
+=== SET: GOLDEN AGE RHYTHMIC ===
+
+=== BREAK ===
+```
+
+or:
+
+```text id="5gqz9x"
+▶ TANDA: DI SARLI
+
+▶ CORTINA: SURF GUITAR
+
+▶ SET: GOLDEN AGE RHYTHMIC
+```
+
+or:
+
+```text id="mnsu54"
+■ TANDA: DI SARLI
+
+◆ CORTINA: SURF GUITAR
+
+▲ SET: GOLDEN AGE RHYTHMIC
+```
+
+The exact visual form is less important than consistency and immediate recognizability.
+
+## Potential Vocabulary
+
+The vocabulary may evolve over time as additional performance concepts are modeled.
+
+Examples include:
+
+### Performance-Level Objects
+
+```text id="1e0ckv"
+EVENT
+SECTION
+SET
+PROGRAM
+THEME
+```
+
+### Dance-Related Objects
+
+```text id="vslmrh"
+TANDA
+CORTINA
+MILONGA
+VALS
+TANGO
+```
+
+### Operational Objects
+
+```text id="e4tdmv"
+ANNOUNCEMENT
+BREAK
+INTERMISSION
+DEMONSTRATION
+PERFORMANCE
+WORKSHOP
+```
+
+### Energy and Mood Markers
+
+```text id="v7m80f"
+ENERGY BUILD
+COOL DOWN
+TRANSITION
+PEAK ENERGY
+RECOVERY
+```
+
+### Organizational Objects
+
+```text id="r6ab9n"
+FAVORITES
+REQUESTS
+ALTERNATES
+RESERVE
+EMERGENCY OPTIONS
+```
+
+The vocabulary should remain extensible and should not be constrained by the capabilities of any particular playback system.
+
+## Possible Symbol Vocabulary
+
+Graphic symbols may provide rapid visual recognition.
+
+Examples:
+
+```text id="ix59n8"
+▶ Section or expandable object
+
+■ Tanda
+
+◆ Cortina
+
+▲ Set
+
+● Announcement
+
+★ Featured item
+
+⚑ Recovery option
+
+⚠ Caution or special handling
+```
+
+These symbols are illustrative rather than prescriptive.
+
+The underlying structural meaning should remain understandable even when symbols are unavailable.
+
+## Observation
+
+Structural markers are not primarily playback objects.
+
+Their principal value is cognitive support.
+
+They provide orientation within a performance, helping the DJ understand current position, past decisions, and available recovery paths when adapting to room conditions.
+
+## Discussion
+
+When a performance is proceeding smoothly, an operator often focuses on the immediate sequence of items:
+
+* Current item
+* Next item
+* Following item
+
+When conditions change unexpectedly, however, individual items become less important than understanding the larger structure. More useful questions become:
+
+* Where am I within the overall performance?
+* What section of the event is currently active?
+* What energy level or mood is being presented?
+* What transitions have recently occurred?
+* What strategic options remain available?
+
+These are structural questions rather than track-level questions.
+
+A flat list containing dozens or hundreds of items can make it difficult to answer them quickly. Structural markers transform a playback queue into a performance map.
+
+For example:
+
+```text id="6cybdu"
+=== GOLDEN AGE INSTRUMENTALS ===
+
+Di Sarli
+Troilo
+D'Arienzo
+
+=== RHYTHMIC ENERGY BUILD ===
+
+Biagi
+Rodriguez
+D'Arienzo
+
+=== COOLING THE ROOM ===
+
+Fresedo
+Caló
+```
+
+In this representation, the operator is no longer navigating individual recordings but navigating intentions, sections, and performance goals.
+
+The markers act as landmarks within the performance. During periods of uncertainty, adaptation, or recovery, these landmarks may help the operator quickly understand where they are within the larger plan and identify appropriate next actions.
+
+The value of the markers lies not in the information they add, but in the context they reveal.
+
+## Consequences
+
+### Benefits
+
+* Makes higher-level performance structure visible within otherwise flat playlists.
+* Provides cognitive support and situational awareness during performance.
+* Requires only simple naming conventions.
+* Is human-readable and application-independent.
+* Preserves meaning when exported, printed, shared, or viewed in different software.
+* Can be implemented incrementally without requiring specialized tooling.
+* Provides a bridge between hierarchical performance models and linear playback systems.
+
+### Limitations
+
+* Structure remains representational rather than explicit.
+* Relationships between objects are implied rather than formally modeled.
+* Expand/collapse behavior is not available.
+* Structural markers may occupy positions within playback sequences.
+
+## Future Considerations
+
+A future user interface may provide native hierarchical views of performance structures, allowing users to expand or collapse levels of detail according to their needs.
+
+Possible viewing levels include:
+
+```text id="axt9vt"
+Performance
+    Set
+        Tanda
+            Track
+```
+
+or:
+
+```text id="fkr8xa"
+Event
+    Section
+        Performance Object
+            Recording
+```
+
+Structural markers provide a low-cost mechanism for validating the usefulness of visible performance structure before investing in specialized hierarchical user interfaces.
+
+## Rationale
+
+The purpose of a performance model is not merely to organize recordings. It is to make intent visible.
+
+Structural markers provide a simple mechanism for exposing that intent within environments that otherwise display only playable items, helping operators maintain orientation, understand context, and make more informed decisions during performance.

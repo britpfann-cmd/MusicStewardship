@@ -1,0 +1,36 @@
+# Tango Time Travel source grammar
+# V3 — filename + embedded metadata evidence
+
+sources:
+  - TangoTimeTravel
+
+filename_patterns:
+  # 001 - Olvido
+  - '^(?P<release_track_number>\d+(?:\.\d+)?)\s+-\s+(?P<title>.+?)$'
+
+  # 074_-_Farol
+  - '^(?P<release_track_number>\d+(?:\.\d+)?)_-_(?P<title>.+?)$'
+
+  # 10-Tú
+  - '^(?P<release_track_number>\d+(?:\.\d+)?)-(?P<title>.+?)$'
+
+  # Provisional: TanturiCampos _-_Malvon
+  - '^(?P<artist>.+?)\s+_-_\s*(?P<title>.+?)$'
+
+metadata_fields:
+  - title
+  - artist
+  - album
+  - date
+  - composer
+  - conductor
+  - record
+  - matrix
+  - take
+  - genre
+  - source_media
+  - track
+  - album_artist
+  - catalognumber
+  - comment
+  - encoded_by

@@ -1,0 +1,15 @@
+source,source_field,source_pattern,operation,derived_example,target_field,transposition_rule,confidence,evidence_notes
+Crackling Tunes,release name,21.08 Releases,DERIVE,CTMM2108,release_id,Convert YY.MM Releases to CTMMYYMM,VERY_HIGH,Observed consistently across collection
+Crackling Tunes,CATALOG #,CT2302-A1,COPY/DECOMPOSE,CT2302-A1,source_catalog_id;source_side;source_take,Prefer embedded catalog value; preserve complete original value,VERY_HIGH,Source identifier
+Crackling Tunes,filename,... [CT2302-A1] ...,EXTRACT,CT2302-A1,source_catalog_id,Fallback when embedded CATALOG # is absent,VERY_HIGH,Fixed missing-field problem in CTMM2404
+Crackling Tunes,CT identifier suffix,CT2302-A1,DECOMPOSE/DERIVE,1,source_track_number,A1=1; B1=2; A2=3; B2=4; continue sequence,VERY_HIGH,542/542 represented tracks reconciled
+Crackling Tunes,ARTIST,Francisco Canaro / Charlo,DECOMPOSE,Francisco Canaro; Charlo,ensemble_candidate;singer_candidates,Split on /; first component is ensemble candidate,HIGH,Retain original ARTIST
+Crackling Tunes,ARTIST,Juan D'Arienzo / Instr.,DECOMPOSE,Juan D'Arienzo; instrumental,ensemble_candidate;instrumental,"Instr./Instrumental is status, not a person",HIGH,
+Crackling Tunes,ARTIST,A / B / C,DECOMPOSE,A; B; C,ensemble_candidate;singer_candidates,First component ensemble candidate; remaining named components are performer/singer candidates,MEDIUM,Role still merits validation
+Crackling Tunes,ALBUMARTIST,"Canaro, Francisco [Orquesta]",COPY/DECOMPOSE,"Canaro, Francisco [Orquesta]",source_albumartist,Retain full source assertion; bracketed ensemble type is evidence,HIGH,Do not infer leadership solely from this field
+Crackling Tunes,TITLE,El trece (El 13) (435Hz),STANDARDIZE,El trece (El 13),comparison_title,Remove frequency annotation for comparison only,HIGH,435Hz describes supplied audio representation
+Crackling Tunes,TITLE,Así es el mundo 435Hz,STANDARDIZE,Así es el mundo,comparison_title,Remove frequency annotation for comparison only,HIGH,
+Crackling Tunes,filename date,17_10_1928,EXTRACT/STANDARDIZE,1928-10-17,source_date,Convert DD_MM_YYYY to ISO date,HIGH,Do not silently override other source dates
+Crackling Tunes,CTMM + track,CTMM2108 + track 1,REFERENCE,TANGO-DJ ref,tango_dj_reference,Link by release and derived track position,VERY_HIGH,542/542 matched represented tracks
+Crackling Tunes,CT catalog number,CT1874-A1,REFERENCE/SOURCE_CONTEXT,CT1874-A1,source_catalog_id,Do not compare directly with TANGO-DJ historical catalog number,VERY_HIGH,Different namespaces
+Crackling Tunes,release availability,CTMM2106 / CTMM2512,EXCEPTION,unresolved,resolution_status,Retain unresolved when release is absent from reference snapshot,VERY_HIGH,Snapshot limitation

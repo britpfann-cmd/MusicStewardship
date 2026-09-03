@@ -1,0 +1,183 @@
+A  01_docs/Architecture/Audio_Derived_Identity_Evidence.md
+A  01_docs/Architecture/Crackling_Tunes_Rosetta_Stone.md
+A  "01_docs/Decisions/ADR-0006 - Structural Markers for Playlist Orientation"
+A  01_docs/DesignDocumentationChain.md
+A  01_docs/FOUNDATION_From_Collection_to_Exhibition.md
+A  01_docs/PerformanceModel_revised(2).md
+A  01_docs/Research/MusicStewardship_Vocabulary_and_Transposition_Rules.xlsx
+A  01_docs/Specifications/DJ_Library_Analysis_Source_Interpretation_Spec_v0.2.md
+A  01_docs/Specifications/MusicStewardship_Music_Vocabulary_and_Ingestion_Framework_v0.2.md
+A  01_docs/TraceabilityReview_2026-09-01.md
+A  01_docs/TraceabilityTaggingStandard.md
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger.htm"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/100_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/40_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/50_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/60_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/70_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/80_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/90_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/analytics_002_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/analytics_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/api_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/badge-full-member_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/close_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/component_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/constant_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/cookies_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/css_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/database_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/database_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/favorite_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/feedback_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/form_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/gehberger_print_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/gehberger_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/headpic_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/jquery.1.9.2_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/jquery.metadata_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/jquery.tablesorter_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/js_002_uHX5"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/js_uHX5"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/lyrics-14_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/manual_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/modernizr.custom_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/news-tracker_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/player_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/player_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/popup_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/popup_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/pretty-checkbox_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/recommended_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/splash_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/table_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/table_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/theme_uHX5.css"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_002_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_003_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_004_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_005_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_006_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_007_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_008_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_009_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_010_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_011_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_012_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_013_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_014_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_015_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_016_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_017_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_018_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_019_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_020_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_021_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_022_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_023_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_024_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_025_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_026_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_027_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_028_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_029_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_030_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_031_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_032_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_033_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_034_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_035_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_036_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_037_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_038_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_039_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_040_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_041_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_042_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_043_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_044_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_045_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_046_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_047_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_048_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_049_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_050_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_051_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_052_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_053_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_054_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/thumbnail_uHX5.png"
+A  "03_assets/ReferenceCatalogs/TANGO-DJ_AT/2026-08-27/CracklingTunes/source/Crackling Tunes query - TANGO-DJ.AT \302\273 Tango Database, Bernhard Gehberger_files/turnstile-gate_uHX5.js"
+A  "03_assets/ReferenceCatalogs/TangoTimeTravel/TTT Tango.dj-at sample.pdf"
+A  08_tools/retired/text/historical_analysis/analyze_crackling_patterns.py
+A  08_tools/retired/text/historical_ingest/README.md
+A  08_tools/retired/text/historical_ingest/RETIREMENT_MANIFEST.csv
+A  08_tools/retired/text/historical_ingest/TTT_grammar_ingest_v2_baseline.csv
+A  08_tools/retired/text/historical_ingest/TangoTimeTravel_v3_baseline.yaml
+A  08_tools/retired/text/historical_ingest/build_ingest_evidence.py
+A  08_tools/retired/text/historical_ingest/build_ttt_canonical_staging.py
+A  08_tools/retired/text/historical_ingest/compare_ttt_tags_to_reference.py
+A  08_tools/retired/text/historical_ingest/ingest_ttt_with_ledger.py
+A  08_tools/retired/text/historical_ingest/probe_ttt_test_set.py
+A  08_tools/retired/text/historical_ingest/validate_ttt_release.py
+A  08_tools/retired/text/historical_ingest/validate_ttt_tree.py
+A  08_tools/setup/cleanup_03_assets_referencecatalogs.sh
+A  08_tools/setup/reorganize_03_assets_reference_catalogs.sh
+A  08_tools/setup/retire_historical_ingest_tools.ps1
+A  08_tools/text/analyze_crackling_catalog.py
+A  08_tools/text/analyze_source_tree.py
+A  08_tools/text/analyze_source_tree_structure.py
+A  08_tools/text/build_audio_asset_records.py
+A  08_tools/text/build_common_catalog.py
+A  08_tools/text/build_crackling_reference_records.py
+A  08_tools/text/build_ingest_run.py
+A  08_tools/text/build_ingest_staging.py
+A  08_tools/text/build_source_context.py
+A  08_tools/text/build_source_profile_skeleton.py
+A  08_tools/text/build_tango_tunes_ingest.py
+A  08_tools/text/catalog_spec.yaml
+A  08_tools/text/compare_crackling_to_tango.py
+A  08_tools/text/contextualize_audio_files.py
+A  08_tools/text/extract_flac_text.py
+A  08_tools/text/inspect_ingest_evidence.py
+A  08_tools/text/inventory_tango_tunes.py
+A  08_tools/text/mappings/crackling_tunes_rosetta.csv
+A  08_tools/text/parse_tango_dj_crackling_html.py
+A  08_tools/text/reconcile_reference_records.py
+A  08_tools/text/source_ingest.py
+A  08_tools/text/source_profiles/TangoTimeTravel.yaml
+A  08_tools/text/source_profiles/TangoTunes.yaml
+A  08_tools/text/source_profiles/tango_sources.yaml
+D  08_tools/text/tests/TANGO-DJ_CracklingTunes_sorted.csv
+D  08_tools/text/tests/TTT_Donato_1940-1945_validation.csv
+D  08_tools/text/tests/TTT_Donato_1940-1945_validation_summary.csv
+D  08_tools/text/tests/TTT_canonical_staging.csv
+D  08_tools/text/tests/TTT_canonical_validation.csv
+D  08_tools/text/tests/TTT_tags_vs_reference.csv
+D  08_tools/text/tests/TTT_tags_vs_reference_v2.csv
+D  08_tools/text/tests/TTT_test_metadata.csv
+D  08_tools/text/tests/TTT_test_set.csv
+D  08_tools/text/tests/crackling_21.08_text.csv
+D  08_tools/text/tests/crackling_21.08_text_v2.csv
+D  08_tools/text/tests/crackling_catalog_analysis.md
+D  08_tools/text/tests/crackling_catalog_inventory.csv
+D  08_tools/text/tests/crackling_catalog_text.csv
+D  08_tools/text/tests/crackling_catalog_text_v2.csv
+D  08_tools/text/tests/crackling_pattern_analysis.md
+D  08_tools/text/tests/crackling_reference_records.csv
+D  08_tools/text/tests/crackling_reference_validation.md
+D  08_tools/text/tests/crackling_source_tracks.csv
+D  08_tools/text/tests/crackling_to_tango_comparison.csv
+D  08_tools/text/tests/crackling_to_tango_comparison_v2.csv
+D  08_tools/text/tests/crackling_to_tango_comparison_v3.csv
+D  08_tools/text/tests/crackling_to_tango_comparison_v4.csv
+D  08_tools/text/tests/crackling_to_tango_comparison_v5.csv
+D  08_tools/text/tests/crackling_to_tango_comparison_v5b.csv
+D  08_tools/text/tests/names/names_adapter.py
+D  08_tools/text/tests/names/test_names.txt
+D  08_tools/text/tests/names/test_names_adapter.py
+D  08_tools/text/tests/test_text_identity.txt
+D  08_tools/text/tests/test_text_identity_results.jsonl
+D  08_tools/text/tests/test_text_identity_results.xlsx
+D  08_tools/text/tests/test_text_identity_unicode.txt
+?? status.txt

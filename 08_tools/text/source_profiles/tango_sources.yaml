@@ -1,0 +1,20 @@
+# Initial Tango-focused source grammar set.
+# Rules describe evidence to collect; they do not assert canonical facts.
+
+sources:
+  - AmazonMusic
+  - BandcampMusic
+  - CDs
+  - CracklingTunes
+  - DanielsLaptop
+  - FromJae
+  - TangoSparks
+  - TangoTimeTravel
+  - TangoTunes
+  - TangoUtopiaClass
+  - ToTango
+
+filename_patterns:
+  # Conservative generic patterns. Source-specific patterns belong in
+  # individual profiles as they are discovered and verified.
+  - '^(?P<title>.+?)\s+(?P<catalog_id>\d{3,6}(?:-\d+)?)_(?P<source_code>TT|RP|FV)$'

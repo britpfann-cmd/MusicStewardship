@@ -1,0 +1,84 @@
+
+table > img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img.disabled
+{
+  opacity:0.5;
+}
+
+img.close-button
+{
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 100;
+  display: none;
+}
+
+div.title-with-button
+{
+  position: relative;
+  left: 0px;
+  margin-right: 5px
+}
+
+/*
+img.close-button:hover
+{
+  display: none;
+  display: block;
+}
+
+div.title-with-button:hover
+{
+left: 0px;
+left: 13px;
+}
+*/
+div.title-no-button
+{
+  position: relative;
+  left:12px;
+}
+
+.has-js .favorite
+{
+  background: url(../assets/favorite-off.png) no-repeat;
+}
+.has-js label.f_on
+{
+  background: url(../assets/favorite-on.png) no-repeat;
+}
+.has-js .favorite input
+{
+  position: absolute;
+  left: -9999px;
+}
+
+.favorite {
+    background-image: url(../assets/favorite-off.png);
+    background-repeat: no-repeat;
+    display:inline-block;
+    vertical-align:middle;
+    height: 16px;
+    width: 16px;
+}
+
+.favorite.f_on {
+  background-image: url(../assets/favorite-on.png);
+}
+
+/*
+div.feedback {
+  background-image: url(../assets/feedback.png);
+  background-repeat: no-repeat;
+  display:inline-block;
+  vertical-align:middle;
+  height: 16px;
+  width: 16px;
+}
+*/

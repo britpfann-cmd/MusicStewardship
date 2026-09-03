@@ -1,4 +1,0 @@
-name_ref|name_value|authority_status|authority_source
-NAME-001|Miguel Caló|AUTHORIZED|TTT
-NAME-002|D'Arienzo|AUTHORIZED|TTT
-NAME-003|Carlos Di Sarli|PROVISIONAL|

@@ -1,0 +1,8 @@
+"File","FormerPath","RetiredPath","Reason","Status"
+"build_ttt_canonical_staging.py","08_tools/text/build_ttt_canonical_staging.py","08_tools/retired/text/historical_ingest/build_ttt_canonical_staging.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"
+"compare_ttt_tags_to_reference.py","08_tools/text/compare_ttt_tags_to_reference.py","08_tools/retired/text/historical_ingest/compare_ttt_tags_to_reference.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"
+"ingest_ttt_with_ledger.py","08_tools/text/ingest_ttt_with_ledger.py","08_tools/retired/text/historical_ingest/ingest_ttt_with_ledger.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"
+"probe_ttt_test_set.py","08_tools/text/probe_ttt_test_set.py","08_tools/retired/text/historical_ingest/probe_ttt_test_set.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"
+"validate_ttt_release.py","08_tools/text/validate_ttt_release.py","08_tools/retired/text/historical_ingest/validate_ttt_release.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"
+"validate_ttt_tree.py","08_tools/text/validate_ttt_tree.py","08_tools/retired/text/historical_ingest/validate_ttt_tree.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"
+"build_ingest_evidence.py","08_tools/text/build_ingest_evidence.py","08_tools/retired/text/historical_ingest/build_ingest_evidence.py","Historical implementation superseded by grammar-driven generic ingestion","RETIRED"

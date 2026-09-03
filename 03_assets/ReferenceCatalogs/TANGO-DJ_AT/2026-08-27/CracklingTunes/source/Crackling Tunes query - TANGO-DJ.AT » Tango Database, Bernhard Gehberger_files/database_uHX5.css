@@ -1,0 +1,856 @@
+
+
+.mfp-wrap {
+  cursor: pointer;
+}
+
+.mfp-close {
+  cursor: pointer;
+}
+
+input.recommended[type=checkbox] {
+  visibility: hidden
+}
+
+input.recommended[type=checkbox]::before {
+  visibility: visible;
+  content:"";
+  background-image: url(../assets/recommended-disabled.png);
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+  display:inline-block;
+  padding: 0 0 0 0px;
+}
+
+input.recommended[type=checkbox]::before:checked {
+  visibility: visible;
+  background-image: url(../assets/recommended-enabled.png);
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+  display:inline-block;
+  padding: 0 0 0 0px;
+}
+
+#nav li a:hover {
+  border-bottom: 5px solid var(--visited);
+  color: var(--black);
+  font-weight: bold;
+}
+
+
+li#database a:link, li#database a:visited {
+  border-bottom: 5px solid var(--visited);
+  color: var(--black);
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+
+dd.nav#database a:link, dd.nav#database a:visited {
+  color: var(--visited);
+  background-color: #FFE08F;
+  border-right: 1px solid #f00;
+}
+
+input[type=text] {
+  width: calc(100% - 20px);
+  margin-left: 10px;
+  margin-right: 10px;
+}
+input[type=date] {
+  width: 48%;
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  /* border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  color: black;
+  text-align: center;
+  background-color: #F8F5E0;
+  padding: 5px;
+  border-radius: 6px;
+  width: 120px;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  border: 1px solid #A44;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+  font-size: 0.9em;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+.tooltip .tooltiptext {
+  top: -11px;
+  right: 150%;
+}
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  left: 100%; /* To the right of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent black;
+}
+
+/* tooltipplayer container */
+.tooltipplayer {
+  position: relative;
+  display: inline-block;
+}
+
+/* tooltipplayer text */
+.tooltipplayer .tooltipplayertext {
+  visibility: hidden;
+  color: black;
+  text-align: center;
+  background-color: #F8F5E0;
+  padding: 5px;
+  border-radius: 6px;
+  width: 120px;
+  border: 1px solid #A44;
+
+  /* Position the tooltipplayer text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltipplayer text when you mouse over the tooltipplayer container */
+.tooltipplayer:hover .tooltipplayertext {
+  visibility: visible;
+}
+.tooltipplayer .tooltipplayertext {
+  top: 0px;
+  left: 112%;
+}
+.tooltipplayer .tooltipplayertext::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 100%; /* To the left of the tooltip */
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent black transparent transparent;
+}
+/* various offset, depending on tooltip size */
+.tooltipplayertext.tpt-ma {
+  top: -5px;
+  left: 42px;
+}
+.tooltipplayertext.tpt-as {
+  top: -29px;
+  left: 42px;
+}
+.tooltipplayertext.tpt-r {
+  top: -40px;
+}
+.tooltipplayertext.tpt-f {
+  top: -40px;
+  left: 22px;
+}
+.tooltipplayertext.tpt-mca {
+  top: -2px;
+  left: 55px;
+}
+.tooltipplayertext.tpt-cav {
+  top: -30px;
+}
+.tooltipplayertext.tpt-cas {
+  top: -23px;
+  left: 55px;
+}
+/* tooltiphelper container */
+.th-user-manual {
+  /* float: right; */
+}
+
+.tooltiphelper {
+  position: relative;
+  display: inline-block;
+}
+#yearto.tooltiphelper {
+  display: block;
+}
+/* tooltiphelper text */
+.tooltiphelper .tooltiphelpertext {
+  visibility: hidden;
+  color: black;
+  text-align: center;
+  background-color: #F8F5E0;
+  padding: 5px;
+  border-radius: 6px;
+  width: 150px;
+  bottom: 120%;
+  left: 50%;
+  border: 1px solid #A44;
+  margin-left: -75px; /* Use half of the width (120/2 = 60), to center the tooltip */
+  font-size: 0.9em;
+
+  /* Position the tooltiphelper text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltiphelper text when you mouse over the tooltiphelper container */
+.tooltiphelper:hover .tooltiphelpertext {
+  visibility: visible;
+}
+
+.tooltiphelper .tooltiphelpertext::after {
+  content: " ";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+button.search {
+
+}
+
+/* =====================================================================
+ * v3.1.0: Lyrics Popup Styles
+ * ===================================================================== */
+
+.lyrics-popup-content {
+  background: #fff;
+  border-radius: 8px;
+  width: 420px;
+  max-width: 95%;
+  margin: 0 auto;
+  position: relative;
+}
+.lyrics-popup-header {
+  background: #8B1C1C;
+  color: #fff;
+  padding: 14px 18px 12px;
+  border-radius: 8px 8px 0 0;
+}
+.lyrics-popup-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.lyrics-popup-composer {
+  font-size: 12px;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+.lyrics-popup-meta {
+  padding: 12px 18px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.lyrics-popup-meta-label {
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.lyrics-popup-meta-value {
+  font-size: 13px;
+  color: #333;
+}
+.lyrics-popup-text {
+  padding: 16px 18px 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #333;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.lyrics-popup-credit {
+  padding: 8px 18px 14px;
+  text-align: center;
+  font-size: 9.5px;
+  color: #aaa;
+  line-height: 1.5;
+  border-top: 1px solid #eee;
+}
+.lyrics-popup-credit a {
+  color: #aaa;
+  text-decoration: underline;
+}
+.lyrics-popup-credit a:hover {
+  color: #8B1C1C;
+}
+.lyrics-popup-link {
+  cursor: pointer;
+  text-decoration: none;
+}
+.lyrics-popup-link:hover img {
+  opacity: 0.7;
+}
+.lyrics-popup-content .mfp-close {
+  color: rgba(255,255,255,0.7);
+  top: 0;
+  right: 0;
+}
+.lyrics-popup-content .mfp-close:hover {
+  color: #fff;
+}
+
+/* =====================================================================
+ * Comment Column – mehrzeilige Anzeige
+ * ===================================================================== */
+
+.comment-cell {
+  white-space: pre-line;
+  width: 10%;
+}
+
+
+/* =====================================================================
+ * v3.1.2: News Section – Design B (Card-Style)
+ * ===================================================================== */
+
+/* v3.3.0: News über volle Breite (aus search-area herausgenommen) */
+#database-news {
+  flex: 0 0 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.news-section {
+  font-size: 0.9em;
+  line-height: 1.5;
+  padding: 1px 10px 4px;
+  background: var(--light-beige);
+  border-bottom: none;
+}
+.news-permanent {
+  color: var(--dark-red);
+  padding: 0 0 5px 0;
+  text-align: center;
+  word-break: break-word;
+}
+.news-permanent a {
+  color: var(--link);
+  text-decoration: none;
+}
+.news-permanent a:hover {
+  color: var(--bright-red);
+  text-decoration: underline;
+}
+.news-sep {
+  color: var(--grey);
+  margin: 0 6px;
+}
+.news-card {
+  background: #fff;
+  border: 1px solid var(--light-grey);
+  border-left: 3px solid var(--soft-red);
+  border-radius: 0 4px 4px 0;
+  padding: 6px 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.news-card-header {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--soft-red);
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.news-history-link {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--dark-grey);
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 12px;
+}
+.news-history-link:hover {
+  color: var(--soft-red);
+  text-decoration: underline;
+}
+.news-toggle {
+  color: var(--soft-red);
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: -2px;
+  padding: 0 12px;
+  user-select: none;
+  text-transform: none;
+}
+.news-toggle:hover {
+  color: var(--bright-red);
+}
+.news-items {
+  line-height: 1.6;
+}
+.news-line {
+  display: inline;
+  color: #333;
+  margin-right: 12px;
+  white-space: normal;
+}
+.news-line a {
+  color: var(--link);
+  text-decoration: none;
+}
+.news-line a:hover {
+  color: var(--bright-red);
+  text-decoration: underline;
+}
+.news-tag {
+  display: inline;
+  border: 1px solid var(--soft-red);
+  color: var(--soft-red);
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0 4px;
+  border-radius: 3px;
+  margin-right: 3px;
+  line-height: 1;
+  vertical-align: 2px;
+}
+.news-tag.update {
+  border-color: var(--dark-grey);
+  color: var(--dark-grey);
+}
+
+/* ── History Section ── */
+.news-history {
+  font-size: 0.9em;
+  line-height: 1.5;
+  padding: 0 20px 12px;
+  background: var(--light-beige);
+}
+.news-history .news-card {
+  background: #fff;
+  border: 1px solid var(--light-grey);
+  border-left: 3px solid var(--dark-grey);
+  border-radius: 0 4px 4px 0;
+  padding: 10px 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.news-history .news-card-header {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--dark-grey);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.news-history-line {
+  padding: 2px 0;
+  color: #333;
+  margin: 0;
+}
+.news-history-line a {
+  color: var(--link);
+  text-decoration: none;
+}
+.news-history-line a:hover {
+  color: var(--bright-red);
+  text-decoration: underline;
+}
+
+/* ── History Page ── */
+.news-history-year {
+  margin-bottom: 8px;
+}
+.news-history-year-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--soft-red);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 0 2px;
+  border-bottom: 1px solid var(--light-grey);
+  margin-bottom: 4px;
+}
+.news-history-entry {
+  padding: 3px 0;
+  line-height: 1.5;
+  color: #333;
+}
+.news-history-date {
+  display: inline-block;
+  min-width: 80px;
+  color: var(--dark-grey);
+  font-size: 11px;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+.news-history-text {
+  color: #333;
+}
+.news-history-text a {
+  color: var(--link);
+  text-decoration: none;
+}
+.news-history-text a:hover {
+  color: var(--bright-red);
+  text-decoration: underline;
+}
+
+/* ── v3.1.5: Maintenance-Mode ────────────────────────────────── */
+
+/* Overlay für Nicht-Admins */
+.maintenance-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  padding: 60px 20px;
+}
+.maintenance-overlay-box {
+  text-align: center;
+  max-width: 500px;
+}
+.maintenance-overlay-icon {
+  font-size: 64px;
+  color: var(--soft-red);
+  margin-bottom: 16px;
+}
+.maintenance-overlay-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--dark-red);
+  margin-bottom: 8px;
+}
+.maintenance-overlay-text {
+  font-size: 14px;
+  color: var(--dark-grey);
+}
+
+/* Admin-Warnbalken */
+.admin-maintenance-warning {
+  background-color: var(--bright-red);
+  color: #fff;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+.admin-maintenance-warning strong {
+  font-weight: 700;
+}
+.admin-maintenance-warning-icon {
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+/* News Admin Edit-Link (v3.1.5, nur für Admin sichtbar) */
+.news-card {
+  position: relative;
+}
+.news-admin-edit {
+  position: absolute;
+  right: 14px;
+  bottom: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dark-grey);
+  text-decoration: none;
+}
+.news-admin-edit:hover {
+  color: var(--soft-red);
+  text-decoration: underline;
+}
+
+/* Cover Art Loading-Spinner (v3.1.5) */
+td.gallery-loading {
+  position: relative;
+}
+td.gallery-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border: 2px solid rgba(0,0,0,0.15);
+  border-top-color: var(--soft-red);
+  border-radius: 50%;
+  animation: gallery-spin 0.6s linear infinite;
+  pointer-events: none;
+}
+@keyframes gallery-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================================================================
+ * v3.3.0: Ribbon Icon Bar
+ * ===================================================================== */
+
+
+/* v3.3.0: Ribbon-Links – neutralisiert gehberger.css a:link (#900, bold)
+   .ribbon a = Spezifität (0,1,1) → schlägt a:link (0,1,1) per Source-Order,
+   wird aber von .rib-btn.rib-subscribe (0,2,0) etc. korrekt überstimmt */
+.ribbon a {
+  color: #333;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.ribbon {
+  background: var(--light-beige);
+  margin-bottom: -1px;
+  margin-top: -1px;
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  flex-wrap: wrap;
+}
+/* v3.3.0: Keine Abstände um den Ribbon */
+.news-section + .ribbon,
+.ribbon + .cbp-mc-form {
+  margin-top: 0;
+}
+.status-badge {
+  width: 64px;
+  min-height: 64px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--dark-red);
+  align-self: flex-start;
+  cursor: pointer;
+  display: flex;
+  transition: opacity 0.15s;
+  text-decoration: none;
+}
+.status-badge:hover {
+  opacity: 0.9;
+}
+.status-badge img,
+.status-badge svg {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+.ribbon-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 1;
+  padding: 4px 8px;
+  min-width: 0;
+}
+.rib-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  padding: 0 4px;
+}
+.rib-sep {
+  width: 1px;
+  margin: 8px 5px;
+  background: var(--light-grey);
+  align-self: stretch;
+}
+.rib-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 58px;
+  padding: 6px 6px;
+  text-decoration: none;
+  color: #333;
+  font-size: 11px;
+  font-weight: 400;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  user-select: none;
+}
+.rib-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rib-btn:hover {
+  color: var(--dark-red);
+  border-bottom-color: var(--dark-red);
+}
+
+/* Subscribe CTA (dark-red, hover soft-red) */
+.rib-btn.rib-subscribe {
+  color: #fff;
+  background: var(--soft-red);
+  border-radius: 4px;
+  border-bottom: 2px solid var(--dark-red);
+  margin: 2px;
+  padding: 4px 10px;
+  min-width: 68px;
+}
+.rib-btn.rib-subscribe:hover {
+  background: var(--bright-red);
+  color: #fff;
+  border-bottom-color: var(--soft-red);
+}
+
+/* Login */
+.rib-btn.rib-login {
+  color: var(--soft-red);
+}
+.rib-btn.rib-login:hover {
+  color: var(--dark-red);
+  border-bottom-color: var(--dark-red);
+}
+
+/* Toggle-Buttons (Recommendation, Instrumental) */
+.rib-btn.toggle {
+  color: var(--dark-grey);
+}
+.rib-btn.toggle:hover {
+  color: var(--soft-red);
+  border-bottom-color: var(--soft-red);
+}
+.rib-btn.toggle.active {
+  color: var(--soft-red);
+  border-bottom-color: var(--soft-red);
+  background: rgba(161, 37, 35, 0.08);
+  font-weight: 600;
+}
+.rib-btn.toggle.active svg {
+  stroke-width: 1.8;
+}
+
+/* Favorite: solides rotes Herz wenn aktiv */
+.rib-btn.rib-favorite.active {
+  color: var(--soft-red);
+  border-bottom-color: var(--soft-red);
+  background: rgba(161, 37, 35, 0.08);
+  font-weight: 600;
+}
+.rib-btn.rib-favorite.active svg {
+  fill: var(--soft-red);
+  stroke: var(--soft-red);
+}
+
+/* Membership-Badges als klickbare Mini-Vorschau (50x50, ohne Beschriftung) */
+.membership-badge-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 2px;
+  margin: 2px;
+  border-radius: 4px;
+  transition: opacity 0.15s;
+  text-decoration: none;
+}
+.membership-badge-btn img {
+  height: 50px;
+  width: 50px;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+  transition: transform 0.2s ease-out;
+}
+.membership-badge-btn:hover img {
+  transform: scale(1.05);
+}
+
+/* Ribbon-Formular-Streifen (Medium + Sorting, innerhalb der Form) */
+.rib-form-strip {
+  background: var(--light-beige);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 4px 12px;
+}
+.rib-seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  justify-content: center;
+}
+.rib-seg-label {
+  font-size: 11px;
+  color: var(--dark-grey);
+}
+.rib-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%23606060' stroke-width='1.5' d='m3 4.5 3 3 3-3'/%3E%3C/svg%3E") no-repeat right 8px center / 10px 10px;
+  border: 1px solid var(--light-grey);
+  padding: 5px 24px 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dark-grey);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  min-width: 90px;
+  letter-spacing: 0.3px;
+}
+.rib-select:focus {
+  outline: none;
+  border-color: var(--soft-red);
+}
+.rib-radio-group {
+  display: inline-flex;
+  border: 1px solid var(--light-grey);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+}
+.rib-radio-group input[type="radio"] {
+  display: none;
+}
+.rib-radio-group label {
+  padding: 5px 11px;
+  font-size: 11px;
+  color: var(--dark-grey);
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-right: 1px solid var(--light-grey);
+}
+.rib-radio-group label:last-of-type {
+  border-right: none;
+}
+.rib-radio-group label:hover {
+  background: var(--light-beige);
+  color: var(--dark-red);
+}
+.rib-radio-group input[type="radio"]:checked + label {
+  background: var(--soft-red);
+  color: #fff;
+}

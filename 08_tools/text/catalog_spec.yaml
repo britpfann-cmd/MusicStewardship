@@ -1,0 +1,84 @@
+# MusicStewardship Common Catalog
+# V1 — foundational design
+#
+# The common catalog is the convergence point for source-specific ingestion.
+# It is not an output format.
+
+entities:
+
+  Person:
+    purpose: "Unique identifiable person"
+    identity: "stable internal identity"
+    core_fields:
+      - name
+
+  Group:
+    purpose: "Unique identifiable performing group or ensemble"
+    identity: "stable internal identity"
+    core_fields:
+      - name
+
+  Song:
+    purpose: "Unique identifiable musical work"
+    identity: "stable internal identity"
+    core_fields:
+      - title
+
+  Event:
+    purpose: "Unique identifiable event when relevant"
+    identity: "stable internal identity"
+    core_fields:
+      - name
+
+  Performance:
+    purpose: "A uniquely identified occurrence/performance"
+    identity:
+      - song
+      - group
+      - other_persons_when_needed
+      - recording_date_when_needed
+    core_fields:
+      - song
+      - group
+      - persons
+      - recording_date
+      - identity_status
+
+  CatalogedInstance:
+    purpose: "A cataloged or documented representation of a Performance"
+    core_fields:
+      - performance
+      - source
+      - external_identifier
+      - source_evidence
+
+  Asset:
+    purpose: "An owned or accessible audio file representing a Performance"
+    core_fields:
+      - performance
+      - source
+      - path
+
+principles:
+
+  identity:
+    - "Core Performance information is only as large as necessary to uniquely identify the Performance."
+    - "Recording date may be required to distinguish otherwise similar performances."
+    - "Date precision must reflect the available evidence."
+    - "Imprecise dates may be provisional and later refined."
+    - "Conflicting evidence must be preserved rather than silently discarded."
+
+  provenance:
+    - "Source evidence is preserved."
+    - "External references permit traceback to authoritative sources."
+    - "Cataloged instances supplement Performance identity rather than redefining it."
+
+  views:
+    - "Purpose-specific information belongs in views."
+    - "DJ is one important view."
+    - "Views are derived from the common catalog."
+    - "The DJ-organized directory tree is an output of the DJ view."
+
+  extensibility:
+    - "Source-specific information may be retained as auxiliary evidence."
+    - "Future acoustic profiles may be associated with Performances."
