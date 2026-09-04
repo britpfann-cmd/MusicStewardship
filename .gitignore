@@ -36,3 +36,6 @@ desktop.ini# MusicStewardship ephemeral working area
 08_tools/text/tests/*_summary.csv
 08_tools/text/tests/*_issues.csv
 08_tools/text/tests/*_comparison*.csv
+
+# Browser-captured webpage analytics assets
+**/analytics_*.js
