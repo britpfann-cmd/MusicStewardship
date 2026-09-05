@@ -22,3 +22,12 @@ class TransformationRule:
             "target": self.target,
             "arguments": self.arguments,
         }
+
+    def apply(self, value, decoder):
+        """Apply the supplied decoder to a value."""
+        return decoder.decode(
+            value,
+            rule=self,
+            arguments=self.arguments,
+            **self.arguments,
+        )

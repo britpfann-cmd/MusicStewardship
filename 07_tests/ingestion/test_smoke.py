@@ -168,3 +168,44 @@ def test_ingestion_engine_accepts_decoder():
     engine = IngestionEngine(decoder=decoder)
 
     assert engine.decoder is decoder
+
+def test_ingestion_engine_with_copy_decoder_preserves_source():
+    decoder = CopyDecoder()
+    engine = IngestionEngine(decoder=decoder)
+
+    source = {"title": "Example", "artist": "Test Artist"}
+
+    result = engine.ingest(source)
+
+    assert result == source
+
+def test_ingestion_engine_without_decoder_preserves_source():
+    engine = IngestionEngine()
+
+    source = {"title": "Example", "artist": "Test Artist"}
+
+    assert engine.ingest(source) == source
+
+def test_ingestion_engine_passes_source_and_context_to_decoder():
+    class ContextDecoder:
+        def decode(self, value, **kwargs):
+            return {
+                "value": value,
+                "profile": kwargs["profile"],
+                "diagnostics": kwargs["diagnostics"],
+            }
+
+    profile = object()
+    diagnostics = object()
+
+    engine = IngestionEngine(
+        profile=profile,
+        diagnostics=diagnostics,
+        decoder=ContextDecoder(),
+    )
+
+    result = engine.ingest("source")
+
+    assert result["value"] == "source"
+    assert result["profile"] is profile
+    assert result["diagnostics"] is diagnostics

@@ -12,4 +12,12 @@ class CompoundDecoder(Decoder):
     name = "DECOMPOSE"
 
     def decode(self, value, **kwargs):
-        raise NotImplementedError
+        """Split a compound value and map parts to component names."""
+        separator = kwargs["separator"]
+        components = kwargs.get("components")
+        parts = value.split(separator)
+
+        if components is None:
+            return parts
+
+        return dict(zip(components, parts))
