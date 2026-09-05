@@ -9,4 +9,8 @@ class ClauseDecoder(Decoder):
     name = "CLAUSE"
 
     def decode(self, value, **kwargs):
-        raise NotImplementedError
+        """Return the clause value unchanged."""
+        if value is None:
+            return None
+
+        return value.strip()
