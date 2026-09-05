@@ -1,6 +1,5 @@
 """Core ingestion engine."""
 
-
 class IngestionEngine:
     """Orchestrates source ingestion and transformation."""
 
@@ -10,8 +9,12 @@ class IngestionEngine:
         self.decoder = decoder
 
     def ingest(self, source):
-     """Ingest a source record or collection."""
-     if self.decoder is None:
-        return source
+        """Ingest a source record or collection."""
+        if self.decoder is None:
+            return source
 
-     return self.decoder.decode(source)
+        return self.decoder.decode(
+            source,
+            profile=self.profile,
+            diagnostics=self.diagnostics,
+        )
