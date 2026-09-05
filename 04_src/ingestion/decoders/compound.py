@@ -15,7 +15,11 @@ class CompoundDecoder(Decoder):
         """Split a compound value and map parts to component names."""
         separator = kwargs["separator"]
         components = kwargs.get("components")
-        parts = value.split(separator)
+
+        if value is None:
+            return None
+
+        parts = [part.strip() for part in value.split(separator)]
 
         if components is None:
             return parts

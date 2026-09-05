@@ -95,4 +95,82 @@ def test_compound_decoder_handles_empty_value():
     assert result == {
         "ensemble": "",
     }
-    
+
+def test_compound_decoder_preserves_extra_parts():
+    decoder = CompoundDecoder()
+
+    result = decoder.decode(
+        "Ensemble / Performer / Extra",
+        separator=" / ",
+        components=["ensemble", "performer"],
+    )
+
+    assert result == {
+        "ensemble": "Ensemble",
+        "performer": "Performer",
+    }
+
+def test_compound_decoder_preserves_missing_components():
+    decoder = CompoundDecoder()
+
+    result = decoder.decode(
+        "Ensemble",
+        separator=" / ",
+        components=["ensemble", "performer"],
+    )
+
+    assert result == {
+        "ensemble": "Ensemble",
+    }
+
+def test_compound_decoder_handles_empty_value():
+    decoder = CompoundDecoder()
+
+    result = decoder.decode(
+        "",
+        separator=" / ",
+        components=["ensemble", "performer"],
+    )
+
+    assert result == {
+        "ensemble": "",
+    }
+
+
+def test_compound_decoder_strips_parts():
+    decoder = CompoundDecoder()
+
+    result = decoder.decode(
+        " Ensemble / Performer ",
+        separator=" / ",
+        components=["ensemble", "performer"],
+    )
+
+    assert result == {
+        "ensemble": "Ensemble",
+        "performer": "Performer",
+    }
+
+def test_compound_decoder_preserves_none():
+    decoder = CompoundDecoder()
+
+    result = decoder.decode(
+        None,
+        separator=" / ",
+        components=["ensemble", "performer"],
+    )
+
+    assert result is None
+
+
+def test_compound_decoder_accepts_empty_components():
+    decoder = CompoundDecoder()
+
+    result = decoder.decode(
+        "Ensemble / Performer",
+        separator=" / ",
+        components=[],
+    )
+
+    assert result == {}
+
