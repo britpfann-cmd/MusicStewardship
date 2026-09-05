@@ -35,4 +35,9 @@ def test_base_decoder_is_not_implemented():
     except NotImplementedError:
         pass
     else:
-        raise AssertionError("Base Decoder.decode() should not be implemented")       
+        raise AssertionError("Base Decoder.decode() should not be implemented")  
+
+def test_copy_decoder_has_expected_name():
+    decoder = CopyDecoder()
+
+    assert decoder.name == "COPY" 

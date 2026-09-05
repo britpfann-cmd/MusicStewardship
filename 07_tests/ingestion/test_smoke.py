@@ -4,6 +4,7 @@
 
 from ingestion.engine import IngestionEngine
 from ingestion.evidence import EvidenceRecord
+from ingestion.decoders.scalar import CopyDecoder
 
 
 def test_ingestion_engine_can_be_created():
@@ -80,3 +81,20 @@ def test_evidence_record_diagnostic():
         "values": values,
         "provenance": provenance,
     }    
+
+def test_ingestion_engine_preserves_decoder():
+    decoder = object()
+
+    engine = IngestionEngine(decoder=decoder)
+
+    assert engine.decoder is decoder  
+
+def test_ingestion_engine_uses_decoder():
+    class UpperDecoder:
+        def decode(self, value, **kwargs):
+            return value.upper()
+
+    decoder = UpperDecoder()
+    engine = IngestionEngine(decoder=decoder)
+
+    assert engine.ingest("example") == "EXAMPLE"
