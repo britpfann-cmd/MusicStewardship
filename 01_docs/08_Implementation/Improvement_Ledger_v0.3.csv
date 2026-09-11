@@ -1,0 +1,19 @@
+improvement_id,capability,state,horizon,description,evidence_or_note
+IMP-001,Source preservation/provenance,ACCOMPLISHED,Baseline,Preserve source values and provenance rather than treating external references as replacements.,Demonstrated in current architecture/observations.
+IMP-002,TTT source grammar/Rosetta interpretation,ACCOMPLISHED,Baseline,TTT-specific source grammar translated through versioned Rosetta rules.,v0.2 Rosetta regression sample: 12 source records.
+IMP-003,Orthogonal ingestion universe,ACCOMPLISHED,Baseline,"Information class, processing disposition, assurance, and provenance remain separate dimensions.",Established architecture.
+IMP-004,Work-item identity and processing state,ACCOMPLISHED,Baseline,Source record × Rosetta rule produces deterministic work items with persistent state.,313 work items recorded COMPLETE.
+IMP-005,Idempotent processing,ACCOMPLISHED,Baseline,Completed work items are skipped on repeat processing unless forced.,"Second pass: 0 processed, 313 skipped, 0 failed, 0 new observations."
+IMP-006,Processing observations/audit trail,ACCOMPLISHED,Baseline,"Processing emits inspectable observations with rule, source, operation, assurance, and evidence fields.",349 observations in baseline state.
+IMP-007,Residual handling and visibility,ACCOMPLISHED,Baseline,Residual observations are preserved and explicitly reported rather than treated as failures.,12 residual observations visible in v0.3 report.
+IMP-008,Human-facing processing report,ACCOMPLISHED,Baseline,"Workbook summarizes processing status, information classes, observations, residuals, operations, and assurance.",v0.3 report verified.
+IMP-009,Fix Summary,ACCOMPLISHED,Baseline,"Operational report identifies fixes, remaining review items, and verification status.",8 Fix Summary rows verified.
+IMP-010,Explicit runner stage reporting,ACCOMPLISHED,Baseline,Processing and reporting are separate stages; reporting failure propagates.,Verified in second pass.
+IMP-011,Versioned test artifacts,ACCOMPLISHED,Baseline,"Regression samples, prototype code, reports, and tests can be versioned as named artifacts.",v0.3 baseline established.
+IMP-012,Run-level process ledger,FORECAST,Next,"Persist each processing run, including all-skip runs, with counts, inputs, rules, versions, and outcome.",Not yet implemented; current log represents work-item state only.
+IMP-013,Dependency-aware invalidation/reprocessing,FORECAST,Next,Detect changed inputs/rules/dependencies and recursively reprocess affected work.,Architecture requirement; not yet implemented.
+IMP-014,Generic transformation engine,FORECAST,Next,Apply source-independent processing machinery to Rosetta/interpreter rules and emit uniform interchange CSV.,Next major implementation milestone.
+IMP-015,TTT Rosetta expansion,FORECAST,Next,Expand from regression sample coverage toward faithful handling of the full TTT source grammar.,"Current sample proves mechanism, not full-source completeness."
+IMP-016,Reference-library importer/entity reconciliation,FORECAST,Later,"Consume uniform interchange records and reconcile canonical entities, aliases, conflicts, and provisional identities.",Not yet implemented as the downstream generic importer.
+IMP-017,Human operational control interface,FORECAST,Later,"Provide review, exception, resume, reprocess, and run-history views over persistent process state.",Workbook is the current POC interface; full interface remains future work.
+IMP-018,Additional source Rosetta profiles,FORECAST,Later,Apply the same processing stream to other sources with smaller/source-specific rule sets.,Architecture established; TTT remains proving ground.
