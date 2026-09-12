@@ -47,3 +47,25 @@ The system should support continual refinement without requiring redesign.
 ## P7. Extensibility
 
 New metadata, object types, analyses, and applications should be accommodated without disrupting existing content.
+---
+
+## P8. Sandbox and Graduation
+
+Exploratory development should take place in a structured sandbox rather than prematurely altering production artifacts.
+
+Sandbox work is provisional. Experiments, discovery analyses, prototypes, and intermediate results may be discarded, superseded, or reorganized.
+
+When an experiment demonstrates durable value, its useful artifacts should be deliberately graduated into the appropriate production area:
+
+- implementation → `08_tools`
+- verification → `07_tests`
+- architectural or domain knowledge → `01_docs`
+- operational results → `06_runtime`
+
+Important discoveries should be preserved as knowledge even when the experimental implementation is discarded.
+
+The development lifecycle is:
+
+**Play → Discover → Test → Graduate → Operate**
+
+The sandbox is a workshop, not a second production tree.

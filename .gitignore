@@ -25,12 +25,17 @@ generated/
 # Operating system
 .DS_Store
 Thumbs.db
-desktop.ini# MusicStewardship ephemeral working area
+desktop.ini
+
+# MusicStewardship ephemeral working area
 99_sandbox/
+
 # Generated Python runtime artifacts
 *.pyc
+
 # Local ingest ledgers / working databases
 08_tools/text/tests/*.db
+
 # Generated validation/report output
 08_tools/text/tests/*_validation.csv
 08_tools/text/tests/*_summary.csv
@@ -39,3 +44,10 @@ desktop.ini# MusicStewardship ephemeral working area
 
 # Browser-captured webpage analytics assets
 **/analytics_*.js
+
+# Chat transfer/staging areas
+_from_chat/
+_to_chat/
+
+# Generated processing runtime
+06_runtime/

@@ -1,0 +1,27 @@
+source_element,source_field,notes
+source identity,source_id,TTT source identity
+source file,relative_path,complete source-relative path
+directory hierarchy,directory_path,source directory hierarchy
+filename,filename,original filename
+title,metadata_title,embedded/source title
+artist,metadata_artist,TTT artist representation
+album_artist,metadata_album_artist,source album artist
+composer,metadata_composer,TTT composer field
+author,metadata_composer,TTT composer/lyrics compound field; decoder must recognize Lyrics clause
+catalog_number,metadata_catalognumber,labeled Record Matrix Take compound
+record_number,metadata_record,already decoded record component when present
+matrix_number,metadata_matrix,already decoded matrix component when present
+take_number,metadata_take,already decoded take component when present
+recording_date,metadata_date,source recording date
+genre,metadata_genre,TTT genre vocabulary
+singer / performer text,metadata_artist,performer evidence may be embedded in artist
+conductor,metadata_conductor,source conductor
+source_media,metadata_source_media,source medium
+album,metadata_album,release title
+track,metadata_track,release track
+comment,metadata_comment,structured source assertions
+has_lyrics,,derived from recognized lyrics information
+instrumental,,derived from artist/performance evidence
+audio technical metadata,embedded_metadata_values,technical metadata where present
+TANGO-DJ reference,tango_dj_ref,external reference when present in a later enriched input
+reference metadata,,external reference assertion when present in a later enriched input
