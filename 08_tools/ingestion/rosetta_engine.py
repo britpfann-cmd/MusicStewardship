@@ -129,7 +129,7 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
     for row_no,row in enumerate(source_rows,start=2):
         sid=row.get("source_id","") or f"row-{row_no}"; source_record=row.get("relative_path") or row.get("filename") or str(row_no)
         for rule in rules:
-            elem=rule["source_element"]; field=bind.get(elem,""); value=row.get(field,"") if field else ""
+            elem=rule["source_element"]; field=rule.get("source_field") or bind.get(elem,""); value=row.get(field,"") if field else ""
             if not field and elem=="instrumental": value=row.get("metadata_artist","")
             if not field and elem=="has_lyrics": value=row.get("metadata_composer","")
             if not value or not rule_matches(rule,value): continue
