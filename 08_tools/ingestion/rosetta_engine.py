@@ -128,21 +128,92 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
     new_log=[]; new_obs=[]; skipped=0; processed=0
     for row_no,row in enumerate(source_rows,start=2):
         sid=row.get("source_id","") or f"row-{row_no}"; source_record=row.get("relative_path") or row.get("filename") or str(row_no)
+        semantic_values={}
         for rule in rules:
-            elem=rule["source_element"]; field=rule.get("source_field") or bind.get(elem,""); value=row.get(field,"") if field else ""
-            if not field and elem=="instrumental": value=row.get("metadata_artist","")
-            if not field and elem=="has_lyrics": value=row.get("metadata_composer","")
-            if not value or not rule_matches(rule,value): continue
-            wid=work_id(sid,source_record,rule["rule_id"]); fp=fingerprint(value)
+            elem=rule["source_element"]
+            direct_field=rule.get("source_field") or bind.get(elem,"")
+            input_semantic=rule.get("input_semantic_term") or ""
+            field=direct_field
+
+            if direct_field:
+                value=row.get(direct_field,"") or ""
+            elif input_semantic:
+                value=semantic_values.get(input_semantic,"")
+                field=f"semantic:{input_semantic}" if value else ""
+            else:
+                value=""
+
+            if not direct_field and not input_semantic and elem=="instrumental": value=row.get("metadata_artist","")
+            if not direct_field and not input_semantic and elem=="has_lyrics": value=row.get("metadata_composer","")
+            resolved_values = semantic_values.get(input_semantic, []) if input_semantic and not direct_field else [value]
+            resolved_values = [v for v in resolved_values if v]
+
+            if not resolved_values:
+                continue
+
+            combined_value = "\n".join(str(v) for v in resolved_values)
+            wid=work_id(sid,source_record,rule["rule_id"]); fp=fingerprint(combined_value)
             prior=completed.get(wid)
             if prior and prior.get("input_fingerprint")==fp and not force:
                 skipped+=1; continue
-            started=datetime.now(timezone.utc).isoformat(); attempt=int(prior.get("attempt",0))+1 if prior else 1
+
+            started=datetime.now(timezone.utc).isoformat()
+            attempt=int(prior.get("attempt",0))+1 if prior else 1
+            total_count=0
+
             try:
-                decoded,status=apply(rule,value,row); count=0
-                for item in decoded:
-                    new_obs.append({"run_id":run_id,"source_id":sid,"source_record":source_record,"source_element":elem,"source_field":field,"source_value":value,"rule_id":rule["rule_id"],"information_class":rule["information_class"],"operation":rule["operation"],"decoder":rule["decoder"],"target_entity":rule["target_entity"],"target_property":rule["target_property"],"target_relationship":rule["target_relationship"],"assurance":rule["assurance"],"preserve_source_value":rule["preserve_source_value"],"decoded_value":item,"status":status,"residual":"","evidence_basis":rule["evidence_basis"]}); count+=1
-                new_log.append({"run_id":run_id,"work_item_id":wid,"source_id":sid,"source_record":source_record,"rule_id":rule["rule_id"],"source_element":elem,"source_field":field,"input_fingerprint":fp,"status":"COMPLETE","attempt":attempt,"started_at":started,"completed_at":datetime.now(timezone.utc).isoformat(),"observation_count":count,"exception":"","engine_version":ENGINE_VERSION,"rosetta_version":rosetta_version})
+                for resolved_value in resolved_values:
+                    if not rule_matches(rule,resolved_value):
+                        continue
+
+                    decoded,status=apply(rule,resolved_value,row)
+
+                    if decoded:
+                        semantic_values.setdefault(elem,[])
+                        semantic_values[elem].extend(decoded)
+
+                    for item in decoded:
+                        new_obs.append({
+                            "run_id":run_id,
+                            "source_id":sid,
+                            "source_record":source_record,
+                            "source_element":elem,
+                            "source_field":field,
+                            "source_value":resolved_value,
+                            "rule_id":rule["rule_id"],
+                            "information_class":rule["information_class"],
+                            "operation":rule["operation"],
+                            "decoder":rule["decoder"],
+                            "target_entity":rule["target_entity"],
+                            "target_property":rule["target_property"],
+                            "target_relationship":rule["target_relationship"],
+                            "assurance":rule["assurance"],
+                            "preserve_source_value":rule["preserve_source_value"],
+                            "decoded_value":item,
+                            "status":status,
+                            "residual":"",
+                            "evidence_basis":rule["evidence_basis"]
+                        })
+                        total_count+=1
+
+                new_log.append({
+                    "run_id":run_id,
+                    "work_item_id":wid,
+                    "source_id":sid,
+                    "source_record":source_record,
+                    "rule_id":rule["rule_id"],
+                    "source_element":elem,
+                    "source_field":field,
+                    "input_fingerprint":fp,
+                    "status":"COMPLETE",
+                    "attempt":attempt,
+                    "started_at":started,
+                    "completed_at":datetime.now(timezone.utc).isoformat(),
+                    "observation_count":total_count,
+                    "exception":"",
+                    "engine_version":ENGINE_VERSION,
+                    "rosetta_version":rosetta_version
+                })
                 processed+=1
             except Exception as exc:
                 new_log.append({"run_id":run_id,"work_item_id":wid,"source_id":sid,"source_record":source_record,"rule_id":rule["rule_id"],"source_element":elem,"source_field":field,"input_fingerprint":fp,"status":"FAILED","attempt":attempt,"started_at":started,"completed_at":"","observation_count":0,"exception":repr(exc),"engine_version":ENGINE_VERSION,"rosetta_version":rosetta_version})
