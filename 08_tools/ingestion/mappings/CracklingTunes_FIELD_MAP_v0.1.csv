@@ -1,0 +1,25 @@
+﻿map_id,source,source_field,source_name,semantic_term,field_role,representation_level,status,notes
+CT-FIELD-001,CracklingTunes,source_id,source identity,source_identity,common,source,ESTABLISHED,Source-tree identity field.
+CT-FIELD-002,CracklingTunes,relative_path,source file,source_file,common,source,ESTABLISHED,Source-relative path.
+CT-FIELD-003,CracklingTunes,directory_path,directory hierarchy,source_directory_hierarchy,common,source,ESTABLISHED,Filesystem hierarchy.
+CT-FIELD-004,CracklingTunes,filename,filename,source_filename,common,source,ESTABLISHED,"Original filename, including baked character representations."
+CT-FIELD-005,CracklingTunes,metadata_title,TITLE,title,common,source→semantic,ESTABLISHED,Embedded TITLE field exposed by source_ingest.
+CT-FIELD-006,CracklingTunes,metadata_artist,ARTIST,artist_representation,common-source-representation,source,ESTABLISHED,Preserve complete CT artist representation before CT-specific interpretation.
+CT-FIELD-007,CracklingTunes,metadata_album_artist,ALBUMARTIST / ALBUM ARTIST,album_artist,common,source,ESTABLISHED,Two tag spellings were observed in CT material.
+CT-FIELD-008,CracklingTunes,metadata_album,ALBUM,release,common-release-representation,source→semantic,ESTABLISHED,CT embedded album value is release context; CTMM extraction remains source-specific.
+CT-FIELD-009,CracklingTunes,metadata_date,DATE,recording_date,common,source→semantic,ESTABLISHED,Embedded date; preserve supplied precision.
+CT-FIELD-010,CracklingTunes,metadata_composer,COMPOSER,composer,common,source→semantic,ESTABLISHED,Composer representation from embedded metadata.
+CT-FIELD-011,CracklingTunes,metadata_conductor,CONDUCTOR,conductor,common,source→semantic,ESTABLISHED,Field is present in common ingest output; may be blank on individual files.
+CT-FIELD-012,CracklingTunes,metadata_genre,GENRE,genre,common,source→semantic,ESTABLISHED,"CT examples include Tango, Vals, Milonga; retain source value before controlled lookup."
+CT-FIELD-013,CracklingTunes,metadata_track,TRACK,release_track_number,common,source→semantic,ESTABLISHED,Embedded TRACK is the release-position candidate. Distinct from historical source_track_number.
+CT-FIELD-014,CracklingTunes,metadata_comment,COMMENT,source_comment,common,source,ESTABLISHED,Preserve original comment before CT-specific clause interpretation.
+CT-FIELD-015,CracklingTunes,audio_format,audio format,audio_technical_metadata,common,supplemental,ESTABLISHED,Minimal common field; richer technical metadata may be added later.
+CT-FIELD-016,CracklingTunes,tango_dj_ref,TANGO-DJ reference,external_reference,common-external,external,OPTIONAL,Optional enrichment/reference field; does not gate ingestion.
+CT-FIELD-017,CracklingTunes,metadata_catalognumber,CATALOGNUMBER,source_catalog_number,CT-source,source,ESTABLISHED,"In tested CT files this contained label/matrix text, distinct from CATALOG #."
+CT-FIELD-018,CracklingTunes,metadata_ct_catalog_id,CATALOG #,ct_source_identifier,CT-source,source,PLANNED,Semantic target for embedded CT CATALOG #. Current generic source_ingest does not yet emit this dedicated field.
+CT-FIELD-019,CracklingTunes,filename_rule_values,filename CT identifier,ct_source_identifier,CT-source,source,ESTABLISHED,Current filename rule exposes CT identifier inside filename_rule_values; a future explicit field would be cleaner.
+CT-FIELD-020,CracklingTunes,source_side,CT identifier side,source_side,CT-source,decomposed,PLANNED,A/B component derived from CT identifier.
+CT-FIELD-021,CracklingTunes,source_take,CT identifier take,source_take,CT-source,decomposed,PLANNED,Numeric suffix component derived from CT identifier.
+CT-FIELD-022,CracklingTunes,source_track_number,source track number,source_track_number,CT-provenance,source,PLANNED,Historical staging/provenance value; do not map to release_track_number.
+CT-FIELD-023,CracklingTunes,filename_date,filename date,filename_recording_date,CT-source,derived,PLANNED,Filename-derived date; preserve separately from embedded recording_date.
+CT-FIELD-024,CracklingTunes,ct_identifier_corroboration,filename / embedded identifier agreement,identifier_corroboration,CT-derived,derived,PLANNED,Evidence of independent filename and embedded CATALOG # agreement.

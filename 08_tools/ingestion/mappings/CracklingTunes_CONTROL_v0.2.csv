@@ -1,0 +1,22 @@
+﻿control_id,source,source_name,source_field,semantic_term,representation_level,operation,decoder,target_entity,target_property,target_relationship,preserve_source_value,confidence,status,notes
+CT-CTRL-001,CracklingTunes,source identity,source_id,source_identity,source,SOURCE_CONTEXT,scalar,Source,name,,YES,VERY_HIGH,ESTABLISHED,Current analyzer supplies release-directory name; source identity normalization remains a separate control.
+CT-CTRL-002,CracklingTunes,source file,relative_path,source_file,source,COPY,scalar,Source Asset,source_path,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-003,CracklingTunes,directory hierarchy,directory_path,source_directory_hierarchy,source,SOURCE_CONTEXT,path,Source Context,original_path_hierarchy,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-004,CracklingTunes,filename,filename,source_filename,source,EXTRACT,filename,Source Asset,source_filename,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-005,CracklingTunes,title,metadata_title,title,source→semantic,COPY,scalar,Composition,title,,YES,HIGH,ESTABLISHED,
+CT-CTRL-006,CracklingTunes,artist,metadata_artist,artist_representation,source→semantic,DECOMPOSE,regex_findall,Ensemble,name,performs,YES,HIGH,ESTABLISHED,
+CT-CTRL-007,CracklingTunes,artist,metadata_artist,performer,source→semantic,DECOMPOSE,regex_findall,Person,name,performs,YES,MEDIUM,ESTABLISHED,
+CT-CTRL-008,CracklingTunes,artist,metadata_artist,instrumental,derived,DERIVE,regex_boolean,Performance,instrumental,,YES,HIGH,ESTABLISHED,
+CT-CTRL-009,CracklingTunes,album_artist,metadata_album_artist,album_artist,source,COPY,scalar,Ensemble,source_album_artist,,YES,HIGH,ESTABLISHED,
+CT-CTRL-010,CracklingTunes,album,metadata_album,release,source→semantic,REFERENCE,entity,Release,title,,YES,MEDIUM,ESTABLISHED,
+CT-CTRL-011,CracklingTunes,track,metadata_track,release_track_number,source→semantic,COPY,scalar,Release Track,track_number,orders_performance,YES,HIGH,ESTABLISHED,Uses embedded TRACK; historical source_track_number is not treated as release-track position.
+CT-CTRL-012,CracklingTunes,recording date,metadata_date,recording_date,source→semantic,STANDARDIZE,date,Recording,date,,YES,HIGH,ESTABLISHED,
+CT-CTRL-013,CracklingTunes,filename date,,filename_recording_date,source→derived,EXTRACT,regex,Source Assertion,filename_date,,YES,VERY_HIGH,ESTABLISHED,Supports DD_MM_YYYY and YYYY forms; preserve precision.
+CT-CTRL-014,CracklingTunes,CATALOG #,metadata_ct_catalog_id,ct_source_identifier,source,COPY,scalar,Identifier,source_catalog_id,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-015,CracklingTunes,filename CT identifier,filename_rule_values,ct_source_identifier,source,EXTRACT,regex,Identifier,source_catalog_id,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-016,CracklingTunes,CT identifier side,source_side,source_side,decomposed,COPY,scalar,Identifier,source_side,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-017,CracklingTunes,CT identifier take,source_take,source_take,decomposed,COPY,scalar,Identifier,source_take,,YES,VERY_HIGH,ESTABLISHED,
+CT-CTRL-018,CracklingTunes,source track number,source_track_number,source_track_number,source,COPY,scalar,Source Assertion,source_track_number,,YES,HIGH,ESTABLISHED,
+CT-CTRL-019,CracklingTunes,CATALOGNUMBER,metadata_catalognumber,source_catalog_number,source,ASSERT,scalar,Source Assertion,source_catalog_number,,YES,HIGH,ESTABLISHED,"Tested files showed label/matrix text here, distinct from CATALOG #."
+CT-CTRL-020,CracklingTunes,filename / embedded identifier agreement,ct_identifier_corroboration,identifier_corroboration,derived,ASSERT,scalar,Source Assertion,ct_identifier_corroboration,,YES,VERY_HIGH,ESTABLISHED,10/10 agreement in real 21.08 test.
+CT-CTRL-021,CracklingTunes,TANGO-DJ reference,tango_dj_ref,external_reference,external,REFERENCE,identifier,Source Assertion,external_reference,,YES,MEDIUM,OPTIONAL,

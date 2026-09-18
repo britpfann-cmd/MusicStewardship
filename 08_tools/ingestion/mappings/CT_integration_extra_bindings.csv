@@ -1,0 +1,4 @@
+"source_element","source_field","notes"
+"CT identifier suffix","source_catalog_id","CT catalog identifier from validated CT transition"
+"ALBUMARTIST","metadata_album_artist","Source album artist representation"
+"recording date","metadata_date","Source date at supplied precision"

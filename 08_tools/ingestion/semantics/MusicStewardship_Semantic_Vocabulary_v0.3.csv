@@ -1,0 +1,37 @@
+﻿semantic_term,definition,domain,representation_level,source_precedents,status,notes
+title,The title representation of the work supplied by a source.,library/core,source→semantic,Observed in CT/TTT; public precedents include title.,WORKING,
+performer,A performer role derived or referenced from source performance evidence; not assumed to be identical to the source Artist field.,library/core,derived/reference,TTT Artist field; CT artist representation,WORKING,Treat as an interpreted role. Preserve the original artist_representation.
+composer,A person credited as composer for a composition.,library/core,source→semantic,TTT provides composer information; CT also provides composer metadata.,WORKING,
+conductor,A person credited as conductor for a performance.,library/core,source→semantic,Present in common/TTT vocabulary; may be absent in a source.,WORKING,
+recording_date,"Date associated with the recording, preserving source precision.",library/core,source→semantic,CT and TTT both supply recording-date evidence.,WORKING,
+release,A source-issued release or release representation associated with one or more tracks/performances.,library/core,source→semantic,TTT Tagging Schema: Album,WORKING,The source label may be Album; MusicStewardship uses release to avoid making the source vocabulary authoritative.
+release_track_number,Position of a performance within a release.,library/core,source→semantic,Distinct from source_track_number and external_track_number.,WORKING,
+genre,Source genre/category interpreted into MusicStewardship vocabulary.,library/core,source→semantic,CT/TTT source genre vocabularies may require lookup.,WORKING,
+source_media,Source-provided representation of the physical or logical media associated with an item.,library/core,source→semantic,TTT Tagging Schema: Media,WORKING,TTT example explicitly records Media = TT/78.
+record_identifier,A record identifier component decomposed from source identifier evidence.,identifier,decomposed,TTT Catalog Number → Record,WORKING,Canonical library identifier concept remains under semantic review.
+matrix_identifier,A matrix identifier component decomposed from source identifier evidence.,identifier,decomposed,TTT Catalog Number → Matrix,WORKING,Canonical library identifier concept remains under semantic review.
+take_identifier,A take identifier component decomposed from source identifier evidence.,identifier,decomposed,TTT Catalog Number → Take,WORKING,Needs reconciliation with source_take before finalizing the distinction.
+source_identity,Identity of the source system or collection providing the record.,provenance,source,Common source-tree provenance.,WORKING,
+source_file,Source-relative file representation/path.,provenance,source,Preserve exact source file/path.,WORKING,
+source_directory_hierarchy,Directory hierarchy supplied by the source tree.,provenance,source,Context only; not canonical identity.,WORKING,
+source_filename,"Original filename representation, preserved exactly.",provenance,source,Includes baked/mojibake character representations.,WORKING,
+source_catalog_number,Source catalog-number representation before interpretation.,provenance,source,Distinct from source-specific identifiers and matrix identifiers.,WORKING,
+source_compound_identifier,An uninterpreted compound source identifier containing multiple identifier components.,provenance,source,TTT Tagging Schema: Catalog Number,WORKING,"TTT example contains Record, Matrix, and Take components in one source field."
+source_track_number,A source-provenance/staging track-like value.,provenance,source,Do not assume release-track semantics.,WORKING,
+source_side,Source identifier side component such as A/B.,provenance,decomposed,Observed in CT identifiers.,WORKING,
+source_take,Source-specific take component as represented by a source identifier.,provenance,decomposed,Observed in CT; distinct from take_identifier until semantics are settled.,WORKING,
+ct_source_identifier,"Crackling Tunes source identifier representation, e.g. CT...-A1.",provenance/source-specific,source,CT-specific term; filename and embedded CATALOG # corroborate in tested release.,WORKING,
+filename_recording_date,Recording-date evidence extracted specifically from a filename.,provenance/derived,derived,Preserves filename precision separately from embedded date.,WORKING,
+external_reference,Reference identifier linking an observation to an external provider.,external,external,"Used for TANGO-DJ.AT, Discogs, future providers.",WORKING,
+identifier_corroboration,Evidence that independent identifier representations agree.,evidence/derived,derived,CT 21.08 test showed filename and CATALOG # agreement.,WORKING,
+artist_representation,Complete source-provided artist field preserved before role interpretation.,evidence/source,source,TTT Tagging Schema: Artist; CT embedded ARTIST,WORKING,TTT documentation demonstrates that Artist can be a compound representation such as 'Orquesta Típica Victor / Instr.'.
+album_artist,Source album-artist representation.,evidence/source,source,Preserve source value; may support ensemble evidence.,WORKING,
+has_lyrics,Derived indication that a performance has lyrics.,supplemental/derived,derived,TTT source grammar precedent.,WORKING,
+instrumental,Indication that a performance is instrumental.,supplemental/derived,derived,TTT Artist values using 'Instr.'; CT/TTT performance evidence,WORKING,Derive from source evidence rather than treating Artist as the canonical boolean field.
+pitch_hz,Pitch/frequency supplemental data.,supplemental,supplemental,Observed in TTT comment-derived vocabulary.,WORKING,
+recording_key,Key associated with the recording.,supplemental,supplemental,Observed in TTT comment-derived vocabulary.,WORKING,
+score_key,Key associated with the composition/score.,supplemental,supplemental,Observed in TTT comment-derived vocabulary.,WORKING,
+audio_technical_metadata,Technical properties of an audio asset.,supplemental,supplemental,Common audio probe domain.,WORKING,
+source_comment,Original source comment text preserved before interpretation.,evidence/source,source,Supports later clause extraction without replacing source text.,WORKING,
+encoded_by,Source-provided encoding/provenance text associated with the audio asset.,provenance/supplemental,source,TTT Tagging Schema: Encoded by,WORKING,"Preserve raw value. Do not decompose into publisher, copyright, collection, or encoder semantics without further evidence."
+source_image,Source-provided image or artwork reference associated with an audio item.,supplemental/provenance,source,TTT Tagging Schema: Image,WORKING,Preserve the source reference; artwork-role semantics can be modeled later.

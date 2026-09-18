@@ -1,0 +1,30 @@
+﻿control_id,source,source_name,source_field,input_role,semantic_term,representation_level,operation,decoder,target_entity,target_property,target_relationship,preserve_source_value,confidence,status,notes
+TTT-CTRL-001,TangoTimeTravel,source identity,source_id,SOURCE,source_identity,source,SOURCE_CONTEXT,scalar,Source,name,,YES,VERY_HIGH,ESTABLISHED,
+TTT-CTRL-002,TangoTimeTravel,source file,relative_path,SOURCE,source_file,source,COPY,scalar,Source Asset,source_path,,YES,VERY_HIGH,ESTABLISHED,
+TTT-CTRL-003,TangoTimeTravel,directory hierarchy,directory_path,SOURCE,source_directory_hierarchy,source,SOURCE_CONTEXT,path,Source Context,original_path_hierarchy,,YES,VERY_HIGH,ESTABLISHED,
+TTT-CTRL-004,TangoTimeTravel,filename,filename,SOURCE,source_filename,source,EXTRACT,filename,Source Asset,source_filename,,YES,VERY_HIGH,ESTABLISHED,
+TTT-CTRL-005,TangoTimeTravel,title,metadata_title,SOURCE,title,source→semantic,COPY,scalar,Composition,title,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-006,TangoTimeTravel,artist,metadata_artist,SOURCE,artist_representation,source→semantic,COPY,scalar,Source Assertion,source_artist,performs,YES,HIGH,ESTABLISHED,TTT Tagging Schema documents Artist as a source field; preserve the complete representation before role interpretation.
+TTT-CTRL-008,TangoTimeTravel,artist,metadata_artist,DERIVATION_INPUT,instrumental,derived,DERIVE,regex_boolean,Performance,instrumental,,YES,HIGH,ESTABLISHED,Use metadata_artist as derivation input; derive instrumental from artist_representation evidence such as 'Instr.'.
+TTT-CTRL-009,TangoTimeTravel,album_artist,metadata_album_artist,SOURCE,album_artist,source,COPY,scalar,Ensemble,source_album_artist,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-010,TangoTimeTravel,composer,metadata_composer,SOURCE,composer,source→semantic,DECOMPOSE,list,Person,name,composed,YES,HIGH,ESTABLISHED,
+TTT-CTRL-011,TangoTimeTravel,catalog_number,metadata_catalognumber,SOURCE,source_compound_identifier,source→decomposed,DECOMPOSE,labeled_fields,Identifier,component,identifies_source_context,YES,HIGH,ESTABLISHED,
+TTT-CTRL-012,TangoTimeTravel,record_number,metadata_record,DERIVED,record_identifier,decomposed,COPY,scalar,Identifier,record_number,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-013,TangoTimeTravel,matrix_number,metadata_matrix,DERIVED,matrix_identifier,decomposed,COPY,scalar,Identifier,matrix_number,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-014,TangoTimeTravel,take_number,metadata_take,DERIVED,take_identifier,decomposed,COPY,scalar,Take,identifier,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-015,TangoTimeTravel,recording_date,metadata_date,SOURCE,recording_date,source→semantic,STANDARDIZE,date,Recording,date,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-016,TangoTimeTravel,genre,metadata_genre,SOURCE,genre,source→semantic,LOOKUP,vocabulary,Performance,genre,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-018,TangoTimeTravel,conductor,metadata_conductor,SOURCE,conductor,source→semantic,REFERENCE,entity,Person,name,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-019,TangoTimeTravel,source_media,metadata_source_media,SOURCE,source_media,source→semantic,LOOKUP,vocabulary,Media,type,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-020,TangoTimeTravel,album,metadata_album,SOURCE,release,source→semantic,REFERENCE,entity,Release,title,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-021,TangoTimeTravel,track,metadata_track,SOURCE,release_track_number,source→semantic,COPY,scalar,Release,track_number,orders_performance,YES,HIGH,ESTABLISHED,
+TTT-CTRL-022,TangoTimeTravel,comment,metadata_comment,SOURCE,source_comment,source→decomposed,DECOMPOSE,clauses,Source Assertion,clause,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-023,TangoTimeTravel,comment,metadata_comment,SOURCE,pitch_hz,supplemental,EXTRACT,regex,Source Asset,pitch_hz,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-024,TangoTimeTravel,comment,metadata_comment,SOURCE,recording_key,supplemental,EXTRACT,regex,Recording,key,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-025,TangoTimeTravel,comment,metadata_comment,SOURCE,score_key,supplemental,EXTRACT,regex,Composition,score_key,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-026,TangoTimeTravel,has_lyrics,has_lyrics,SOURCE,has_lyrics,derived,DERIVE,regex_boolean,Performance,has_lyrics,,YES,MEDIUM,ESTABLISHED,
+TTT-CTRL-028,TangoTimeTravel,audio technical metadata,embedded_metadata_values,SOURCE,audio_technical_metadata,supplemental,COPY,scalar,Source Asset,technical_properties,,YES,HIGH,ESTABLISHED,
+TTT-CTRL-029,TangoTimeTravel,TANGO-DJ reference,tango_dj_ref,SOURCE,external_reference,external,REFERENCE,identifier,Source Assertion,external_reference,,YES,MEDIUM,OPTIONAL,
+TTT-CTRL-030,TangoTimeTravel,Encoded by,,SOURCE,encoded_by,source,COPY,scalar,Source Assertion,source_encoded_by,,YES,HIGH,ESTABLISHED,TTT Tagging Schema explicitly documents Encoded by; preserve raw provenance text.
+TTT-CTRL-031,TangoTimeTravel,Image,,SOURCE,source_image,source,COPY,scalar,Source Assertion,source_image,,YES,HIGH,ESTABLISHED,TTT Tagging Schema explicitly documents Image/artwork reference; preserve the source reference.
+TTT-CTRL-032,TangoTimeTravel,Artist → performer interpretation,,DERIVATION_INPUT,performer,derived,REFERENCE,entity,Person,name,performs,YES,MEDIUM,WORKING,Interpret artist_representation into performer evidence using source-specific TTT conventions.

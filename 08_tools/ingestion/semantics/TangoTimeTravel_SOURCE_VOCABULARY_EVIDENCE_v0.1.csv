@@ -1,0 +1,15 @@
+﻿evidence_id,ttt_field_name,documented_usage,example_value,musicstewardship_term,evidence_status
+TTT-VOC-001,Title,The title shown for the audio item.,De mi sentir,title,CONFIRMED
+TTT-VOC-002,Artist,Source artist/performance representation.,Orquesta Típica Victor / Instr.,artist_representation,CONFIRMED
+TTT-VOC-003,Album,Source release/album representation.,"Todos de la Orquesta Típica Victor 1925-1930, Tango Time Travel 11",release,CONFIRMED
+TTT-VOC-004,Comment,Source comment field.,(blank in the displayed example),source_comment,CONFIRMED
+TTT-VOC-005,Date,Recording/date representation.,1926-06-24,recording_date,CONFIRMED
+TTT-VOC-006,Track,Release track position representation.,021,release_track_number,CONFIRMED
+TTT-VOC-007,Genre,Source genre category.,Tango,genre,CONFIRMED
+TTT-VOC-008,Album Artist,Source album artist representation.,Orquesta Típica Victor,album_artist,CONFIRMED
+TTT-VOC-009,Catalog Number,"Compound source identifier containing Record, Matrix, and Take.","Record: 79686-A, Matrix: 860, Take: 1",source_compound_identifier,CONFIRMED
+TTT-VOC-010,Composer,Composer credit representation.,A.Verri - V.M.Landolfi - A.Galucci,composer,CONFIRMED
+TTT-VOC-011,Conductor,Conductor credit representation.,Luis Petrucelli,conductor,CONFIRMED
+TTT-VOC-012,Encoded by,Source encoding/provenance description.,"© 2024 TangoTimeTravel.org, 78-rpm shellac collection of first fixations",encoded_by,CONFIRMED
+TTT-VOC-013,Media,Source media representation.,TT/78,source_media,CONFIRMED
+TTT-VOC-014,Image,Artwork/image reference associated with the item.,Pochette ... 79686-A.jpg,source_image,CONFIRMED

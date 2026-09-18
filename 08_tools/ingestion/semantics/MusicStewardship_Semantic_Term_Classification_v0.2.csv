@@ -1,0 +1,37 @@
+﻿semantic_term,current_evidence,ct_status,ttt_status,proposed_classification,reason,decision_status
+title,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both sources expose a title representation and COMMON processing succeeded.,WORKING
+recording_date,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both sources provide recording-date evidence.,WORKING
+release_track_number,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both sources provide release-position track values distinct from source_track_number.,WORKING
+genre,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both sources expose genre; controlled vocabulary lookup can remain common.,WORKING
+source_identity,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Source-tree provenance concept is common.,WORKING
+source_file,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both preserve source-relative file/path.,WORKING
+source_directory_hierarchy,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both source trees provide directory context.,WORKING
+source_filename,Observed in CT and TTT,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Both preserve the original filename; interpretation is source-specific.,WORKING
+external_reference,Observed in CT and TTT control models; optional in source-only runs,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,External references are a common semantic concept even when absent from a particular source record.,WORKING
+audio_technical_metadata,CT observed 10/10; TTT observed 78/134,CONFIRMED,CONFIRMED,COMMON_CONFIRMED,Technical metadata is common in concept; observed coverage is optional/partial.,WORKING
+album_artist,Mapped in CT and TTT; COMMON observed in TTT test only,CANDIDATE,CONFIRMED,COMMON_CANDIDATE,"CT mapping exists, but the present CT common run did not establish equivalent populated observations.",WORKING
+composer,Mapped in CT and TTT; COMMON observed in TTT test only,CANDIDATE,CONFIRMED,COMMON_CANDIDATE,"CT exposes composer metadata, so absence from the common CT observation run is not evidence of source specificity.",WORKING
+conductor,Mapped in CT and TTT; COMMON observed in TTT test only,CANDIDATE,CONFIRMED,COMMON_CANDIDATE,CT generic ingest schema includes the field even though the tested records were not populated.,WORKING
+release,Mapped in CT and TTT,CANDIDATE,CONFIRMED,COMMON_CANDIDATE,TTT documents Album; MusicStewardship interprets this as release context while retaining source vocabulary.,WORKING
+source_media,Mapped in CT/TTT architecture; TTT observed,CANDIDATE,CONFIRMED,COMMON_CANDIDATE,TTT explicitly documents Media = TT/78; likely common but CT confirmation remains useful.,WORKING
+source_comment,Mapped in CT and TTT; not yet emitted as a common rule in current baseline,CANDIDATE,CANDIDATE,COMMON_CANDIDATE,Both sources have source comments; preservation is plausibly common and interpretation is source-specific.,WORKING
+artist_representation,Mapped in both sources; no common rule currently,CANDIDATE,CANDIDATE,COMMON_CANDIDATE,TTT documentation confirms Artist is a source representation; preserve it before role interpretation.,WORKING
+performer,TTT mapped; CT mapped in current control model; no common rule currently,CANDIDATE,CANDIDATE,COMMON_CANDIDATE,Treat as an interpreted performer role rather than a direct synonym for source Artist.,WORKING
+instrumental,Derived/mapped in both source control models; no common rule currently,CANDIDATE,CANDIDATE,COMMON_CANDIDATE,Derived performance property; source-specific evidence can feed a common concept.,WORKING
+has_lyrics,TTT mapped; not established in CT test,OPEN,CANDIDATE,COMMON_CANDIDATE,"Potentially common performance property, but current evidence is insufficient for confirmation.",WORKING
+record_identifier,TTT mapped,OPEN,CONFIRMED,COMMON_CANDIDATE,TTT documentation directly supports a decomposed Record identifier concept.,WORKING
+matrix_identifier,TTT mapped,OPEN,CONFIRMED,COMMON_CANDIDATE,TTT documentation directly supports a decomposed Matrix identifier concept.,WORKING
+take_identifier,TTT mapped,OPEN,CONFIRMED,COMMON_CANDIDATE,TTT documentation directly supports a decomposed Take identifier concept; reconcile with CT source_take later.,WORKING
+source_catalog_number,CT mapped,CONFIRMED,OPEN,CT_SPECIFIC_FOR_NOW,Presently a CT source representation; do not promote to common until another source demonstrates the same semantics.,WORKING
+ct_source_identifier,CT mapped,CONFIRMED,OPEN,SOURCE_SPECIFIC,Explicitly CT-specific identifier representation.,WORKING
+filename_recording_date,CT mapped,CONFIRMED,OPEN,SOURCE_SPECIFIC,Filename-derived CT evidence; source syntax-specific.,WORKING
+identifier_corroboration,CT mapped,CONFIRMED,OPEN,SOURCE_SPECIFIC,Current evidence is specifically CT filename/CATALOG # agreement.,WORKING
+source_side,CT mapped,CONFIRMED,OPEN,SOURCE_SPECIFIC_FOR_NOW,A/B side component of CT source identifier; may later generalize to a broader identifier component.,WORKING
+source_take,CT mapped,CONFIRMED,OPEN,SOURCE_SPECIFIC_FOR_NOW,Current CT representation; requires reconciliation with take_identifier.,WORKING
+source_track_number,CT mapped,CONFIRMED,OPEN,PROVENANCE_SPECIFIC,Historical/provenance field; explicitly not the same as release_track_number.,WORKING
+source_compound_identifier,TTT mapped,OPEN,CONFIRMED,COMMON_CANDIDATE,"TTT documents Catalog Number as a compound containing Record, Matrix, and Take.",WORKING
+pitch_hz,TTT mapped,OPEN,CONFIRMED,SUPPLEMENTAL_CANDIDATE,Supplemental technical/music information; not yet demonstrated across sources.,WORKING
+recording_key,TTT mapped,OPEN,CONFIRMED,SUPPLEMENTAL_CANDIDATE,Potential common supplemental concept; source evidence currently from TTT comments.,WORKING
+score_key,TTT mapped,OPEN,CONFIRMED,SUPPLEMENTAL_CANDIDATE,Potential common supplemental concept; source evidence currently from TTT comments.,WORKING
+encoded_by,TTT Tagging Schema documents the source field.,OPEN,CONFIRMED,SUPPLEMENTAL_CANDIDATE,TTT explicitly documents Encoded by; preserve as source provenance until further semantic decomposition is justified.,WORKING
+source_image,TTT Tagging Schema documents the source field.,OPEN,CONFIRMED,SUPPLEMENTAL_CANDIDATE,TTT explicitly documents Image as a source artwork/image reference.,WORKING

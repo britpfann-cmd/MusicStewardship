@@ -1,0 +1,20 @@
+# FromJae source grammar
+# V1 — narrow filename observation only
+#
+# Interpretation boundary:
+# Numeric filename components are preserved as uninterpreted source
+# observations. They are NOT assigned canonical track, recording,
+# catalog, year, or other identifier meaning.
+#
+# Directory organization is preserved by Explorer Tree and is available
+# as source context. TANDA directories are source structural evidence,
+# but are not interpreted here.
+
+sources:
+  - FromJae
+
+filename_patterns:
+  # Track21
+  - '^Track(?P<numeric_component>\d+)$'
+
+metadata_fields: []

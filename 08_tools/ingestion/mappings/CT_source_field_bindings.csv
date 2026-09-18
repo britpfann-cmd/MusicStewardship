@@ -1,0 +1,16 @@
+source_element,source_field,notes
+source identity,source_id,Crackling Tunes source identity
+source file,relative_path,Complete source-relative path
+directory hierarchy,directory_path,Source directory hierarchy
+filename,filename,Original filename
+release name,source_release,Crackling Tunes monthly release representation
+CATALOG #,source_catalog_id,Embedded CT catalog/side/take identifier; preserve complete source value
+title,metadata_title,Source title
+artist,metadata_artist,Crackling Tunes artist representation
+album_artist,metadata_album_artist,Source album artist representation
+filename date,metadata_date,Date extracted from filename when present; do not silently override other dates
+source track number,metadata_track,Derived release-track position from CT identifier suffix
+source catalog side,source_side,Decomposed CT side designation
+source catalog take,source_take,Decomposed CT take designation
+source audio format,audio_format,Source representation format
+TANGO-DJ reference,tango_dj_ref,External reference when later reconciliation is available
