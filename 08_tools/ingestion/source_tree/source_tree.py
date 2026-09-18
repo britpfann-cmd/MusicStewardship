@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+"""
+MusicStewardship source-tree scanner.
+
+Non-destructively inventories the complete supplied source tree:
+- the supplied root
+- every directory entry, including empty directories
+- every file entry
+
+The scanner preserves observed names and relative paths. It does not
+normalize filename text or assign musical meaning.
+"""
+
+from __future__ import annotations
+
 import argparse
 import csv
 import hashlib
@@ -27,12 +42,12 @@ OUTPUT_FIELDS = [
 ]
 
 
-def stable_object_id(source_id, relative_path):
+def stable_object_id(source_id: str, relative_path: str) -> str:
     value = f"{source_id}|{relative_path}".encode("utf-8")
     return hashlib.sha256(value).hexdigest()[:24]
 
 
-def classify_file(path):
+def classify_file(path: Path) -> tuple[str, str]:
     name = path.name
     parts = {part.lower() for part in path.parts}
 
@@ -61,53 +76,102 @@ def classify_file(path):
     return "OTHER_SOURCE_FILE", ""
 
 
-def discover(root, source_id):
+def directory_record(root: Path, path: Path, source_id: str) -> dict[str, str]:
+    relative = path.relative_to(root)
+    relative_text = str(relative) if str(relative) != "." else ""
+    parts = relative.parts
+
+    parent = str(relative.parent) if str(relative.parent) != "." else ""
+    depth = len(parts)
+
+    return {
+        "source_id": source_id,
+        "source_root": str(root),
+        "relative_path": relative_text,
+        "filename": path.name if relative_text else root.name,
+        "extension": "",
+        "source_object_type": "DIRECTORY",
+        "artifact_reason": "",
+        "top_level_collection": parts[0] if parts else "",
+        "directory_path": parent,
+        "directory_depth": str(max(depth - 1, 0)),
+        "file_stem": "",
+        "file_size": "",
+        "file_mtime_ns": str(path.stat().st_mtime_ns),
+        "source_object_id": stable_object_id(source_id, relative_text),
+        "metadata_status": "NOT_APPLICABLE",
+    }
+
+
+def file_record(root: Path, path: Path, source_id: str) -> dict[str, str]:
+    relative = path.relative_to(root)
+    relative_text = str(relative)
+    object_type, artifact_reason = classify_file(path)
+    parts = relative.parts
+    directory_path = (
+        str(relative.parent)
+        if str(relative.parent) != "."
+        else ""
+    )
+
+    stat = path.stat()
+
+    return {
+        "source_id": source_id,
+        "source_root": str(root),
+        "relative_path": relative_text,
+        "filename": path.name,
+        "extension": path.suffix.lower(),
+        "source_object_type": object_type,
+        "artifact_reason": artifact_reason,
+        "top_level_collection": parts[0] if parts else "",
+        "directory_path": directory_path,
+        "directory_depth": str(len(parts) - 1),
+        "file_stem": path.stem,
+        "file_size": str(stat.st_size),
+        "file_mtime_ns": str(stat.st_mtime_ns),
+        "source_object_id": stable_object_id(source_id, relative_text),
+        "metadata_status": "NOT_YET_READ",
+    }
+
+
+def discover(root: str | Path, source_id: str) -> list[dict[str, str]]:
     root = Path(root).resolve()
-    records = []
 
-    for path in sorted(root.rglob("*")):
-        if not path.is_file():
-            continue
+    if not root.exists():
+        raise FileNotFoundError(f"Source root does not exist: {root}")
+    if not root.is_dir():
+        raise NotADirectoryError(f"Source root is not a directory: {root}")
 
-        relative = path.relative_to(root)
-        object_type, artifact_reason = classify_file(path)
+    records: list[dict[str, str]] = []
 
-        top_level = (
-            relative.parts[0]
-            if len(relative.parts) > 0
-            else ""
-        )
+    # The supplied root is itself a source-tree node.
+    records.append(directory_record(root, root, source_id))
 
-        directory_path = (
-            str(relative.parent)
-            if str(relative.parent) != "."
-            else ""
-        )
+    # Record directories explicitly. This preserves empty directories and
+    # avoids reconstructing hierarchy later from file paths.
+    directories = sorted(
+        (p for p in root.rglob("*") if p.is_dir()),
+        key=lambda p: (str(p.relative_to(root)).casefold(),
+                       str(p.relative_to(root))),
+    )
 
-        records.append({
-            "source_id": source_id,
-            "source_root": str(root),
-            "relative_path": str(relative),
-            "filename": path.name,
-            "extension": path.suffix.lower(),
-            "source_object_type": object_type,
-            "artifact_reason": artifact_reason,
-            "top_level_collection": top_level,
-            "directory_path": directory_path,
-            "directory_depth": len(relative.parts) - 1,
-            "file_stem": path.stem,
-            "file_size": path.stat().st_size,
-            "file_mtime_ns": path.stat().st_mtime_ns,
-            "source_object_id": stable_object_id(
-                source_id, str(relative)
-            ),
-            "metadata_status": "NOT_YET_READ",
-        })
+    for path in directories:
+        records.append(directory_record(root, path, source_id))
+
+    files = sorted(
+        (p for p in root.rglob("*") if p.is_file()),
+        key=lambda p: (str(p.relative_to(root)).casefold(),
+                       str(p.relative_to(root))),
+    )
+
+    for path in files:
+        records.append(file_record(root, path, source_id))
 
     return records
 
 
-def write_csv(records, output):
+def write_csv(records: list[dict[str, str]], output: str | Path) -> None:
     output = Path(output)
     output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -117,9 +181,9 @@ def write_csv(records, output):
         writer.writerows(records)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Discover and classify every file in a source package."
+        description="Non-destructively inventory every entry in a supplied source tree."
     )
     parser.add_argument("root")
     parser.add_argument("--source-id", required=True)
@@ -129,16 +193,14 @@ def main():
     records = discover(args.root, args.source_id)
     write_csv(records, args.output)
 
-    counts = {}
+    counts: dict[str, int] = {}
     for record in records:
         kind = record["source_object_type"]
         counts[kind] = counts.get(kind, 0) + 1
 
     print(f"Source objects: {len(records)}")
-
     for kind in sorted(counts):
         print(f"{kind}: {counts[kind]}")
-
     print(f"CSV written: {args.output}")
 
 
