@@ -189,6 +189,12 @@ def main():
     ap.add_argument("tree_dir", type=Path)
     ap.add_argument("rules", type=Path)
     ap.add_argument("--output", required=True, type=Path)
+    ap.add_argument(
+        "--evidence-output",
+        required=False,
+        type=Path,
+        help="Optional JSON output for structured filename-decoder evidence.",
+    )
     a = ap.parse_args()
 
     dirs = read_csv(
@@ -211,6 +217,7 @@ def main():
     metadata_fields = rules.get("metadata_fields", [])
 
     rows = []
+    filename_evidence = []
 
     for f in fs:
         if f.get("is_audio") != "YES":
@@ -260,6 +267,29 @@ def main():
         if metadata:
             evidence.append("embedded_metadata")
 
+        if status == "MATCHED":
+            for field_name, field_value in filename_data.items():
+                filename_evidence.append({
+                    "source_object": {
+                        "source_id": sid,
+                        "source_root": source_root,
+                        "relative_path": relative_path,
+                        "filename": f.get("filename", ""),
+                    },
+                    "evidence": {
+                        "evidence_channel": "source_specific",
+                        "evidence_type": "filename_rule",
+                        "source_locator": f"filename.rule.{rule_id}.{field_name}",
+                        "raw_value": field_value,
+                        "normalized_value": field_value,
+                        "extraction_method": "filename_regex",
+                        "decoder": a.rules.stem,
+                        "rule_id": rule_id,
+                        "rule_field": field_name,
+                        "status": "observed",
+                    },
+                })
+
         row = {
             "source_id": sid,
             "relative_path": relative_path,
@@ -308,6 +338,36 @@ def main():
         rows.append(row)
 
     write_csv(a.output, rows)
+
+    if a.evidence_output:
+        evidence_payload = {
+            "schema": "musicstewardship.source_specific_evidence.v1",
+            "decoder": a.rules.stem,
+            "evidence_channel": "source_specific",
+            "evidence_type": "filename_rule",
+            "source_objects": filename_evidence,
+            "summary": {
+                "source_objects": len({
+                    (
+                        x["source_object"]["source_id"],
+                        x["source_object"]["source_root"],
+                        x["source_object"]["relative_path"],
+                    )
+                    for x in filename_evidence
+                }),
+                "observations": len(filename_evidence),
+            },
+        }
+
+        a.evidence_output.parent.mkdir(parents=True, exist_ok=True)
+        a.evidence_output.write_text(
+            json.dumps(
+                evidence_payload,
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
 
     matched = sum(
         x["filename_rule_status"] == "MATCHED"
