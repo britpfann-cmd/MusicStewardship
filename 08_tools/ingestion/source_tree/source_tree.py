@@ -19,8 +19,12 @@ import hashlib
 from pathlib import Path
 
 RECOGNIZED_AUDIO_EXTENSIONS = {
-    ".flac", ".mp3", ".wav", ".m4a",
-    ".mp4", ".aac", ".ogg", ".opus",
+    # Lossless / uncompressed
+    ".flac", ".wav", ".aif", ".aiff", ".alac", ".ape", ".wv",
+    ".tta", ".caf", ".dsf", ".dff", ".sd2",
+
+    # Lossy / compressed
+    ".mp3", ".m4a", ".mp4", ".aac", ".ogg", ".opus", ".wma",
 }
 
 OUTPUT_FIELDS = [
