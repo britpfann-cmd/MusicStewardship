@@ -1,0 +1,95 @@
+{
+  "schema": "musicstewardship.d_entity_population.v1",
+  "entities": [
+    {
+      "entity_id": "entity:000001",
+      "entity_type": "source_context_entity",
+      "name": "CALO MIGUEL / TANDA CALO BERON",
+      "attributes": {
+        "source_context": [
+          "MUSICA CIUDADANA",
+          "1 - TANGOS",
+          "CALO MIGUEL"
+        ],
+        "source_grouping_label": [
+          "TANDA CALO BERON"
+        ]
+      },
+      "provenance": {
+        "type": "established_library_knowledge",
+        "note": "D1 deterministic test fixture"
+      }
+    },
+    {
+      "entity_id": "entity:000002",
+      "entity_type": "source_context_entity",
+      "name": "SEXTETO 1929",
+      "attributes": {
+        "source_context": [
+          "MUSICA CIUDADANA",
+          "SEXTETO 1929"
+        ],
+        "source_grouping_label": []
+      },
+      "provenance": {
+        "type": "established_library_knowledge",
+        "note": "D1 negative-control fixture"
+      }
+    },
+    {
+      "entity_id": "entity:000003",
+      "entity_type": "source_context_entity",
+      "name": "CALO MIGUEL / OTHER GROUPING",
+      "attributes": {
+        "source_context": [
+          "MUSICA CIUDADANA",
+          "1 - TANGOS",
+          "CALO MIGUEL"
+        ],
+        "source_grouping_label": [
+          "OTHER GROUPING"
+        ]
+      },
+      "provenance": {
+        "type": "established_library_knowledge",
+        "note": "D1 partial-match control: context only"
+      }
+    },
+    {
+      "entity_id": "entity:000004",
+      "entity_type": "source_context_entity",
+      "name": "OTHER CONTEXT / TANDA CALO BERON",
+      "attributes": {
+        "source_context": [
+          "OTHER CONTEXT"
+        ],
+        "source_grouping_label": [
+          "TANDA CALO BERON"
+        ]
+      },
+      "provenance": {
+        "type": "established_library_knowledge",
+        "note": "D1 partial-match control: grouping only"
+      }
+    },
+    {
+      "entity_id": "entity:000005",
+      "entity_type": "source_context_entity",
+      "name": "CALO MIGUEL / TANDA CALO BERON — DUPLICATE CONTROL",
+      "attributes": {
+        "source_context": [
+          "MUSICA CIUDADANA",
+          "1 - TANGOS",
+          "CALO MIGUEL"
+        ],
+        "source_grouping_label": [
+          "TANDA CALO BERON"
+        ]
+      },
+      "provenance": {
+        "type": "established_library_knowledge",
+        "note": "D1 ambiguity control: exact duplicate correspondence"
+      }
+    }
+  ]
+}
