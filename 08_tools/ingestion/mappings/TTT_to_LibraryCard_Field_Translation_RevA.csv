@@ -1,0 +1,24 @@
+source_field,canonical_field,translation_type,retain_source_as_residual,notes
+metadata_title,title,DIRECT,NO,TTT embedded Title
+filename_rule_values.title,title,DIRECT,NO,TTT filename title candidate
+metadata_artist,artist,DIRECT,NO,TTT Artist is retained as source performance attribution
+metadata_album_artist,orchestra_or_album_artist,DIRECT,NO,TTT Album Artist
+metadata_date,recording_date,DIRECT,NO,TTT Date
+metadata_genre,genre,DIRECT,NO,TTT Genre
+metadata_composer,composer,DIRECT,NO,TTT Composer
+metadata_conductor,conductor,DIRECT,NO,TTT Conductor
+metadata_record,recording_identifier,LABELED,YES,Record identifier
+metadata_matrix,recording_identifier,LABELED,YES,Matrix identifier
+metadata_take,recording_identifier,LABELED,YES,Take identifier
+metadata_catalognumber,recording_identifier,LABELED,YES,Catalog Number compound identifier
+metadata_track,sequence_number_candidate,DIRECT,NO,Release track position
+filename_rule_values.release_track_number,sequence_number_candidate,DIRECT,NO,Filename release track number
+filename_rule_values.title,filename_leading_text_candidate,NO_MAP,NO,Not used as leading text because TTT rule explicitly identifies title
+metadata_source_media,residual_evidence,RESIDUAL,YES,TTT Media
+metadata_comment,residual_evidence,RESIDUAL,YES,TTT Comment
+metadata_encoded_by,residual_evidence,RESIDUAL,YES,TTT Encoded by
+embedded_metadata_values,residual_evidence,RAW,YES,Complete raw embedded metadata string retained
+filename_rule_values,residual_evidence,RAW,YES,Complete raw filename-rule values retained
+directory_path,source_context,DIRECT,NO,Source directory context
+directory_name,source_context,DIRECT,NO,Source directory name
+hierarchy_signature,source_context,DIRECT,NO,Source hierarchy signature

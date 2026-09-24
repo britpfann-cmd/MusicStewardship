@@ -273,3 +273,14 @@ The Library Card is the point at which C's work becomes a portable, inspectable 
 The card is sufficiently complete to build a catalog directly, while preserving the native provenance necessary for later assessment, refinement, and reprocessing.
 
 
+
+
+## Addendum — 2026-09-24 Internal Entity Indexing Boundary
+
+The Rev A Library Card remains the common source-to-catalog exchange artifact and does not expose internal entity identity as a user-facing naming system.
+
+After canonical Library Card construction, the catalog may maintain an internal entity index keyed by opaque entity IDs. These IDs are for relationships and indexing only. They are not intended for display to users.
+
+Entity/name association is therefore downstream of source translation. Source names remain on the Library Card; internal entity references may be attached to the managed catalog/index representation.
+
+User-facing preferred and short names are presentation-layer properties and are not replacements for source names.

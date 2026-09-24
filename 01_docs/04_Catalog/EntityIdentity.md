@@ -111,3 +111,21 @@ new entity identity.
 > **A provisional conclusion is useful knowledge, not an error. The catalog
 > should be able to learn without losing what it previously knew.**
 
+
+
+## Addendum — 2026-09-24 Seed Vocabulary and Presentation Names
+
+The first major Restorer collection, TTT, will seed the initial entity/name vocabulary. This is a practical bootstrapping measure, not an assertion that TTT is authoritative.
+
+Subsequent collections contribute additional observed names. Different names are initially treated as candidate representations of an existing entity when the available evidence supports that association; the source observation is always preserved.
+
+An external public reference such as TANGO-DJ.AT may be used as a **name/reference vocabulary source**. MusicStewardship does not copy its recording values as catalog truth merely because a name occurs there.
+
+Internal entity identifiers are opaque stable keys. They exist for indexing and relationships and are not intended for user-facing display.
+
+An entity may have many observed names. User-facing presentation is separate from identity:
+
+- `preferred_name` is a presentation choice;
+- `short_name` is an optional compact presentation alias, particularly useful for DJ output.
+
+A user's presentation choices do not change the underlying entity identity or source observations.

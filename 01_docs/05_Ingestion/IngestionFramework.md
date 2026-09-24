@@ -300,3 +300,31 @@ The system's objective is:
 > **maximize the accuracy, completeness, usefulness, and provenance of music we actually possess.**
 
 The system must not turn reference gaps into music rejection.
+
+
+## Addendum — 2026-09-24 Collection Import and CSV Boundary
+
+The initial library-building implementation shall use **one canonical CSV public interface** for all source collections.
+
+Source-specific grammars and translation tables may differ, but every source must be translated into the same canonical CSV field vocabulary. The canonical vocabulary begins with the union of the established Restorer field definitions and is extended only when a demonstrated source requirement cannot be represented without loss.
+
+A source-specific translation table is a reference artifact, preferably CSV, and is part of the auditable source profile. It maps source vocabulary to canonical fields and identifies information that is retained as residual/unparsed source text.
+
+The rule is:
+
+> **No source information is discarded because the current model does not yet know how to interpret it.**
+
+The canonical CSV is therefore the interchange boundary. Downstream library-card construction, indexing, and entity association consume the canonical CSV rather than source-specific structures.
+
+The first end-to-end proving source is Tango Time Travel (TTT), because its dataset is unusually information-rich. TTT is a seed source for names and vocabulary, not an authority source.
+
+The planned initial collection order is:
+
+1. TTT
+2. Crackling Tunes (CT)
+3. Tango Tunes (TT)
+4. the small TS collection
+5. fromJae
+6. ToTango
+
+A complete source collection import is successful only when every terminal track/object produces a canonical CSV record and the build evidence demonstrates that no source record was silently dropped.

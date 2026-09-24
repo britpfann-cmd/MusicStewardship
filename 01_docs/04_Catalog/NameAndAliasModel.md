@@ -56,3 +56,14 @@ Differences in attribution are observations requiring evaluation. A source asser
 ## Self-correcting behavior
 
 The name system must support later evidence establishing that two names refer to one entity, one name refers to multiple entities, or an earlier association was incorrect.
+
+
+## Addendum — 2026-09-24 Preferred and Short Names
+
+The name register distinguishes observed/source names from presentation aliases.
+
+An observed name retains its source and provenance. A `preferred_name` is a user-facing presentation choice. A `short_name` is a separate optional presentation choice intended for compact outputs such as DJ catalogs.
+
+The same observed name may also be selected as a preferred or short presentation name; these are still conceptually different facts.
+
+The initial default preferred-name candidate may be selected from the most widely used equivalent observed name in the accumulated corpus, but this is a presentation heuristic rather than an identity rule. Different users may select different preferred and short names while sharing the same underlying entities and records.
