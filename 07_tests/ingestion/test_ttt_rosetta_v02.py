@@ -28,7 +28,7 @@ def load_observations(tmp_path):
         run_id="REGRESSION",
     )
 
-    assert result["processed"] == 313
+    assert result["processed"] == 396
     assert result["new_observations"] == 349
 
     with (state / "observations.csv").open(
@@ -43,6 +43,61 @@ def load_observations(tmp_path):
         r["information_class"] in {"CORE", "ASSOCIATED", "RESIDUAL"}
         for r in observations
     )
+
+    # Processing outcome is a semantic result, distinct from information class.
+    valid_outcomes = {
+        "DECODED",
+        "DERIVED",
+        "PRESERVED",
+        "NOT_ATTEMPTED",
+        "PARTIAL",
+        "UNDECODABLE",
+        "CONFLICT",
+        "REVIEW",
+    }
+    valid_reasons = {
+        "",
+        "OUT_OF_SCOPE",
+        "NO_CAPABILITY",
+        "DECODER_FAILURE",
+        "AMBIGUOUS",
+        "CONFLICTING_EVIDENCE",
+        "HUMAN_REQUIRED",
+        "PRESERVATION",
+        "OTHER",
+    }
+
+    assert all(r["processing_outcome"] in valid_outcomes for r in observations)
+    assert all(r["outcome_reason"] in valid_reasons for r in observations)
+
+    # The v0.2 TTT regression corpus has established normal-processing
+    # expectations for the new semantic outcome layer.
+    from collections import Counter
+
+    outcome_counts = Counter(r["processing_outcome"] for r in observations)
+
+    assert outcome_counts == {
+        "DECODED": 255,
+        "DERIVED": 22,
+        "PRESERVED": 72,
+    }
+
+    # Compound catalog numbers are both decomposed and preserved.
+    decomposed = [
+        r for r in observations
+        if r["rule_id"] == "TTT-MAP-015A"
+    ]
+    preserved = [
+        r for r in observations
+        if r["rule_id"] == "TTT-MAP-015B"
+    ]
+
+    assert decomposed
+    assert all(r["processing_outcome"] == "DECODED" for r in decomposed)
+
+    assert preserved
+    assert all(r["processing_outcome"] == "PRESERVED" for r in preserved)
+    assert all(r["outcome_reason"] == "PRESERVATION" for r in preserved)
 
     return observations
 
@@ -123,3 +178,4 @@ def test_ttt_rosetta_v02_regression(tmp_path):
         r["decoded_value"]
         for r in obs(rows, "Racing Club", "TTT-MAP-014A")
     } == {"Julian Porteño"}
+

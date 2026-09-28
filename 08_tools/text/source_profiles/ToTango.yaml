@@ -1,0 +1,44 @@
+# ToTango source grammar
+# SANDBOX candidate v0.1
+#
+# Conservative first pass:
+# Preserve the source's principal filename boundary.
+# Do not yet infer orchestra/year/singer from artist_token.
+
+sources:
+  - ToTango
+
+filename_patterns:
+
+  # Dominant ToTango form:
+  # Biagi39Falgas_Dichas Que Vivi
+  # Aieta30_Arana De Oro
+  # Aker Bilk_Only You
+  - '^(?P<artist_token>.+?)_(?P<title>.+?)$'
+
+  # Older/exception form:
+  # TroiloGrela - Nunca tuvo novio
+  # TipicaPortena31Ibanez - Confesion
+  - '^(?P<artist_token>.+?)\s+-\s+(?P<title>.+?)$'
+
+  # Residual single-token title/name:
+  # Milord
+  - '^(?P<unparsed_name>.+?)$'
+
+metadata_fields:
+  - title
+  - artist
+  - album
+  - date
+  - composer
+  - conductor
+  - record
+  - matrix
+  - take
+  - genre
+  - source_media
+  - track
+  - album_artist
+  - catalognumber
+  - comment
+  - encoded_by

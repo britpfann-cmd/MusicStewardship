@@ -1,0 +1,5 @@
+"source_element","source_field","notes"
+"source_identity","source_id","ToTango source identity"
+"source_file","relative_path","Complete source-relative path"
+"source_directory_hierarchy","directory_path","Original directory hierarchy"
+"source_filename","filename","Original filename"

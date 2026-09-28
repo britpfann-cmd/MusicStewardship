@@ -90,7 +90,7 @@ def build_records(tree,candidates,metadata,plan=None):
     for node in nodes:
         if not is_terminal_file(node): continue
         root=root_path(node.get("source_root") or default_root); rel=clean_rel(node.get("relative_path")); name=str(node.get("name","")); ext=extension_of(node); rid=f"candidate:{len(records)+1:06d}"
-        record={"candidate_record_id":rid,"schema":SCHEMA,"status":"candidate","source":{"source_root":root,"relative_path":rel,"filename":name,"extension":ext,"entry_type":node.get("entry_type","FILE")},"candidate_attributes":{},"observations":[],"residual_evidence":[],"conflicts":[],"lineage":{"source_object_key":source_key(root,rel)}}
+        record={"candidate_record_id":rid,"schema":SCHEMA,"status":"candidate","source_object_id":node.get("source_object_id"),"source":{"source_root":root,"relative_path":rel,"filename":name,"extension":ext,"entry_type":node.get("entry_type","FILE")},"candidate_attributes":{},"observations":[],"residual_evidence":[],"conflicts":[],"lineage":{"source_object_key":source_key(root,rel)}}
         for i,obs in enumerate(build_directory_observations(node),1): add_observation(record,obs,None,"directory",f"directory:{i:06d}")
         key=source_key(root,rel)
         for i,item in enumerate(ci.get(key,[]),1):

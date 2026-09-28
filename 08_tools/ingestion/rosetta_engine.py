@@ -10,7 +10,13 @@ import argparse, csv, re, hashlib
 from pathlib import Path
 from datetime import datetime, timezone
 
-INFO_CLASSES = {"CORE", "ASSOCIATED", "RESIDUAL"}
+from processing_outcome_vocabulary import (
+    INFORMATION_CLASSES,
+    PROCESSING_OUTCOMES,
+    OUTCOME_REASONS,
+)
+
+INFO_CLASSES = INFORMATION_CLASSES
 OPERATIONS = {"COPY", "RENAME", "STANDARDIZE", "DECOMPOSE", "COMBINE", "LOOKUP",
               "EXTRACT", "PATH_EXTRACT", "DERIVE", "REFERENCE", "IGNORE",
               "SOURCE_CONTEXT", "ASSERT"}
@@ -21,8 +27,9 @@ PROCESS_FIELDS = ["run_id","work_item_id","source_id","source_record","rule_id",
 OBS_FIELDS = ["run_id","source_id","source_record","source_element","source_field",
              "source_value","rule_id","information_class","operation","decoder",
              "target_entity","target_property","target_relationship","assurance",
-             "preserve_source_value","decoded_value","status","residual","evidence_basis"]
-ENGINE_VERSION = "0.3-poc"
+             "preserve_source_value","decoded_value","status",
+             "processing_outcome","outcome_reason","residual","evidence_basis"]
+ENGINE_VERSION = "0.4-processing-outcome"
 
 
 def read_csv(path: Path):
@@ -69,6 +76,43 @@ def regex_extract(text, pattern, findall=False):
     m=rx.search(text)
     if not m: return [], "NO_MATCH"
     return [m.group(1).strip()] if m.lastindex else [m.group(0).strip()], "EMITTED"
+
+def classify_processing_outcome(rule, execution_status):
+    """
+    Translate low-level generic operation status into the controlled
+    processing-outcome vocabulary.
+
+    This classification is deliberately generic.  Source-specific
+    semantics remain in the Rosetta control/binding layers.
+    """
+    op = (rule.get("operation") or "").upper()
+    status = (execution_status or "").upper()
+
+    if status == "IGNORED":
+        return "NOT_ATTEMPTED", "OUT_OF_SCOPE"
+
+    if status == "NO_MATCH":
+        return "UNDECODABLE", ""
+
+    if status == "ERROR":
+        return "REVIEW", "DECODER_FAILURE"
+
+    if status.startswith("UNSUPPORTED_OPERATION:"):
+        return "NOT_ATTEMPTED", "NO_CAPABILITY"
+
+    if status == "EMITTED":
+        if op == "COPY":
+            return "PRESERVED", "PRESERVATION"
+
+        if op == "DERIVE":
+            return "DERIVED", ""
+
+        return "DECODED", ""
+
+    # Conservative fallback: do not silently call an unknown execution
+    # state successful.
+    return "REVIEW", "OTHER"
+
 
 def apply(rule, value, row):
     op=rule["operation"].upper(); dec=(rule.get("decoder") or "scalar").lower(); text=value or ""; pattern=(rule.get("decoder_pattern") or "").strip()
@@ -167,6 +211,9 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
                         continue
 
                     decoded,status=apply(rule,resolved_value,row)
+                    processing_outcome,outcome_reason = classify_processing_outcome(
+                        rule, status
+                    )
 
                     if decoded:
                         semantic_values.setdefault(elem,[])
@@ -191,6 +238,8 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
                             "preserve_source_value":rule["preserve_source_value"],
                             "decoded_value":item,
                             "status":status,
+                            "processing_outcome":processing_outcome,
+                            "outcome_reason":outcome_reason,
                             "residual":"",
                             "evidence_basis":rule["evidence_basis"]
                         })

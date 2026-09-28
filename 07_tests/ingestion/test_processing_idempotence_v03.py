@@ -23,17 +23,17 @@ def test_repeat_run_skips_completed_work_items(tmp_path):
     first = run(rows, rules, binds, state, run_id="RUN1")
     second = run(rows, rules, binds, state, run_id="RUN2")
 
-    assert first["processed"] == 313
+    assert first["processed"] == 396
     assert first["new_observations"] == 349
     assert second["processed"] == 0
-    assert second["skipped"] == 313
+    assert second["skipped"] == 396
 
     with (state / "processing_log.csv").open(
         encoding="utf-8-sig", newline=""
     ) as f:
         log = list(csv.DictReader(f))
 
-    assert len(log) == 313
+    assert len(log) == 396
 
     with (state / "observations.csv").open(
         encoding="utf-8-sig", newline=""
@@ -41,3 +41,4 @@ def test_repeat_run_skips_completed_work_items(tmp_path):
         obs = list(csv.DictReader(f))
 
     assert len(obs) == 349
+

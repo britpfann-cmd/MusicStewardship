@@ -30,7 +30,7 @@ def main():
             ap.error("--rules is required with --tree-dir")
         ingest_csv=args.output_dir/"source_ingest.csv"
         evidence=args.output_dir/"source_specific_evidence.json"
-        cmd=[sys.executable,str(Path(__file__).with_name("source_ingest.py")),
+        cmd=[sys.executable,str(Path(__file__).parent.parent / "text" / "source_ingest.py"),
              str(args.tree_dir),str(args.rules),"--output",str(ingest_csv),
              "--evidence-output",str(evidence)]
         subprocess.run(cmd,check=True)
@@ -49,3 +49,4 @@ def main():
 
 if __name__=="__main__":
     main()
+

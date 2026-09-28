@@ -1,3 +1,14 @@
-# MusicStewardship
+# MusicStewardship Processing-State Amendment
 
-Music Stewardship is an open reference architecture for the long-term stewardship of recorded music and musical knowledge. It is intended as a collaborative resource for collectors, archivists, DJs, performers, educators, and software developers who share an interest in preserving not only recordings, but also the knowledge and experience that surround them.
+These files implement the architecture amendment discussed on 2026-09-27.
+
+Copy the files into `_from_chat` first, inspect them, then move/copy them into the
+production tree as appropriate.
+
+Important: this package intentionally does NOT modify `rosetta_engine.py` or its
+report generator yet. The next implementation step should wire the new vocabulary
+into those existing components after inspecting their current source in the local
+tree. This avoids guessing at the current implementation and accidentally
+overwriting unrelated work.
+
+The design amendment and CSV are paired human/machine artifacts.

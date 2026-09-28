@@ -1,0 +1,20 @@
+dimension,value,meaning,reporting_significance
+information_class,CORE,Minimum information required for the applicable processing model,Not itself a success/failure indicator
+information_class,ASSOCIATED,Additional useful interpreted information,Not itself a success/failure indicator
+information_class,RESIDUAL,Information retained without incorporation into an interpreted result,Not itself a failure indicator
+processing_outcome,DECODED,Information successfully decoded,Successful processing
+processing_outcome,DERIVED,Information successfully derived from evidence,Successful processing
+processing_outcome,PRESERVED,Source representation retained,Normal non-destructive behavior
+processing_outcome,NOT_ATTEMPTED,No interpretation was attempted,Informational unless scope requires processing
+processing_outcome,PARTIAL,Only part of intended interpretation succeeded,Attention
+processing_outcome,UNDECODABLE,Attempted interpretation could not decode the value,Attention/capability gap
+processing_outcome,CONFLICT,Relevant evidence or interpretations conflict,Attention
+processing_outcome,REVIEW,Human judgment is required,Attention
+outcome_reason,OUT_OF_SCOPE,Information was deliberately outside current processing scope,Explain not-attempted/residual state
+outcome_reason,NO_CAPABILITY,Current processing capability does not support the required interpretation,Capability gap
+outcome_reason,DECODER_FAILURE,Applicable decoder failed to produce the intended result,Processing exception
+outcome_reason,AMBIGUOUS,Available evidence supports more than one interpretation,Review
+outcome_reason,CONFLICTING_EVIDENCE,Independent evidence disagrees,Review
+outcome_reason,HUMAN_REQUIRED,Automated processing cannot safely decide,Review
+outcome_reason,PRESERVATION,Original source representation retained as part of non-destructive processing,Informational
+outcome_reason,OTHER,Other controlled explanation,Context dependent
