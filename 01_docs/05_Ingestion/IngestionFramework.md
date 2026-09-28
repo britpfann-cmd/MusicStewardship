@@ -198,6 +198,15 @@ normalization_rule
 normalization_type
 ```
 
+### Source-semantic boundary
+
+Source grammar may establish a semantic role when that role is reliably encoded by the source itself. For example, a source may encode a principal performer representation, an associated performer representation, or a source recording-year representation.
+
+Source interpretation shall stop where a stronger conclusion requires knowledge external to the source grammar. Entity identity or type (for example, Person versus Ensemble), canonical identity, and more specific participant roles shall be deferred to downstream reference/entity reconciliation unless the source itself provides sufficient evidence.
+
+The governing rule is:
+
+> **Decode what the source encodes; do not use source grammar to manufacture knowledge that belongs to entity or reference reconciliation.**
 ## 9. External normalization
 
 External systems such as TANGO-DJ may have their own transposition or representation rules.
