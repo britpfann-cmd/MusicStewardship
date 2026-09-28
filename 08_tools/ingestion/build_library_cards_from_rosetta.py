@@ -105,10 +105,20 @@ def main():
         semantic_targets={
             ("Composition","title"):"title",
             ("Recording","date"):"recording_date",
+            ("Ensemble","source_album_artist"):"orchestra_or_album_artist",
+            ("Release","title"):"source_album",
+            ("Performance","genre"):"genre",
+            ("Person","name","credit:Composer"):"composer",
+            ("Person","name","credit:Conductor"):"conductor",
+            ("Identifier","component","record/matrix/take"):"recording_identifier",
         }
         for o in rosetta_obs:
+            entity=o.get("target_entity","")
+            prop=o.get("target_property","")
+            relationship=o.get("target_relationship","")
             canon=semantic_targets.get(
-                (o.get("target_entity",""),o.get("target_property",""))
+                (entity,prop,relationship),
+                semantic_targets.get((entity,prop))
             )
             value=o.get("decoded_value","")
             if canon and value:
@@ -181,6 +191,7 @@ def main():
 
 if __name__=="__main__":
     main()
+
 
 
 

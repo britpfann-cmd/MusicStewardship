@@ -135,3 +135,89 @@ def test_common_recombination_totango_v02(tmp_path):
     assert principal[0]["rule_id"] == "TOT-CTRL-010"
     assert associated[0]["rule_id"] == "TOT-CTRL-012"
 
+
+TTT_SOURCE = (
+    INGEST / "tests"
+    / "TTT_rosetta_engine_v0.2_regression_sample.csv"
+)
+TTT_MAPPING = (
+    INGEST / "mappings"
+    / "TTT_to_MusicStewardship_Rosetta_v0.2.csv"
+)
+TTT_BINDINGS = (
+    INGEST / "mappings"
+    / "TTT_source_field_bindings.csv"
+)
+TTT_CANDIDATE_ASSEMBLER = ASSEMBLER
+TTT_RUN_ID = "TTT_COMMON_RECOMBINATION_REGRESSION"
+
+
+def build_ttt_cards(tmp_path):
+    rows = read_csv(TTT_SOURCE)
+    rules = read_csv(TTT_MAPPING)
+    bindings = read_csv(TTT_BINDINGS)
+
+    state = tmp_path / "ttt_state"
+    result = run(
+        rows,
+        rules,
+        bindings,
+        state,
+        run_id=TTT_RUN_ID,
+    )
+
+    assert result["failed"] == 0
+    assert result["processed"] == 396
+    assert result["new_observations"] == 349
+
+    output = tmp_path / "ttt_library_cards.csv"
+    report = tmp_path / "ttt_report.json"
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(TTT_CANDIDATE_ASSEMBLER),
+            str(TTT_SOURCE),
+            "--public-map", str(PUBLIC_MAP),
+            "--observations", str(state / "observations.csv"),
+            "--run-id", TTT_RUN_ID,
+            "--output", str(output),
+            "--report", str(report),
+        ],
+        check=True,
+    )
+
+    with output.open(encoding="utf-8-sig", newline="") as f:
+        cards = list(csv.DictReader(f))
+
+    assert len(cards) == 12
+    return {c["filename"]: c for c in cards}
+
+
+def test_common_recombination_ttt_v02(tmp_path):
+    cards = build_ttt_cards(tmp_path)
+
+    comme = cards["001 - Comme il faut.flac"]
+
+    assert array_value(comme, "title") == ["Comme il faut"]
+    assert array_value(comme, "recording_date") == ["1938-07-03"]
+    assert array_value(
+        comme, "orchestra_or_album_artist"
+    ) == ["Aníbal Troilo"]
+    assert array_value(comme, "recording_identifier") == [
+        "record=7160-A",
+        "matrix=9326",
+        "take=1",
+    ]
+    assert array_value(comme, "genre") == ["Tango"]
+    assert array_value(comme, "source_album") == [
+        "Todos de Aníbal Troilo 1938-1945, Tango Time Travel 13"
+    ]
+    assert array_value(comme, "composer") == ["Eduardo Arolas"]
+    assert array_value(comme, "conductor") == ["Aníbal Troilo"]
+
+    # More-specific performer roles are not manufactured by recombination.
+    for card in cards.values():
+        assert array_value(card, "artist") == []
+        assert array_value(card, "singer") == []
+
