@@ -216,7 +216,7 @@ Revision A defines the public Library Card field set used by the tested C-to-D e
 
 The definitive Rev A field definition is maintained in:
 
-`99_sandbox\MusicStewardship_Library_Card_Field_Definitions_RevA.csv`
+`01_docs\05_Ingestion\MusicStewardship_Library_Card_Field_Definitions_RevA.csv`
 
 That artifact defines, for every public field:
 
