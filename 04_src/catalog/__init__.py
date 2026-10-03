@@ -1,0 +1,1 @@
+"""MusicStewardship catalog persistence package."""
