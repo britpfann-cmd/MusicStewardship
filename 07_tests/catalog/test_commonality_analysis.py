@@ -110,6 +110,27 @@ def test_commonality_consolidates_candidate_paths(tmp_path):
             ),
         )
 
+        conn.execute(
+            """
+            INSERT INTO cataloged_instance_evidence (
+                cataloged_instance_evidence_id,
+                cataloged_instance_id,
+                library_card_id,
+                relationship_status,
+                reason,
+                created_at
+            )
+            VALUES (?, ?, ?, 'ACTIVE', ?, ?)
+            """,
+            (
+                f"CIE-{n}",
+                ci_id,
+                card_id,
+                "test provenance",
+                "2026-10-03T00:00:00Z",
+            ),
+        )
+
         values = {
             "title": ["Chiqué", "Chique"],
             "orchestra_or_album_artist": ["Osvaldo Pugliese"],
@@ -159,7 +180,7 @@ def test_commonality_consolidates_candidate_paths(tmp_path):
     }
 
     assert report["analysis_revision"] == (
-        "catalog_commonality_analysis.v0.2"
+        "catalog_commonality_analysis.v0.3"
     )
     assert report["identity_effect"] == "NONE"
 
@@ -170,8 +191,36 @@ def test_commonality_consolidates_candidate_paths(tmp_path):
 
     candidate_set = candidate["candidate_sets"][0]
 
+    assert candidate_set["candidate_entity_type"] == "RECORDING"
+    assert candidate_set["resolution_status"] == "UNRESOLVED"
+    assert candidate_set["identity_effect"] == "NONE"
     assert candidate_set["member_ci_ids"] == ["CI-1", "CI-2"]
     assert candidate_set["comparison_path_count"] == 2
+
+    assert candidate_set["members"] == [
+        {
+            "cataloged_instance_id": "CI-1",
+            "active_library_card_evidence": [
+                {
+                    "library_card_id": "CARD-1",
+                    "source_object_id": "SOURCE-1",
+                    "source_object_key": "TEST:SOURCE-1",
+                    "source_record_revision": "test",
+                }
+            ],
+        },
+        {
+            "cataloged_instance_id": "CI-2",
+            "active_library_card_evidence": [
+                {
+                    "library_card_id": "CARD-2",
+                    "source_object_id": "SOURCE-2",
+                    "source_object_key": "TEST:SOURCE-2",
+                    "source_record_revision": "test",
+                }
+            ],
+        },
+    ]
 
     corroboration = candidate_set["corroboration"]
 

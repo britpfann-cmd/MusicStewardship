@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import Any
 
 
-ANALYSIS_REVISION = "catalog_commonality_analysis.v0.2"
+ANALYSIS_REVISION = "catalog_commonality_analysis.v0.3"
 
 DEFAULT_COMBINATIONS = (
     ("title",),
@@ -99,6 +99,47 @@ def load_population(conn: sqlite3.Connection):
         )
 
     return rows, by_ci
+
+
+def load_ci_source_evidence(conn: sqlite3.Connection):
+    """Load active CI -> Library Card provenance for reporting."""
+    rows = conn.execute(
+        """
+        SELECT
+            cie.cataloged_instance_id,
+            lc.library_card_id,
+            lc.source_object_id,
+            lc.source_object_key,
+            lc.source_record_revision
+        FROM cataloged_instance_evidence AS cie
+        JOIN library_cards AS lc
+          ON lc.library_card_id = cie.library_card_id
+        WHERE cie.relationship_status = 'ACTIVE'
+        ORDER BY
+            cie.cataloged_instance_id,
+            lc.library_card_id
+        """
+    ).fetchall()
+
+    by_ci = defaultdict(list)
+
+    for (
+        ci_id,
+        library_card_id,
+        source_object_id,
+        source_object_key,
+        source_record_revision,
+    ) in rows:
+        by_ci[ci_id].append(
+            {
+                "library_card_id": library_card_id,
+                "source_object_id": source_object_id,
+                "source_object_key": source_object_key,
+                "source_record_revision": source_record_revision,
+            }
+        )
+
+    return dict(by_ci)
 
 
 def fields_present(by_ci):
@@ -335,7 +376,7 @@ def corroboration_for_set(by_ci, ci_ids):
     return result
 
 
-def candidate_set_analysis(by_ci):
+def candidate_set_analysis(by_ci, source_evidence_by_ci):
     """Consolidate repeated comparison paths by identical CI membership."""
     groups = combination_groups(
         by_ci,
@@ -361,8 +402,19 @@ def candidate_set_analysis(by_ci):
 
         entries.append(
             {
+                "candidate_entity_type": "RECORDING",
+                "resolution_status": "UNRESOLVED",
+                "identity_effect": "NONE",
                 "member_ci_ids": sorted_cis,
                 "member_count": len(sorted_cis),
+                "members": [
+                    {
+                        "cataloged_instance_id": ci_id,
+                        "active_library_card_evidence":
+                            source_evidence_by_ci.get(ci_id, []),
+                    }
+                    for ci_id in sorted_cis
+                ],
                 "comparison_path_count": len(sorted_paths),
                 "comparison_paths": [
                     dict(
@@ -485,6 +537,7 @@ def population_summary(conn, rows, by_ci):
 
 def analyze_database(conn):
     rows, by_ci = load_population(conn)
+    source_evidence_by_ci = load_ci_source_evidence(conn)
 
     return {
         "analysis_revision": ANALYSIS_REVISION,
@@ -500,7 +553,10 @@ def analyze_database(conn):
             by_ci,
             DEFAULT_COMBINATIONS,
         ),
-        "candidate_sets": candidate_set_analysis(by_ci),
+        "candidate_sets": candidate_set_analysis(
+            by_ci,
+            source_evidence_by_ci,
+        ),
         "collisions": collision_analysis(by_ci),
     }
 
