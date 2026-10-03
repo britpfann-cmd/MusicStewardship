@@ -1,6 +1,6 @@
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE library_cards (
+CREATE TABLE IF NOT EXISTS library_cards (
     library_card_id TEXT PRIMARY KEY,
     source_object_id TEXT NOT NULL,
     source_object_key TEXT NOT NULL,
@@ -13,17 +13,17 @@ CREATE TABLE library_cards (
     UNIQUE(source_object_id, source_record_revision)
 );
 
-CREATE INDEX idx_library_cards_source_object
+CREATE INDEX IF NOT EXISTS idx_library_cards_source_object
 ON library_cards(source_object_id);
 
-CREATE TABLE cataloged_instances (
+CREATE TABLE IF NOT EXISTS cataloged_instances (
     cataloged_instance_id TEXT PRIMARY KEY,
     status TEXT NOT NULL DEFAULT 'PROVISIONAL',
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
 
-CREATE TABLE cataloged_instance_revisions (
+CREATE TABLE IF NOT EXISTS cataloged_instance_revisions (
     cataloged_instance_revision_id TEXT PRIMARY KEY,
     cataloged_instance_id TEXT NOT NULL,
     revision_number INTEGER NOT NULL,
@@ -36,10 +36,10 @@ CREATE TABLE cataloged_instance_revisions (
     UNIQUE(cataloged_instance_id, revision_number)
 );
 
-CREATE INDEX idx_ci_revisions_instance
+CREATE INDEX IF NOT EXISTS idx_ci_revisions_instance
 ON cataloged_instance_revisions(cataloged_instance_id);
 
-CREATE TABLE cataloged_instance_evidence (
+CREATE TABLE IF NOT EXISTS cataloged_instance_evidence (
     cataloged_instance_evidence_id TEXT PRIMARY KEY,
     cataloged_instance_id TEXT NOT NULL,
     library_card_id TEXT NOT NULL,
@@ -52,13 +52,13 @@ CREATE TABLE cataloged_instance_evidence (
         REFERENCES library_cards(library_card_id)
 );
 
-CREATE INDEX idx_ci_evidence_instance
+CREATE INDEX IF NOT EXISTS idx_ci_evidence_instance
 ON cataloged_instance_evidence(cataloged_instance_id);
 
-CREATE INDEX idx_ci_evidence_card
+CREATE INDEX IF NOT EXISTS idx_ci_evidence_card
 ON cataloged_instance_evidence(library_card_id);
 
-CREATE TABLE recordings (
+CREATE TABLE IF NOT EXISTS recordings (
     recording_id TEXT PRIMARY KEY,
     status TEXT NOT NULL DEFAULT 'PROVISIONAL',
     current_data_json TEXT NOT NULL DEFAULT '{}',
@@ -66,7 +66,7 @@ CREATE TABLE recordings (
     updated_at TEXT NOT NULL
 );
 
-CREATE TABLE performances (
+CREATE TABLE IF NOT EXISTS performances (
     performance_id TEXT PRIMARY KEY,
     status TEXT NOT NULL DEFAULT 'PROVISIONAL',
     current_data_json TEXT NOT NULL DEFAULT '{}',
@@ -74,7 +74,7 @@ CREATE TABLE performances (
     updated_at TEXT NOT NULL
 );
 
-CREATE TABLE works (
+CREATE TABLE IF NOT EXISTS works (
     work_id TEXT PRIMARY KEY,
     status TEXT NOT NULL DEFAULT 'PROVISIONAL',
     current_data_json TEXT NOT NULL DEFAULT '{}',
@@ -82,7 +82,7 @@ CREATE TABLE works (
     updated_at TEXT NOT NULL
 );
 
-CREATE TABLE catalog_observations (
+CREATE TABLE IF NOT EXISTS catalog_observations (
     observation_id TEXT PRIMARY KEY,
     library_card_id TEXT,
     subject_type TEXT NOT NULL,
@@ -97,13 +97,13 @@ CREATE TABLE catalog_observations (
         REFERENCES library_cards(library_card_id)
 );
 
-CREATE INDEX idx_observation_subject
+CREATE INDEX IF NOT EXISTS idx_observation_subject
 ON catalog_observations(subject_type, subject_id);
 
-CREATE INDEX idx_observation_card
+CREATE INDEX IF NOT EXISTS idx_observation_card
 ON catalog_observations(library_card_id);
 
-CREATE TABLE catalog_associations (
+CREATE TABLE IF NOT EXISTS catalog_associations (
     association_id TEXT PRIMARY KEY,
     association_type TEXT NOT NULL,
     subject_type TEXT NOT NULL,
@@ -119,16 +119,16 @@ CREATE TABLE catalog_associations (
         REFERENCES catalog_associations(association_id)
 );
 
-CREATE INDEX idx_association_subject
+CREATE INDEX IF NOT EXISTS idx_association_subject
 ON catalog_associations(subject_type, subject_id, association_type);
 
-CREATE INDEX idx_association_object
+CREATE INDEX IF NOT EXISTS idx_association_object
 ON catalog_associations(object_type, object_id, association_type);
 
-CREATE INDEX idx_association_supersedes
+CREATE INDEX IF NOT EXISTS idx_association_supersedes
 ON catalog_associations(supersedes_association_id);
 
-CREATE VIEW current_cataloged_instance_revisions AS
+CREATE VIEW IF NOT EXISTS current_cataloged_instance_revisions AS
 SELECT r.*
 FROM cataloged_instance_revisions r
 WHERE r.revision_number = (
@@ -137,7 +137,7 @@ WHERE r.revision_number = (
     WHERE r2.cataloged_instance_id = r.cataloged_instance_id
 );
 
-CREATE VIEW current_catalog_associations AS
+CREATE VIEW IF NOT EXISTS current_catalog_associations AS
 SELECT a.*
 FROM catalog_associations a
 WHERE NOT EXISTS (
@@ -146,7 +146,7 @@ WHERE NOT EXISTS (
     WHERE newer.supersedes_association_id = a.association_id
 );
 
-CREATE VIEW current_catalog_chain AS
+CREATE VIEW IF NOT EXISTS current_catalog_chain AS
 SELECT
     ci.cataloged_instance_id,
     cir.cataloged_instance_revision_id,
@@ -174,12 +174,12 @@ LEFT JOIN current_catalog_associations p_w
    AND p_w.subject_id = r_p.object_id
    AND p_w.association_type = 'PERFORMANCE_WORK';
 
-CREATE TABLE catalog_schema_metadata (
+CREATE TABLE IF NOT EXISTS catalog_schema_metadata (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
 );
 
-INSERT INTO catalog_schema_metadata(key,value) VALUES
+INSERT OR IGNORE INTO catalog_schema_metadata(key,value) VALUES
 ('schema_name','MusicStewardship Catalog'),
 ('schema_revision','0.1'),
 ('identity_model',

@@ -89,12 +89,42 @@ class CatalogStore:
         self.conn.commit()
         return card_id
 
+    def find_active_ci_for_library_card(
+        self,
+        library_card_id: str,
+    ) -> str | None:
+        rows = self.conn.execute(
+            """
+            SELECT cataloged_instance_id
+            FROM cataloged_instance_evidence
+            WHERE library_card_id = ?
+              AND relationship_status = 'ACTIVE'
+            ORDER BY created_at, cataloged_instance_evidence_id
+            """,
+            (library_card_id,),
+        ).fetchall()
+
+        if not rows:
+            return None
+
+        if len(rows) > 1:
+            raise ValueError(
+                "Library Card has multiple ACTIVE CatalogedInstance "
+                f"relationships: {library_card_id}"
+            )
+
+        return rows[0]["cataloged_instance_id"]
+
     def create_cataloged_instance(
         self,
         library_card_id: str,
         state: dict[str, Any] | None = None,
         reason: str = "Initial catalog interpretation",
     ) -> str:
+        existing_ci = self.find_active_ci_for_library_card(library_card_id)
+        if existing_ci is not None:
+            return existing_ci
+
         ci_id = new_id("CI")
         t = now()
 

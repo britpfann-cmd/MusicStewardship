@@ -183,6 +183,54 @@ class CatalogV01Tests(unittest.TestCase):
 
         self.assertEqual(count, 1)
 
+    def test_03_repeated_card_returns_same_cataloged_instance(self):
+        card = {
+            "source_object_id": "SOURCE-003",
+            "source_object_key": "collection/three.flac",
+            "source_record_revision": "1",
+        }
+
+        card_id = self.store.accept_library_card(card)
+
+        first_ci = self.store.create_cataloged_instance(
+            card_id,
+            {"title": ["First interpretation"]},
+        )
+
+        second_ci = self.store.create_cataloged_instance(
+            card_id,
+            {"title": ["Should not create another revision"]},
+        )
+
+        self.assertEqual(first_ci, second_ci)
+
+        ci_count = self.store.conn.execute(
+            "SELECT COUNT(*) FROM cataloged_instances"
+        ).fetchone()[0]
+
+        revision_count = self.store.conn.execute(
+            """
+            SELECT COUNT(*)
+            FROM cataloged_instance_revisions
+            WHERE cataloged_instance_id = ?
+            """,
+            (first_ci,),
+        ).fetchone()[0]
+
+        evidence_count = self.store.conn.execute(
+            """
+            SELECT COUNT(*)
+            FROM cataloged_instance_evidence
+            WHERE library_card_id = ?
+              AND relationship_status = 'ACTIVE'
+            """,
+            (card_id,),
+        ).fetchone()[0]
+
+        self.assertEqual(ci_count, 1)
+        self.assertEqual(revision_count, 1)
+        self.assertEqual(evidence_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
