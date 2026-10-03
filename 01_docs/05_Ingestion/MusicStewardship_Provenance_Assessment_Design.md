@@ -397,4 +397,3 @@ The design deliberately leaves room for:
 - entity merging and splitting.
 
 None of these are prerequisites for the first implementation.
-

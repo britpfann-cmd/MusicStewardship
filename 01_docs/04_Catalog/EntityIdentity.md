@@ -129,3 +129,15 @@ An entity may have many observed names. User-facing presentation is separate fro
 - `short_name` is an optional compact presentation alias, particularly useful for DJ output.
 
 A user's presentation choices do not change the underlying entity identity or source observations.
+
+---
+
+## V3 Addendum — 2026-10-02 Provisional Coalescence and Seed Origin
+
+Identity may emerge from accumulated population evidence. New CatalogedInstances may initially create or associate with provisional candidates at several levels, including Recording, Performance, and Work.
+
+Candidate entities may later coalesce when evidence supports common identity. Coalescence at one level does not require coalescence at every level. Later evidence must also permit an earlier merge to be separated without loss of the observations and evidence that produced it.
+
+Canonical entities may also be created provisionally from external reference material as **seed entities**. `SeedEntity` is not a separate identity class: seed origin is provenance/status of an ordinary catalog entity. Externally seeded and internally inferred entities are reconciled under the same identity rules.
+
+Accessibility of a source does not establish authority. Automated reference harvesting may efficiently produce candidates, while specialized sources may later supply stronger evidence for a particular identity question.

@@ -1,306 +1,359 @@
 # MusicStewardship — Working E-R Schema Baseline
 
-**Date:** 2026-09-13  
+**Date:** 2026-10-02  
+**Version:** E-R v0.1 working baseline  
 **Status:** Working / provisional  
-**Purpose:** Provide an initial entity-relationship model derived from the design rules and TTT prototype.
+**Purpose:** Define the initial entity-relationship model to be represented in the first SQLite implementation and exercised against curated source populations.
 
 ## 1. Modeling stance
 
 This is an E-R design instrument, not a final ontology.
 
-The vocabulary of entities is expected to emerge gradually from source representations and required queries. Entity boundaries may be introduced, merged, split, or renamed as additional sources are reconciled.
+Entity boundaries are expected to mature as complete source populations are ingested and reconciled. Entities may be introduced, merged, split, or renamed when evidence and required queries justify the change.
 
-## 2. Core entities currently justified
+The model must permit incomplete and provisional knowledge. A source observation does not need to be fully identified before it can enter the catalog.
 
-### Acquisition
-Represents an acquisition event/process. It may exist before all cataloging is complete.
+The governing preservation rule is:
 
-**Candidate key:** `acquisition_id`
+> **Lose nothing.**
 
-### Collection
-A coherent group of material within an acquisition/source context.
+Source observations, undecoded/residual material, provenance, earlier interpretations, and corrective history remain recoverable even as the current catalog understanding improves.
 
-**Candidate key:** `collection_id`
+## 2. Three distinct layers at catalog entry
 
-### Release
-A publication/release/album-level representation. Label/publisher and external release identifiers may belong here or in associated publication relationships as the model matures.
+### Library Card / source submission
 
-**Candidate key:** `release_id`
+The Library Card is the preserved submission/evidence package received from ingestion. It records what came to MusicStewardship and should remain traceable in its submitted form.
 
-### Release Track
-A particular track occurrence on a release.
+It is evidence, not the mutable catalog conclusion.
 
-**Candidate key:** `release_track_id`
+### CatalogedInstance
 
-Natural identifying context is presently `release + track_number`, subject to validation where the source provides additional distinctions.
+A CatalogedInstance is the persistent catalog object created for an ingested instance. It is the base from which discovery/reconciliation builds knowledge upward.
 
-### Performance
-A singular historical performance event of a Work.
+**Candidate key:** `cataloged_instance_id`
 
-**Candidate key:** `performance_id`
+A CatalogedInstance has:
 
-The current TTT `recordings.csv` is a provisional stand-in for this concept and should not yet be treated as final historical identity resolution.
+- persistent identity;
+- an immediately accessible **current state** for normal catalog use;
+- a durable relationship to its originating Library Card/source evidence;
+- provisional or resolved associations to higher-level catalog entities; and
+- revision history sufficient for maintenance, diagnosis, corrective action, and audit.
 
-### Work
-The underlying musical work/composition.
-
-**Candidate key:** `work_id`
-
-This entity is anticipated but has not yet been fully extracted/normalized in the TTT prototype.
-
-### Person
-A human participant, composer, lyricist, singer, conductor, etc., when the evidence supports person-level identity.
-
-**Candidate key:** `person_id`
-
-### Ensemble
-A named performing ensemble/orchestra.
-
-**Candidate key:** `ensemble_id`
-
-### Recording Manifestation
-A particular source/recording representation or path by which a performance is available to us, such as a transfer, remaster, reissue representation, or curated source manifestation.
-
-**Candidate key:** `manifestation_id`
-
-This concept is intentionally provisional and may later be split into publication/source-artifact/recording-transfer concepts as evidence requires.
+Ordinary queries should use current state. Revision history must not burden routine catalog use.
 
 ### Library Item
-A particular owned digital file or library artifact.
+
+A Library Item is a particular owned digital file or library artifact.
 
 **Candidate key:** `library_item_id`
 
-### Location
-A place or locator at which a library item can be found.
+Library Item describes what the project possesses. CatalogedInstance describes the evolving catalog knowledge associated with an ingested instance. The two concepts are related but are not synonymous.
 
-**Candidate key:** `location_id` (or another stable locator identity).
+Exact cardinality between Library Card, CatalogedInstance, and Library Item remains subject to population validation.
+
+## 3. Core historical/musical spine
+
+The initial conceptual spine is:
+
+```text
+WORK
+  |
+  | realized as
+  v
+PERFORMANCE
+  |
+  | represented by
+  v
+RECORDING
+  |
+  | associated with / represented in
+  v
+CATALOGED INSTANCE
+```
+
+The direction shown is ontological/historical. Discovery normally proceeds in the opposite direction: from CatalogedInstance upward toward Recording, Performance, and Work.
+
+Cardinalities are provisional until exercised against real populations, especially for edited, composite, derivative, or otherwise exceptional recordings.
+
+### Work
+
+The underlying musical creation/composition that may be realized by one or more Performances.
+
+**Candidate key:** `work_id`
+
+Title or name is not identity. One Work may have multiple observed titles/names, and distinct Works may share a title.
+
+### Performance
+
+A unique historical realization of a Work by particular performer(s), occurring at a particular time/event or recording session, whether or not all of those facts are currently known.
+
+**Candidate key:** `performance_id`
+
+The current TTT `recordings.csv` remains a provisional source representation and must not be treated as final Performance identity resolution.
+
+### Recording
+
+A recorded representation derived from a particular Performance, distinguishable from other recorded representations of that Performance when evidence justifies the distinction.
+
+**Candidate key:** `recording_id`
+
+This replaces the earlier single provisional `Recording Manifestation` concept as the working entity name for E-R v0.1. Transfer, restoration, remaster, edit, master, reissue, digitization, and related distinctions are not forced into the Recording identity definition until population evidence establishes useful boundaries.
+
+Multiple CatalogedInstances may eventually coalesce on one Recording. Multiple Recordings may represent one Performance.
+
+## 4. Publication, possession, people, and context entities
+
+The following entities remain justified, but they surround the historical/musical spine rather than forming its ontological parent chain.
+
+### Acquisition
+
+An acquisition event/process. **Candidate key:** `acquisition_id`.
+
+### Collection
+
+A coherent group of material within an acquisition/source context. **Candidate key:** `collection_id`.
+
+### Release
+
+A publication/release/album-level representation. **Candidate key:** `release_id`.
+
+### Release Track
+
+A particular track occurrence on a Release. **Candidate key:** `release_track_id`.
+
+Natural identifying context may include `release + track_number`, subject to source validation.
+
+Release and Release Track describe publication context. They do not define Work, Performance, or Recording identity.
+
+### Person
+
+A human participant such as composer, lyricist, singer, conductor, arranger, or instrumentalist when evidence supports person-level identity. **Candidate key:** `person_id`.
+
+### Ensemble
+
+A named performing ensemble/orchestra. **Candidate key:** `ensemble_id`.
+
+### Location
+
+A place or locator at which a Library Item can be found. **Candidate key:** `location_id` or another stable locator identity.
 
 ### Source
-A source system, publisher, catalog, collection, document, or other evidence origin.
 
-**Candidate key:** `source_id`
+A source system, publisher, catalog, collection, document, or other evidence origin. **Candidate key:** `source_id`.
 
 ### Source Assertion / Evidence Observation
-A source-attributed statement or observation about an object or representation.
 
-**Candidate key:** a generated evidence/assertion key; exact design TBD.
+A source-attributed statement or observation about an entity, instance, representation, relationship, or attribute. **Candidate key:** generated evidence/assertion key; exact physical design TBD.
 
-## 3. Core relationship sketch
+## 5. Provisional identity and coalescence
 
-```text
-                         ┌──────────────┐
-                         │  ACQUISITION │
-                         └──────┬───────┘
-                                │ 1:M
-                                ▼
-                         ┌──────────────┐
-                         │  COLLECTION  │
-                         └──────┬───────┘
-                                │ 1:M
-                                ▼
-                         ┌──────────────┐
-                         │   RELEASE    │
-                         └──────┬───────┘
-                                │ 1:M
-                                ▼
-                         ┌────────────────┐
-                         │  RELEASE_TRACK │
-                         └───────┬────────┘
-                                 │ represents
-                                 ▼
-                         ┌────────────────┐
-                         │   PERFORMANCE  │
-                         └───────┬────────┘
-                                 │ is realization of
-                                 ▼
-                         ┌──────────────┐
-                         │     WORK     │
-                         └──────────────┘
+Catalog construction begins before complete identity resolution.
 
-PERFORMANCE
-     │
-     │ represented by / available through
-     ▼
-┌─────────────────────────┐
-│ RECORDING_MANIFESTATION │
-└────────────┬────────────┘
-             │
-             │ may appear in / support
-             ▼
-        RELEASE_TRACK
-
-RELEASE_TRACK
-     │
-     │ represented by / owned as
-     ▼
-┌────────────────┐
-│  LIBRARY_ITEM  │
-└───────┬────────┘
-        │ located at
-        ▼
-┌──────────────┐
-│   LOCATION   │
-└──────────────┘
-```
-
-## 4. People and ensembles
-
-The model should support role-bearing relationships rather than requiring complex participant strings to become canonical identifiers.
+A newly ingested CatalogedInstance may produce provisional suggestions upward:
 
 ```text
-PERSON ───────┐
-              ├── participates in ──► PERFORMANCE
-ENSEMBLE ─────┘
+CatalogedInstance
+      |
+      +--> ? Recording
+               |
+               +--> ? Performance
+                          |
+                          +--> ? Work
 ```
 
-Potential roles include singer, conductor, composer, arranger, instrumentalist, and other roles discovered from source evidence.
+As more instances and evidence accumulate, candidates may begin to coalesce. Coalescence may occur independently at different levels: two instances may be recognized as the same Work before their Performance identity is known, or as the same Performance while Recording representation remains uncertain.
 
-A specific role model will be introduced only when actual data and query needs require it.
+D (discovery/reconciliation) therefore performs progressive entity resolution rather than merely filling foreign keys:
 
-## 5. Evidence and provenance
+```text
+create provisional candidates
+        -> accumulate evidence
+        -> discover commonality
+        -> coalesce when justified
+        -> retain history/evidence
+```
 
-The evidence layer surrounds the other layers rather than becoming a substitute for them.
+Later evidence must also permit separation of an earlier merge. Coalescence is a change in current interpretation, not destruction of prior evidence.
+
+## 6. Current state and revision history
+
+The operational catalog is optimized for:
+
+> **What do we currently believe?**
+
+CatalogedInstance and other evolving catalog knowledge should expose an immediately accessible current state.
+
+Revision history is a maintenance/audit facility analogous in purpose to source-control history. It should support diagnosis, rollback/correction, and understanding how present state was reached without requiring ordinary queries to traverse history.
+
+The E-R requirement is behavioral, not a commitment to a storage technology. Revision history may later be implemented with snapshots, deltas, an append-only journal, database temporal mechanisms, exported records under source control, or a combination.
+
+Two histories must remain distinguishable:
+
+- **evidence history** — what came to us and from where;
+- **catalog revision history** — what MusicStewardship interpreted or changed over time.
+
+Neither overwrites the other.
+
+## 7. Evidence and provenance
+
+The evidence layer surrounds all catalog layers rather than substituting for them.
 
 ```text
 SOURCE
-   ↓
+   |
+   v
 SOURCE ASSERTION / OBSERVATION
-   ↓
-CATALOG OBJECT or REPRESENTATION
+   |
+   +--> CatalogedInstance
+   +--> Recording
+   +--> Performance
+   +--> Work
+   +--> Release / ReleaseTrack
+   +--> Person / Ensemble
+   +--> relationships and attributes
 ```
 
-A source assertion should eventually be able to say, in effect:
+A source assertion should be able to express, in effect:
 
-> Source S represents/claims/value X about object O.
+> Source S supplied or claims value X about object/relationship O.
 
-The original source value should remain available even after a value has been promoted into a normalized catalog entity or attribute.
+Promotion into normalized catalog knowledge does not erase the original source value.
 
-## 6. Publication/release layer
+Conflicting evidence is retained. Current interpretation may select or synthesize the best-supported present knowledge while alternatives remain traceable.
 
-The publication side should distinguish at least:
+## 8. Seed entities and external references
+
+Canonical entities may originate either:
+
+- provisionally from ingested CatalogedInstances; or
+- as externally supported **seed entities** created to reduce reconciliation work.
+
+`SeedEntity` is not a separate entity type. Seeded status/origin is provenance of an ordinary Work, Performance, Recording, Person, Release, or other entity.
+
+Origin does not determine authority. A seeded entity remains subject to confirmation, enrichment, merge, split, correction, and revision.
+
+External systems such as Discogs, TANGO-DJ.AT, Tango Time Travel, Crackling Tunes, and other researched references contribute evidence and candidate structure; they do not become MusicStewardship's canonical identities merely because they are convenient or accessible.
+
+## 9. Demand-driven seed harvest
+
+D may use the ingested population to guide economical external research.
+
+A practical sequence is:
 
 ```text
-Label / Publisher
-        ↓
-Release / Album
-        ↓
-Release Track
+CatalogedInstances
+      -> provisional candidates
+      -> cheap exact/similar population scan
+      -> candidate counts/clusters
+      -> targeted automated seed harvest
+      -> reconciliation/coalescence
+      -> smaller difficult residual population
+      -> specialized/manual research
 ```
 
-It should also permit relationships for subsequent releases, reissues, editions, and other publication histories.
+Discogs is particularly useful for automated first-pass seed acquisition where its interface permits efficient queries. Ease of access is not evidentiary authority. More specialized tango references may provide stronger evidence for particular questions and can be consulted after inexpensive evidence has reduced the unresolved population.
 
-Exact Discogs-style taxonomy is a reference point for this layer, while MusicStewardship maintains its own internal identities.
+## 10. Whole-population ingestion as model validation
 
-## 7. Source artifact / historical representation
+The researched source populations should be ingested broadly rather than limiting development to hand-selected successful examples.
 
-TTT demonstrates that a single release may contain many record/matrix/take values, and a single raw catalog representation may recur across multiple tracks.
+Whole-population ingestion tests whether the provisional E-R model can faithfully represent what the sources actually contain.
 
-Therefore:
+Results should distinguish at least:
 
-```text
-record + matrix + take
-```
+- represented successfully;
+- represented with residual/uninterpreted information;
+- failed or forced mappings requiring decoder/grammar remediation;
+- recurring structures suggesting E-R remediation.
 
-is not a universal identity key.
+Failure is diagnostic information, not permission to discard source material.
 
-It should initially be retained as source evidence and may later be promoted into a structured source-artifact relationship.
+This produces a separate **model-confidence** dimension from entity/relationship confidence. A mature E-R model must be capable of faithfully representing uncertain identity.
 
-## 8. Important cardinality patterns
+## 11. Initial implementation cycle
 
-### Multiple library items for one release track
+E-R v0.1 will be exercised in this order:
 
-```text
-RELEASE_TRACK 1 ───── M LIBRARY_ITEM
-```
+1. define and document the provisional E-R model;
+2. create a SQLite database structure representing it;
+3. create one general loader path using existing source grammars/decoders;
+4. exercise the loader with samples from multiple curated collections;
+5. run structural validation queries for coverage, residuals, failures, and cardinality surprises;
+6. create candidate-set queries reporting exact and similar/common values and combinations;
+7. inspect results and remediate the E-R model, grammar, decoder, or loader where indicated;
+8. expand toward whole-population ingestion;
+9. use resulting candidate populations to drive targeted seed harvesting and later reconciliation.
 
-The TTT prototype demonstrates this directly: 1,095 owned files correspond to 1,085 distinct release tracks.
+Automatic coalescence is deliberately **not** required in the first implementation cycle. Candidate reporting comes first so that reconciliation rules are informed by actual populations.
 
-### One performance represented by multiple releases
+## 12. Candidate-set reporting
 
-Eventually expected:
+Initial queries should report candidate populations without asserting identity. Useful dimensions may include:
 
-```text
-PERFORMANCE 1 ───── M RELEASE_TRACK
-```
+- literal title equality;
+- comparison-normalized title similarity;
+- title + ensemble/orchestra;
+- title + ensemble + singer;
+- title + approximate date;
+- matrix, record, take, catalog number, or other source identifiers;
+- combinations suggested by populated source evidence.
 
-This is central to distinguishing the historical performance from its many publication paths.
+Literal observations and comparison forms must remain distinguishable. Comparison normalization must not silently replace source values.
 
-### One work with multiple performances
+Counts are themselves useful intelligence: repeated constellations across sources identify high-value reconciliation and seed-harvest opportunities.
 
-Eventually expected:
+## 13. Current source-to-E-R mapping
 
-```text
-WORK 1 ───── M PERFORMANCE
-```
+Existing TTT prototype structures remain useful input evidence but are not treated as final ontology:
 
-This supports the distinction between the same song performed/recorded multiple times.
+| Prototype table | E-R v0.1 interpretation |
+| --- | --- |
+| `acquisitions.csv` | Acquisition |
+| `collections.csv` | Collection |
+| `releases.csv` | Release |
+| `release_tracks.csv` | Release Track |
+| `recordings.csv` | provisional evidence toward Recording / Performance; not final identity |
+| `library_items.csv` | Library Item |
+| `locations.csv` | Location |
+| `library_item_tracks.csv` | Library Item ↔ Release Track relationship |
+| `release_track_recordings.csv` | source/prototype relationship requiring translation into v0.1 identity layers |
+| `library_item_evidence.csv` | source evidence |
+| `book_metadata.csv` | derived projection |
+| `recording_metadata.csv` | source-attributed secondary metadata |
 
-### Multiple external sources describing one internal entity
-
-Eventually expected:
-
-```text
-INTERNAL ENTITY 1 ───── M SOURCE ASSERTION
-```
-
-This permits TTT, TANGO-DJ, Discogs, Crackling Tunes, and other sources to contribute independently.
-
-## 9. Current TTT-to-E-R mapping
-
-| Current prototype table | Working E-R concept | Status |
-|---|---|---|
-| `acquisitions.csv` | Acquisition | current |
-| `collections.csv` | Collection | current |
-| `releases.csv` | Release | current |
-| `release_tracks.csv` | Release Track | current |
-| `recordings.csv` | Provisional Performance | temporary/provisional |
-| `library_items.csv` | Library Item | current |
-| `locations.csv` | Location | current |
-| `library_item_tracks.csv` | Library Item ↔ Release Track | current relationship |
-| `release_track_recordings.csv` | Release Track ↔ provisional Performance | current relationship |
-| `library_item_evidence.csv` | Source Evidence | current relationship |
-| `book_metadata.csv` | Derived metadata projection | view/projection |
-| `recording_metadata.csv` | Source-attributed secondary metadata | prototype/enrichment |
-
-## 10. Key design restraint
+## 14. Modeling restraint
 
 Do not force every source field into an entity table merely because it exists.
 
-The correct progression is:
+Use the sequence:
 
 ```text
 source representation
-       ↓
-retain as evidence
-       ↓
-understand its scope
-       ↓
-promote when justified
-       ↓
-normalize only when useful
+      -> retain as evidence
+      -> understand scope
+      -> promote when justified
+      -> normalize only when useful
 ```
 
-## 11. Query implications
+Likewise, do not introduce a new entity merely to accommodate one source's vocabulary until the distinction proves useful across evidence or required queries.
 
-The eventual query/report layer should be able to traverse multiple levels and combine conditions across them.
+## 15. Validation targets
 
-Representative future query:
+The model must be tested against cases including:
 
-> Show all tracks in a selected collection, with release, title, ensemble, singer, performance date, label, source representation, owned file, and location, filtered by any combination of those values.
+1. the same Work with multiple Performances;
+2. one Performance appearing on multiple Releases/labels;
+3. multiple Recordings/representations of one Performance;
+4. multiple CatalogedInstances converging on a shared Recording, Performance, or Work;
+5. provisional candidates that later merge or split;
+6. release histories, reissues, and subsequent editions;
+7. person versus ensemble representations;
+8. source documents that describe collections or multiple musical objects;
+9. TANGO-DJ and Discogs external identifiers and release taxonomy;
+10. Crackling Tunes and other curated/commercial source paths;
+11. residual/uninterpreted source information;
+12. whole-population ingest failures and recurring exceptions.
 
-This is a requirement on the eventual data model, not a requirement to build the UI now.
-
-## 12. Next validation targets
-
-The working E-R model should be tested against additional real cases before database implementation, especially:
-
-1. the same Work with multiple performances;
-2. one Performance appearing on multiple releases/labels;
-3. multiple recording manifestations of one Performance;
-4. release histories/reissues/subsequent editions;
-5. person versus ensemble representations;
-6. source documents that describe collections or multiple musical objects;
-7. TANGO-DJ and Discogs external identifiers and release taxonomy;
-8. Crackling Tunes and other curated/commercial source paths.
-
-**Status:** Ready for iterative validation and refinement; not yet a final database schema.
+**Status:** Ready to drive the first provisional SQLite/loader implementation cycle. It remains a working model subject to population-driven refinement.

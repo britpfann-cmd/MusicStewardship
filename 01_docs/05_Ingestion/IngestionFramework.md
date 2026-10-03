@@ -337,3 +337,31 @@ The planned initial collection order is:
 6. ToTango
 
 A complete source collection import is successful only when every terminal track/object produces a canonical CSV record and the build evidence demonstrates that no source record was silently dropped.
+
+---
+
+## Addendum — 2026-10-02 Whole-Population Ingestion and Candidate Discovery
+
+The ingestion objective now includes loading the complete researched populations of curated sources into the base catalog wherever practical. Development samples remain useful for exercising the loader, but successful samples are not sufficient evidence that the E-R model or source grammar represents the population.
+
+Ingestion preserves the source submission and creates/contributes to CatalogedInstance current state without requiring complete identity resolution. CORE, decoded associated information, and residual/uninterpreted source material remain recoverable; inability to interpret a field or resolve an identity is not permission to discard it.
+
+After population loading, inexpensive queries should report exact and similar/common candidate sets before expensive reconciliation is attempted. Literal values must remain available alongside comparison-normalized forms.
+
+Candidate populations then guide demand-driven external seed acquisition. Automated sources such as Discogs may provide economical first-pass evidence; more awkward or specialized tango references can be concentrated on the smaller unresolved population. Source accessibility is not a measure of evidentiary authority.
+
+The first implementation cycle is:
+
+```text
+E-R v0.1
+ -> SQLite structure
+ -> general loader using existing grammars/decoders
+ -> multi-source curated samples
+ -> structural validation
+ -> candidate-set queries
+ -> remediation
+ -> whole-population loading
+ -> targeted seed harvesting
+```
+
+Automatic identity coalescence is not required in this first cycle. Candidate reporting precedes merge rules so that those rules are informed by actual population behavior.

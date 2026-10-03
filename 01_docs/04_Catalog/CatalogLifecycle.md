@@ -155,3 +155,27 @@ temporal or cumbersome.
 
 This principle is fundamental to the project's archaeological approach.
 
+
+---
+
+## V3 Addendum — 2026-10-02 Population-Driven Knowledge Growth
+
+The base catalog is populated before complete identity resolution. Each ingested submission creates or contributes to a persistent CatalogedInstance whose current state may contain provisional upward associations toward Recording, Performance, Work, Release, Person, Ensemble, and other entities.
+
+As entries accumulate, provisional structures may coalesce. Coalescence can occur independently at different entity levels and remains reversible when later evidence requires a split or reassignment.
+
+The preferred development lifecycle is now:
+
+```text
+preserve complete source population
+        -> create CatalogedInstances/provisionals
+        -> scan population for exact/similar candidates
+        -> report candidate counts/clusters
+        -> harvest economical external seed evidence
+        -> reconcile/coalesce where justified
+        -> investigate the smaller difficult residual population
+```
+
+Externally sourced seeds and entities first inferred from owned material participate in the same catalog. Seed origin is provenance, not authority.
+
+Whole-population ingestion also validates the E-R model itself. Recurring residuals, forced mappings, and failures are evidence for model/grammar/decoder remediation rather than reasons to discard source material.

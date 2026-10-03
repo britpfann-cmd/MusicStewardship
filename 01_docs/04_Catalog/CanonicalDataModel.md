@@ -150,3 +150,15 @@ Future datasets may describe:
 - experience
 
 without requiring changes to the overall architecture.
+
+---
+
+## Addendum — 2026-10-02 Current Operational State and Revision History
+
+The first database implementation shall optimize normal catalog use for an immediately accessible **current state**. Current state answers: **What do we currently believe?**
+
+Catalog evolution is retained separately as maintenance/audit history. Revision history must be sufficient for diagnosis, corrective action, rollback/reconstruction where practical, and explanation of how present catalog knowledge was reached. Ordinary catalog queries should not require traversal of revision history.
+
+Evidence history and catalog revision history are distinct. Evidence history preserves what came from sources; catalog revision history preserves how MusicStewardship's interpretation changed.
+
+The physical history mechanism is an implementation decision and is not fixed by the canonical model.

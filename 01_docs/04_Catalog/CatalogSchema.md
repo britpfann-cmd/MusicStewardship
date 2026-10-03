@@ -101,3 +101,15 @@ while retaining enough separate history and provenance to answer:
 > Why do we believe that?
 
 when someone is curious, reviewing, or auditing the catalog.
+
+---
+
+## V3 Addendum — 2026-10-02 CatalogedInstance Current State
+
+`CatalogedInstance` is the persistent base catalog object associated with an ingested submission. It is distinct from both the preserved Library Card/source evidence and the owned Library Item/artifact.
+
+A CatalogedInstance shall expose an immediately accessible current state for ordinary catalog use. It may hold provisional or resolved associations upward to Recording, Performance, Work, Release, and other catalog entities.
+
+CatalogedInstance revision history is retained separately for maintenance, diagnosis, corrective action, and audit. The current-state representation should not be burdened with temporal traversal merely to answer normal catalog questions.
+
+The first database implementation may use SQLite internally while continuing to treat CSV as the public/interchange snapshot representation.

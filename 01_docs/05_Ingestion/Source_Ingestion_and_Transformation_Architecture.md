@@ -532,3 +532,14 @@ The ultimate goal is:
 > **One ingestion system capable of learning the information structure of diverse sources, decoding that information through reusable transformation techniques, mapping it into a stable Common Model, preserving useful source-specific information in a Supplemental Overlay, and demonstrating through automated completeness tests that no information has been silently lost.**
 
 TTT is the first proving ground for this approach, not its final definition.
+---
+
+## Addendum — 2026-10-02 Population Validation Target
+
+The common ingestion engine is to be exercised against complete researched source populations, not only successful examples. Population runs are an architectural validation tool for both source interpretation and the provisional E-R model.
+
+Each source item should be accountable as successfully represented, represented with residual/uninterpreted material, or failed with diagnostic information. Repeated failures or residual structures should drive grammar, decoder, mapping, or E-R remediation.
+
+The loader should feed persistent CatalogedInstances while preserving original Library Card/source evidence. Identity resolution above CatalogedInstance is allowed to remain provisional.
+
+After loading, inexpensive population scans should produce candidate sets and counts for later discovery/reconciliation. External seed harvesting is downstream of ingestion and candidate reporting; it is not an acceptance gate for source material.
