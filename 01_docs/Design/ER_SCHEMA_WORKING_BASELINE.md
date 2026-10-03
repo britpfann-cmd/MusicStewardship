@@ -19,6 +19,28 @@ The governing preservation rule is:
 
 Source observations, undecoded/residual material, provenance, earlier interpretations, and corrective history remain recoverable even as the current catalog understanding improves.
 
+### Layered information access
+
+“Lose nothing” does not require every operation to retrieve everything that has been preserved.
+
+MusicStewardship organizes information into four information levels according to operational role and expected retrieval frequency:
+
+1. **Current operational state** — compact, immediately accessible information required for normal catalog use, search, reporting, analysis, and downstream applications. This level answers: **What do we currently believe?**
+
+2. **Structured evidence and corroboration** — source observations, assertions, provenance, semantic classifications, competing representations, and corroborating evidence used to support, question, or reconcile current interpretation. This level answers: **Why might we believe it?**
+
+3. **Residual evidence** — preserved source information that has not yet been adequately decoded, classified, or represented by the current model. This level answers: **What have we received that we do not yet understand?**
+
+4. **Revision history** — prior catalog states, superseded interpretations, corrections, and other history sufficient to reconstruct how current understanding developed. This level answers: **How did our current understanding develop?**
+
+These are information-access and storage levels, not levels of truth or authority. Evidence in Level 2 is not inherently less valid than information exposed in Level 1, and residual material in Level 3 is not disposable merely because its meaning is not yet understood.
+
+**Preservation depth and retrieval depth are independent.** MusicStewardship preserves the complete evidentiary and revision record while routine processing retrieves only the minimum information level required for the task. Higher information levels should not burden lower-level routine access.
+
+The physical database design should therefore permit information to be reached progressively through explicit relationships rather than requiring complete evidence, residual material, and history to be embedded in every routine record or query.
+
+Information may move in interpretation without disappearing from history. For example, material initially retained as residual evidence may later become a structured observation and subsequently contribute to current catalog state. The earlier evidence and the history of that change remain recoverable.
+
 ## 2. Three distinct layers at catalog entry
 
 ### Library Card / source submission
@@ -357,3 +379,4 @@ The model must be tested against cases including:
 12. whole-population ingest failures and recurring exceptions.
 
 **Status:** Ready to drive the first provisional SQLite/loader implementation cycle. It remains a working model subject to population-driven refinement.
+
