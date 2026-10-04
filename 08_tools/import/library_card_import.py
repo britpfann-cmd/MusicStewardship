@@ -65,11 +65,30 @@ def decode_public_value(field,value,contract):
         return decoded
     return value
 
+def validate_card_shape(card,contract):
+    expected=set(contract.field_names)
+    actual=set(card)
+    missing=sorted(expected-actual)
+    extra=sorted(actual-expected)
+
+    if missing or extra:
+        details=[]
+        if missing:
+            details.append(f"missing certified fields: {missing}")
+        if extra:
+            details.append(f"undeclared fields: {extra}")
+        raise ValueError(
+            f"Library Card does not match certified "
+            f"{contract.interface_id} revision {contract.revision}: "
+            + "; ".join(details)
+        )
+
 def decode_card(card):
     contract=contract_for_card(card)
+    validate_card_shape(card,contract)
     return {
-        field:decode_public_value(field,value,contract)
-        for field,value in card.items()
+        field:decode_public_value(field,card[field],contract)
+        for field in contract.field_names
     }
 
 def verify_standard(card):

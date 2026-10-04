@@ -76,3 +76,23 @@ def test_consumer_independently_resolves_certified_revision():
         contract.certificate
         == "sha256:a06b0925aee1195a71ad885ab280675173a968432d989b4b1806136bdd70a65e"
     )
+
+
+def test_consumer_rejects_undeclared_field():
+    import pytest
+
+    card = valid_rev_a_card()
+    card["undeclared_test_field"] = "not part of revision A"
+
+    with pytest.raises(ValueError, match="undeclared fields"):
+        importer.decode_card(card)
+
+
+def test_consumer_rejects_missing_declared_field():
+    import pytest
+
+    card = valid_rev_a_card()
+    del card["source_suffix"]
+
+    with pytest.raises(ValueError, match="missing certified fields"):
+        importer.decode_card(card)
