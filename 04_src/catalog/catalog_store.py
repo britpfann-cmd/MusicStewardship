@@ -247,6 +247,60 @@ class CatalogStore:
             return None
 
         return json.loads(row["state_json"])
+
+    def get_ci_provenance(
+        self,
+        ci_id: str,
+    ) -> dict[str, Any] | None:
+        ci_row = self.conn.execute(
+            """
+            SELECT
+                cataloged_instance_id,
+                status,
+                created_at,
+                updated_at
+            FROM cataloged_instances
+            WHERE cataloged_instance_id = ?
+            """,
+            (ci_id,),
+        ).fetchone()
+
+        if ci_row is None:
+            return None
+
+        evidence_rows = self.conn.execute(
+            """
+            SELECT
+                lc.library_card_id,
+                lc.source_object_id,
+                lc.source_object_key,
+                lc.source_record_revision,
+                lc.interface_revision,
+                lc.c_processing_revision,
+                lc.d_processing_revision,
+                lc.received_at,
+                cie.reason AS relationship_reason,
+                cie.created_at AS relationship_created_at
+            FROM cataloged_instance_evidence AS cie
+            JOIN library_cards AS lc
+              ON lc.library_card_id = cie.library_card_id
+            WHERE cie.cataloged_instance_id = ?
+              AND cie.relationship_status = 'ACTIVE'
+            ORDER BY cie.created_at, lc.library_card_id
+            """,
+            (ci_id,),
+        ).fetchall()
+
+        return {
+            "cataloged_instance_id": ci_row["cataloged_instance_id"],
+            "status": ci_row["status"],
+            "created_at": ci_row["created_at"],
+            "updated_at": ci_row["updated_at"],
+            "active_library_card_evidence": [
+                dict(row) for row in evidence_rows
+            ],
+        }
+
     def create_entity(
         self,
         entity_type: str,

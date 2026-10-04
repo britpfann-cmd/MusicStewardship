@@ -246,5 +246,49 @@ class CatalogV01Tests(unittest.TestCase):
         self.assertEqual(evidence_count, 1)
 
 
+    def test_04_ci_provenance_is_lightweight_and_plural(self):
+        card = {
+            "source_object_id": "SOURCE-004",
+            "source_object_key": "collection/four.flac",
+            "source_record_revision": "1",
+            "library_card_interface_revision": "A",
+            "c_processing_revision": "TEST-C",
+            "d_processing_revision": "TEST-D",
+            "title": ["Level One Title"],
+        }
+
+        card_id = self.store.accept_library_card(card)
+        ci_id = self.store.create_cataloged_instance(
+            card_id,
+            {"title": ["Level One Title"]},
+        )
+
+        provenance = self.store.get_ci_provenance(ci_id)
+
+        self.assertIsNotNone(provenance)
+        self.assertEqual(provenance["cataloged_instance_id"], ci_id)
+        self.assertEqual(provenance["status"], "PROVISIONAL")
+
+        evidence = provenance["active_library_card_evidence"]
+        self.assertEqual(len(evidence), 1)
+        self.assertEqual(evidence[0]["library_card_id"], card_id)
+        self.assertEqual(evidence[0]["source_object_id"], "SOURCE-004")
+        self.assertEqual(
+            evidence[0]["source_object_key"],
+            "collection/four.flac",
+        )
+        self.assertEqual(evidence[0]["source_record_revision"], "1")
+        self.assertEqual(evidence[0]["interface_revision"], "A")
+        self.assertEqual(evidence[0]["c_processing_revision"], "TEST-C")
+        self.assertEqual(evidence[0]["d_processing_revision"], "TEST-D")
+
+        # Level-0 retrieval is intentionally lightweight.
+        self.assertNotIn("card_json", evidence[0])
+        self.assertNotIn("title", evidence[0])
+
+        self.assertIsNone(
+            self.store.get_ci_provenance("CI-DOES-NOT-EXIST")
+        )
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
