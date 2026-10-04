@@ -165,6 +165,20 @@ class CatalogV01Tests(unittest.TestCase):
         self.assertEqual(chain["performance_id"], performance_id)
         self.assertEqual(chain["work_id"], replacement_work_id)
 
+    def test_current_ci_state_distinguishes_empty_from_missing(self):
+        card = {
+            "source_object_id": "SOURCE-EMPTY",
+            "source_object_key": "collection/empty.flac",
+            "source_record_revision": "1",
+        }
+
+        card_id = self.store.accept_library_card(card)
+        ci_id = self.store.create_cataloged_instance(card_id, state={})
+
+        self.assertEqual(self.store.get_current_ci_state(ci_id), {})
+        self.assertIsNone(
+            self.store.get_current_ci_state("CI-DOES-NOT-EXIST")
+        )
     def test_02_library_card_import_is_idempotent(self):
         card = {
             "source_object_id": "SOURCE-002",

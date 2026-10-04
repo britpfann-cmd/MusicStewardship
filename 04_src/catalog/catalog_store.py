@@ -230,6 +230,23 @@ class CatalogStore:
 
         return revision_id
 
+    def get_current_ci_state(
+        self,
+        ci_id: str,
+    ) -> dict[str, Any] | None:
+        row = self.conn.execute(
+            """
+            SELECT state_json
+            FROM current_cataloged_instance_revisions
+            WHERE cataloged_instance_id = ?
+            """,
+            (ci_id,),
+        ).fetchone()
+
+        if row is None:
+            return None
+
+        return json.loads(row["state_json"])
     def create_entity(
         self,
         entity_type: str,
