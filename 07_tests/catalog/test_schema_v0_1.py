@@ -296,6 +296,56 @@ class CatalogV01Tests(unittest.TestCase):
         self.assertEqual(json.loads(row["context_json"]), {})
         self.assertEqual(json.loads(row["evidence_json"]), {})
 
+    def test_get_ci_revision_history_returns_level_4_states(self):
+        card = {
+            "source_object_id": "SOURCE-L4",
+            "source_object_key": "collection/level4.flac",
+            "source_record_revision": "1",
+        }
+
+        card_id = self.store.accept_library_card(card)
+        ci_id = self.store.create_cataloged_instance(
+            card_id,
+            {"title": ["Submitted Title"]},
+            reason="initial ingestion",
+        )
+
+        self.store.add_ci_revision(
+            ci_id,
+            {
+                "title": ["Revised Title"],
+                "review": "later interpretation",
+            },
+            reason="catalog review",
+        )
+
+        history = self.store.get_ci_revision_history(ci_id)
+
+        self.assertEqual(len(history), 2)
+
+        self.assertEqual(history[0]["revision_number"], 1)
+        self.assertEqual(history[0]["revision_status"], "HISTORICAL")
+        self.assertEqual(
+            history[0]["state"],
+            {"title": ["Submitted Title"]},
+        )
+        self.assertEqual(history[0]["reason"], "initial ingestion")
+
+        self.assertEqual(history[1]["revision_number"], 2)
+        self.assertEqual(history[1]["revision_status"], "CURRENT")
+        self.assertEqual(
+            history[1]["state"],
+            {
+                "title": ["Revised Title"],
+                "review": "later interpretation",
+            },
+        )
+        self.assertEqual(history[1]["reason"], "catalog review")
+
+        self.assertEqual(
+            self.store.get_ci_revision_history("CI-DOES-NOT-EXIST"),
+            [],
+        )
     def test_get_ci_observations_returns_structured_level_2_evidence(self):
         card = {
             "source_object_id": "SOURCE-L2",

@@ -384,6 +384,37 @@ class CatalogStore:
 
         return observation_id
 
+    def get_ci_revision_history(
+        self,
+        ci_id: str,
+    ) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            """
+            SELECT
+                cataloged_instance_revision_id,
+                revision_number,
+                revision_status,
+                state_json,
+                reason,
+                created_at
+            FROM cataloged_instance_revisions
+            WHERE cataloged_instance_id = ?
+            ORDER BY revision_number
+            """,
+            (ci_id,),
+        ).fetchall()
+
+        return [
+            {
+                "cataloged_instance_revision_id": row["cataloged_instance_revision_id"],
+                "revision_number": row["revision_number"],
+                "revision_status": row["revision_status"],
+                "state": json.loads(row["state_json"]),
+                "reason": row["reason"],
+                "created_at": row["created_at"],
+            }
+            for row in rows
+        ]
     def get_ci_observations(
         self,
         ci_id: str,
