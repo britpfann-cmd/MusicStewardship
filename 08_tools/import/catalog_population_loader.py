@@ -198,14 +198,11 @@ def load_population(
 
             card_id = store.accept_library_card(decoded)
 
-            # Level 0: acceptance/provenance sufficient to establish
-            # a persistent, discrete CatalogedInstance.
-            ci_state = {
-                "source_object_id": decoded["source_object_id"],
-                "source_object_key": decoded["source_object_key"],
-                "entry_type": decoded.get("entry_type"),
-                "construction_status": decoded.get("construction_status"),
-            }
+            # Level 0 is structural: the persistent CatalogedInstance,
+            # its active evidence relationship, and the preserved Library
+            # Card establish acceptance and provenance. Level-0 values do
+            # not need to be duplicated into operational state.
+            ci_state = {}
 
             # Level 1: initial usable interpretation. Begin with whatever
             # obvious/likely catalog values arrived on the Library Card.

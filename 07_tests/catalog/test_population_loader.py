@@ -115,22 +115,24 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
 
                 current_states = conn.execute(
                     """
-                    SELECT state_json
-                    FROM current_cataloged_instance_revisions
-                    ORDER BY state_json
+                    SELECT lc.source_object_id, cir.state_json
+                    FROM cataloged_instances AS ci
+                    JOIN cataloged_instance_evidence AS cie
+                      ON cie.cataloged_instance_id = ci.cataloged_instance_id
+                     AND cie.relationship_status = 'ACTIVE'
+                    JOIN library_cards AS lc
+                      ON lc.library_card_id = cie.library_card_id
+                    JOIN current_cataloged_instance_revisions AS cir
+                      ON cir.cataloged_instance_id = ci.cataloged_instance_id
+                    ORDER BY lc.source_object_id
                     """
                 ).fetchall()
 
                 self.assertEqual(len(current_states), 3)
 
-                states = [
-                    json.loads(state_json)
-                    for (state_json,) in current_states
-                ]
-
                 by_source_id = {
-                    state["source_object_id"]: state
-                    for state in states
+                    source_object_id: json.loads(state_json)
+                    for source_object_id, state_json in current_states
                 }
 
                 self.assertEqual(
@@ -150,14 +152,9 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     ["1942-02-02"],
                 )
 
-                # Sparse evidence still establishes a discrete Level-0
-                # CatalogedInstance without inventing Level-1 values.
-                self.assertEqual(
-                    by_source_id["TEST-003"]["source_object_id"],
-                    "TEST-003",
-                )
-                self.assertNotIn("title", by_source_id["TEST-003"])
-                self.assertNotIn("recording_date", by_source_id["TEST-003"])
+                # Level 0 establishes the CatalogedInstance and provenance.
+                # A sparse submission need not invent any Level-1 state.
+                self.assertEqual(by_source_id["TEST-003"], {})
 
                 observation_payloads = conn.execute(
                     """
