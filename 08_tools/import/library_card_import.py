@@ -18,7 +18,7 @@ sys.path.insert(0, str(ROOT / "04_src"))
 
 from library_card_interface import certified_interface
 from typing import Any
-D_PROCESSING_REVISION="library_card_import.revA-test"
+D_PROCESSING_REVISION="library_card_import.v0.1"
 def read_csv_table(path:Path):
     with path.open("r",newline="",encoding="utf-8-sig") as f:return list(csv.DictReader(f))
 def rows_from_workbook(path:Path,sheet:str):
@@ -127,7 +127,7 @@ def import_workbook(workbook):
     return cards,imported,checks
 def write_outputs(outdir,interface_revision,imported,checks):
     outdir.mkdir(parents=True,exist_ok=True)
-    (outdir/"D_imported_library_cards.json").write_text(json.dumps({"schema":"musicstewardship.d_imported_library_card.revA-test","d_processing_revision":D_PROCESSING_REVISION,"library_card_interface_revision":interface_revision,"records":imported},indent=2,ensure_ascii=False),encoding="utf-8")
+    (outdir/"D_imported_library_cards.json").write_text(json.dumps({"schema":"musicstewardship.d_imported_library_card.v0.1","d_processing_revision":D_PROCESSING_REVISION,"library_card_interface_revision":interface_revision,"records":imported},indent=2,ensure_ascii=False),encoding="utf-8")
     with (outdir/"D_verification.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f); w.writerow(["check","result","detail"]); w.writerows(checks)
     print(f"Interface revision   : {interface_revision}"); print(f"D processing revision: {D_PROCESSING_REVISION}"); print(f"Cards imported       : {len(imported)}"); print(f"Verification checks  : {len(checks)}"); print(f"PASS                 : {sum(r[1]=='PASS' for r in checks)}"); print(f"REVIEW               : {sum(r[1]=='REVIEW' for r in checks)}"); print(f"FAIL                 : {sum(r[1]=='FAIL' for r in checks)}"); print(f"Output               : {outdir}")
