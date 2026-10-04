@@ -43,6 +43,8 @@ The physical database design should therefore permit information to be reached p
 
 Information may move in interpretation without disappearing from history. For example, material initially retained as residual evidence may later become a structured observation and subsequently contribute to current catalog state. The earlier evidence and the history of that change remain recoverable.
 
+In the current physical design, Level 3 does not require a separate catalog-side copy of residual evidence. Residual evidence remains preserved in the immutable Library Card and is reachable from the CatalogedInstance through its Level-0 evidence relationship. If later processing interprets that material, it may create Level-2 structured observations and may contribute to a revised Level-1 current state without removing or rewriting the original residual evidence.
+
 ## 2. Three distinct layers at catalog entry
 
 ### Library Card / source submission

@@ -58,7 +58,11 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     "recording_date": json.dumps([date]) if date else json.dumps([]),
                     "source_context": json.dumps(["TEST"]),
                     "evidence_summary": json.dumps(["synthetic regression evidence"]),
-                    "residual_evidence": json.dumps([]),
+                    "residual_evidence": json.dumps(
+                        ["UNINTERPRETED-TEST-003"]
+                        if number == "003"
+                        else []
+                    ),
                     "construction_status": "candidate",
                     "conflicts": json.dumps([]),
                     "c_lineage": json.dumps(["TEST-LINEAGE"]),
@@ -170,7 +174,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
 
                 preserved_cards = conn.execute(
                     """
-                    SELECT DISTINCT lc.card_json
+                    SELECT DISTINCT lc.source_object_id, lc.card_json
                     FROM cataloged_instance_evidence AS cie
                     JOIN library_cards AS lc
                       ON lc.library_card_id = cie.library_card_id
@@ -179,7 +183,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                 ).fetchall()
 
                 self.assertEqual(len(preserved_cards), 3)
-                for (card_json,) in preserved_cards:
+                for source_object_id, card_json in preserved_cards:
                     card = json.loads(card_json)
                     self.assertEqual(
                         card["evidence_summary"],
@@ -188,6 +192,12 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     self.assertEqual(
                         card["c_lineage"],
                         ["TEST-LINEAGE"],
+                    )
+                    self.assertEqual(
+                        card["residual_evidence"],
+                        ["UNINTERPRETED-TEST-003"]
+                        if source_object_id == "TEST-003"
+                        else [],
                     )
             finally:
                 conn.close()
