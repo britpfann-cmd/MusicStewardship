@@ -249,6 +249,50 @@ The revision fields have distinct meanings:
 
 These revisions shall not be conflated.
 
+<!-- BEGIN GENERATED LIBRARY CARD FIELD CONTRACT -->
+
+### Certified ING-CARD-001 Revision A field contract
+
+This table is generated from the certified CSV field definition. **Do not edit this table directly.**
+
+| Field | Cardinality | Value form | Meaning | Required | Native / Derived |
+|---|---|---|---|---|---|
+| card_revision | 1 | scalar | Library Card revision | yes | derived |
+| library_card_interface_revision | 1 | scalar | Public exchange contract revision | yes | derived |
+| c_processing_revision | 1 | scalar | C processing revision that produced the card | yes | derived |
+| source_object_id | 1 | scalar | Stable source-object identity | yes | native |
+| source_object_key | 1 | scalar | Stable source asset key | yes | derived |
+| source_record_revision | 1 | scalar | C Source Record schema revision | yes | derived |
+| source_root | 1 | scalar | Supplied source boundary | yes | native |
+| relative_path | 1 | scalar | Source-relative asset path | yes | native |
+| filename | 1 | scalar | Original source filename | yes | native |
+| extension | 0..1 | scalar | Source filename extension | optional | native |
+| entry_type | 1 | scalar | Source object type | yes | native |
+| title | 0..n | JSON array | Initial catalog title | optional | derived |
+| artist | 0..n | JSON array | Initial artist/performance attribution | optional | derived |
+| orchestra_or_album_artist | 0..n | JSON array | Initial ensemble/album-artist value | optional | derived |
+| singer | 0..n | JSON array | Initial singer value | optional | derived |
+| recording_identifier | 0..n | JSON array | Initial recording identifier | optional | derived |
+| recording_date | 0..n | JSON array | Initial recording date/year | optional | derived |
+| genre | 0..n | JSON array | Initial genre | optional | derived |
+| style | 0..n | JSON array | Initial style | optional | derived |
+| source_album | 0..n | JSON array | Source album/release description | optional | derived |
+| composer | 0..n | JSON array | Initial composer | optional | derived |
+| conductor | 0..n | JSON array | Initial conductor | optional | derived |
+| filename_numeric_component | 0..n | JSON array | Filename numeric component(s) | optional | derived |
+| filename_leading_text_candidate | 0..n | JSON array | Leading filename text | optional | derived |
+| sequence_number_candidate | 0..n | JSON array | Candidate sequence number | optional | derived |
+| source_suffix | 0..n | JSON array | Terminal filename suffix | optional | derived |
+| source_grouping_label | 0..n | JSON array | Source grouping label | optional | derived |
+| source_context | 0..n | JSON array | Ordered source contextual interpretation | optional | derived |
+| evidence_summary | 0..n | JSON array | Compact self-contained evidence summaries | optional | derived |
+| residual_evidence | 0..n | JSON array | Preserved uninterpreted evidence identifiers | optional | native |
+| construction_status | 1 | scalar | C construction/evidence assembly status | yes | derived |
+| conflicts | 0..n | JSON array | C-detected construction conflicts | optional | derived |
+| c_lineage | 1..n | JSON array | Compact C lineage references | yes | derived |
+
+<!-- END GENERATED LIBRARY CARD FIELD CONTRACT -->
+
 The Rev A field-definition artifact and the C-to-Library Card translation map together define the tested public field contract. Internal C structures remain implementation details.
 
 No field shall be added merely because it is convenient for an internal implementation.
