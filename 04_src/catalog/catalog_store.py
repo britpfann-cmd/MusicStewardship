@@ -301,6 +301,89 @@ class CatalogStore:
             ],
         }
 
+    def add_observation(
+        self,
+        *,
+        library_card_id: str | None,
+        subject_type: str,
+        subject_id: str | None,
+        field: str,
+        observed_value: Any,
+        interpreted_value: Any | None = None,
+        context: dict[str, Any] | None = None,
+        evidence: dict[str, Any] | None = None,
+        commit: bool = True,
+    ) -> str:
+        observed_value_json = json.dumps(
+            observed_value,
+            ensure_ascii=False,
+        )
+
+        existing = self.conn.execute(
+            """
+            SELECT observation_id
+            FROM catalog_observations
+            WHERE library_card_id IS ?
+              AND subject_type = ?
+              AND subject_id IS ?
+              AND observed_field = ?
+              AND observed_value_json = ?
+            """,
+            (
+                library_card_id,
+                subject_type,
+                subject_id,
+                field,
+                observed_value_json,
+            ),
+        ).fetchone()
+
+        if existing is not None:
+            return existing["observation_id"]
+
+        observation_id = new_id("OBS")
+
+        interpreted_value_json = (
+            None
+            if interpreted_value is None
+            else json.dumps(interpreted_value, ensure_ascii=False)
+        )
+
+        self.conn.execute(
+            """
+            INSERT INTO catalog_observations (
+                observation_id,
+                library_card_id,
+                subject_type,
+                subject_id,
+                observed_field,
+                observed_value_json,
+                interpreted_value_json,
+                context_json,
+                evidence_json,
+                observed_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                observation_id,
+                library_card_id,
+                subject_type,
+                subject_id,
+                field,
+                observed_value_json,
+                interpreted_value_json,
+                json.dumps(context or {}, ensure_ascii=False),
+                json.dumps(evidence or {}, ensure_ascii=False),
+                now(),
+            ),
+        )
+
+        if commit:
+            self.conn.commit()
+
+        return observation_id
+
     def create_entity(
         self,
         entity_type: str,

@@ -34,7 +34,7 @@ SRC_ROOT = PROJECT_ROOT / "04_src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from catalog.catalog_store import CatalogStore, new_id, now
+from catalog.catalog_store import CatalogStore
 
 
 IMPORTER_PATH = PROJECT_ROOT / "08_tools" / "import" / "library_card_import.py"
@@ -106,78 +106,6 @@ def populated_values(value: Any) -> list[Any]:
     return [value]
 
 
-def add_observation(
-    store: CatalogStore,
-    *,
-    library_card_id: str,
-    cataloged_instance_id: str,
-    field: str,
-    value: Any,
-    card: dict[str, Any],
-) -> str:
-    value_json = json.dumps(value, ensure_ascii=False)
-
-    existing = store.conn.execute(
-        """
-        SELECT observation_id
-        FROM catalog_observations
-        WHERE library_card_id = ?
-          AND subject_type = 'CATALOGED_INSTANCE'
-          AND subject_id = ?
-          AND observed_field = ?
-          AND observed_value_json = ?
-        """,
-        (
-            library_card_id,
-            cataloged_instance_id,
-            field,
-            value_json,
-        ),
-    ).fetchone()
-
-    if existing is not None:
-        return existing["observation_id"]
-
-    observation_id = new_id("OBS")
-
-    # Observation context/evidence are reserved for information
-    # specific to this observation. Card-wide provenance, evidence,
-    # residuals, and lineage remain preserved on the Library Card
-    # and are reachable through library_card_id.
-    context = {}
-    evidence = {}
-
-    store.conn.execute(
-        """
-        INSERT INTO catalog_observations (
-            observation_id,
-            library_card_id,
-            subject_type,
-            subject_id,
-            observed_field,
-            observed_value_json,
-            interpreted_value_json,
-            context_json,
-            evidence_json,
-            observed_at
-        )
-        VALUES (?, ?, 'CATALOGED_INSTANCE', ?, ?, ?, NULL, ?, ?, ?)
-        """,
-        (
-            observation_id,
-            library_card_id,
-            cataloged_instance_id,
-            field,
-            value_json,
-            json.dumps(context, ensure_ascii=False),
-            json.dumps(evidence, ensure_ascii=False),
-            now(),
-        ),
-    )
-
-    return observation_id
-
-
 def load_population(
     csv_path: Path,
     db_path: Path,
@@ -224,13 +152,13 @@ def load_population(
 
             for field in OBSERVATION_FIELDS:
                 for value in populated_values(decoded.get(field)):
-                    add_observation(
-                        store,
+                    store.add_observation(
                         library_card_id=card_id,
-                        cataloged_instance_id=ci_id,
+                        subject_type="CATALOGED_INSTANCE",
+                        subject_id=ci_id,
                         field=field,
-                        value=value,
-                        card=decoded,
+                        observed_value=value,
+                        commit=False,
                     )
                     stats["observations"] += 1
                     field_counts[field] += 1

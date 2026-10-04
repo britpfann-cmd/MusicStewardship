@@ -246,6 +246,56 @@ class CatalogV01Tests(unittest.TestCase):
         self.assertEqual(evidence_count, 1)
 
 
+    def test_add_observation_is_idempotent(self):
+        card = {
+            "source_object_id": "SOURCE-OBS",
+            "source_object_key": "collection/observation.flac",
+            "source_record_revision": "1",
+        }
+
+        card_id = self.store.accept_library_card(card)
+        ci_id = self.store.create_cataloged_instance(card_id, {})
+
+        first = self.store.add_observation(
+            library_card_id=card_id,
+            subject_type="CATALOGED_INSTANCE",
+            subject_id=ci_id,
+            field="title",
+            observed_value="Observed Title",
+            commit=False,
+        )
+
+        second = self.store.add_observation(
+            library_card_id=card_id,
+            subject_type="CATALOGED_INSTANCE",
+            subject_id=ci_id,
+            field="title",
+            observed_value="Observed Title",
+            commit=False,
+        )
+
+        self.assertEqual(first, second)
+
+        row = self.store.conn.execute(
+            """
+            SELECT
+                COUNT(*) AS count,
+                observed_value_json,
+                interpreted_value_json,
+                context_json,
+                evidence_json
+            FROM catalog_observations
+            WHERE observation_id = ?
+            """,
+            (first,),
+        ).fetchone()
+
+        self.assertEqual(row["count"], 1)
+        self.assertEqual(json.loads(row["observed_value_json"]), "Observed Title")
+        self.assertIsNone(row["interpreted_value_json"])
+        self.assertEqual(json.loads(row["context_json"]), {})
+        self.assertEqual(json.loads(row["evidence_json"]), {})
+
     def test_04_ci_provenance_is_lightweight_and_plural(self):
         card = {
             "source_object_id": "SOURCE-004",
