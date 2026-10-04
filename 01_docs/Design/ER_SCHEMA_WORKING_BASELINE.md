@@ -424,6 +424,30 @@ Literal observations and comparison forms must remain distinguishable. Compariso
 
 Counts are themselves useful intelligence: repeated constellations across sources identify high-value reconciliation and seed-harvest opportunities.
 
+### Population validation
+
+The first whole-population candidate analysis against Tango Time Travel (TTT)
+and Crackling Tunes (CT) validated the distinction between candidate discovery
+and identity resolution.
+
+TTT produced nine distinct Recording candidate sets. The reviewed sets were
+consistent with alternate source representations of the same apparent
+recordings, including repeated directory organization and a filename/Unicode
+representation difference.
+
+CT produced eleven Recording candidate sets. Ten reviewed sets carried the
+same CT source identifier across repeated release-directory representations.
+One set matched on title, orchestra, and date while carrying different CT
+source identifiers. This provides a useful counterexample: strong generic
+commonality is evidence for review, not proof of identity.
+
+Source-specific identifiers remain provenance/evidence unless their semantics
+justify a stronger interpretation. Generic commonality may discover candidate
+Recording relationships, while source provenance may independently corroborate
+or contradict them.
+
+Candidate analysis therefore remains report-only at this stage and has no
+identity effect.
 ## 14. Current source-to-E-R mapping
 
 Existing TTT prototype structures remain useful input evidence but are not treated as final ontology:
