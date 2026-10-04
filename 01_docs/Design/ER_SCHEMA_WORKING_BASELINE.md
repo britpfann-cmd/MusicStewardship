@@ -249,7 +249,101 @@ Promotion into normalized catalog knowledge does not erase the original source v
 
 Conflicting evidence is retained. Current interpretation may select or synthesize the best-supported present knowledge while alternatives remain traceable.
 
-## 8. Seed entities and external references
+## 8. Information-level access
+
+The catalog separates information by access role. Information level does not
+mean truth, authority, confidence, or completeness. Preservation depth and
+retrieval depth are independent.
+
+**Association does not imply retrieval.** Information is stored at its natural
+semantic home, connected by durable relationships, and retrieved only to the
+depth required by the operation.
+
+### Level 0 — Acceptance, identity, and provenance
+
+Level 0 establishes the minimum persistent catalog foundation for every
+accepted CatalogedInstance.
+
+It contains the persistent CatalogedInstance identity, catalog status,
+acceptance timestamps, and durable relationships or pointers to originating
+Library Card evidence and source identity.
+
+Level 0 does not require the complete Library Card, residual/raw evidence, or
+routine musical description to be carried in the operational record. It
+establishes that the instance exists, where it came from, and how its preserved
+source evidence can be reached.
+
+### Level 1 — Current operational catalog state
+
+Level 1 is the compact, immediately usable current description of the
+CatalogedInstance.
+
+It may contain current title, artist or orchestra, singer, recording date,
+genre, and other useful catalog descriptions and relationships. At initial
+ingestion it may simply project obvious or likely useful submitted Library Card
+values. If no useful descriptive values are available, the initial state may
+be empty.
+
+Level 1 represents current working knowledge, not final authority.
+
+> **Usability quickly; higher confidence later.**
+
+### Level 2 — Structured evidence and corroboration
+
+Level 2 preserves structured information that supports, qualifies,
+contradicts, or extends the current catalog state.
+
+It includes observations, alternate and interpreted values, corroborating
+evidence, competing representations, structured research or discovery results,
+and evidence supporting identity or association decisions.
+
+Level 2 may contribute to later Level-1 revisions but need not be retrieved for
+ordinary catalog use.
+
+### Level 3 — Preserved source and residual evidence
+
+Level 3 provides lossless deep preservation of submitted and source information
+without burdening routine catalog operations.
+
+It includes the original ingress Library Card, residual evidence,
+uninterpreted or incompletely decoded material, deliberately retained raw
+source evidence, and lossless source-ingest or audit records.
+
+In the current physical design, the immutable Library Card is the preservation
+home for this material. Level 0 retains the durable relationship needed to
+reach it. A separate catalog-side copy is not required merely for convenience.
+
+Later interpretation may create Level-2 observations and may contribute to a
+revised Level-1 current state without removing or rewriting the preserved
+Level-3 evidence.
+
+> **Preserve deeply; retrieve rarely.**
+
+### Level 4 — Catalog revision history
+
+Level 4 preserves the evolution of catalog understanding.
+
+It includes prior Level-1 states, superseded interpretations, corrections,
+reasons for revision, and the current state as the latest point in the
+revision sequence.
+
+Historical does not mean false. Level 4 records how current catalog knowledge
+was reached and is normally accessed only for maintenance, audit, correction,
+or research.
+
+### Related application knowledge
+
+The five information levels describe access depth for catalog knowledge; they
+are not a requirement that every kind of information associated with a
+CatalogedInstance be placed inside the catalog state.
+
+DJ experience, DJ preferences, performance feedback, and future application
+knowledge may reside in their own related tables or domains, associated with
+the appropriate CatalogedInstance, Recording, Performance, Work, or other
+entity. Those relationships do not require that application data be retrieved
+during ordinary catalog operations.
+
+## 9. Seed entities and external references
 
 Canonical entities may originate either:
 
@@ -262,7 +356,7 @@ Origin does not determine authority. A seeded entity remains subject to confirma
 
 External systems such as Discogs, TANGO-DJ.AT, Tango Time Travel, Crackling Tunes, and other researched references contribute evidence and candidate structure; they do not become MusicStewardship's canonical identities merely because they are convenient or accessible.
 
-## 9. Demand-driven seed harvest
+## 10. Demand-driven seed harvest
 
 D may use the ingested population to guide economical external research.
 
@@ -281,7 +375,7 @@ CatalogedInstances
 
 Discogs is particularly useful for automated first-pass seed acquisition where its interface permits efficient queries. Ease of access is not evidentiary authority. More specialized tango references may provide stronger evidence for particular questions and can be consulted after inexpensive evidence has reduced the unresolved population.
 
-## 10. Whole-population ingestion as model validation
+## 11. Whole-population ingestion as model validation
 
 The researched source populations should be ingested broadly rather than limiting development to hand-selected successful examples.
 
@@ -298,7 +392,7 @@ Failure is diagnostic information, not permission to discard source material.
 
 This produces a separate **model-confidence** dimension from entity/relationship confidence. A mature E-R model must be capable of faithfully representing uncertain identity.
 
-## 11. Initial implementation cycle
+## 12. Initial implementation cycle
 
 E-R v0.1 will be exercised in this order:
 
@@ -314,7 +408,7 @@ E-R v0.1 will be exercised in this order:
 
 Automatic coalescence is deliberately **not** required in the first implementation cycle. Candidate reporting comes first so that reconciliation rules are informed by actual populations.
 
-## 12. Candidate-set reporting
+## 13. Candidate-set reporting
 
 Initial queries should report candidate populations without asserting identity. Useful dimensions may include:
 
@@ -330,7 +424,7 @@ Literal observations and comparison forms must remain distinguishable. Compariso
 
 Counts are themselves useful intelligence: repeated constellations across sources identify high-value reconciliation and seed-harvest opportunities.
 
-## 13. Current source-to-E-R mapping
+## 14. Current source-to-E-R mapping
 
 Existing TTT prototype structures remain useful input evidence but are not treated as final ontology:
 
@@ -349,7 +443,7 @@ Existing TTT prototype structures remain useful input evidence but are not treat
 | `book_metadata.csv` | derived projection |
 | `recording_metadata.csv` | source-attributed secondary metadata |
 
-## 14. Modeling restraint
+## 15. Modeling restraint
 
 Do not force every source field into an entity table merely because it exists.
 
@@ -365,7 +459,7 @@ source representation
 
 Likewise, do not introduce a new entity merely to accommodate one source's vocabulary until the distinction proves useful across evidence or required queries.
 
-## 15. Validation targets
+## 16. Validation targets
 
 The model must be tested against cases including:
 
