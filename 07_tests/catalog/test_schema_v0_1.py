@@ -296,6 +296,49 @@ class CatalogV01Tests(unittest.TestCase):
         self.assertEqual(json.loads(row["context_json"]), {})
         self.assertEqual(json.loads(row["evidence_json"]), {})
 
+    def test_get_ci_observations_returns_structured_level_2_evidence(self):
+        card = {
+            "source_object_id": "SOURCE-L2",
+            "source_object_key": "collection/level2.flac",
+            "source_record_revision": "1",
+        }
+
+        card_id = self.store.accept_library_card(card)
+        ci_id = self.store.create_cataloged_instance(card_id, {})
+
+        observation_id = self.store.add_observation(
+            library_card_id=card_id,
+            subject_type="CATALOGED_INSTANCE",
+            subject_id=ci_id,
+            field="title",
+            observed_value="Submitted Title",
+            interpreted_value="Interpreted Title",
+            context={"locator": "filename"},
+            evidence={"basis": "submitted"},
+        )
+
+        observations = self.store.get_ci_observations(ci_id)
+
+        self.assertEqual(
+            observations,
+            [
+                {
+                    "observation_id": observation_id,
+                    "library_card_id": card_id,
+                    "field": "title",
+                    "observed_value": "Submitted Title",
+                    "interpreted_value": "Interpreted Title",
+                    "context": {"locator": "filename"},
+                    "evidence": {"basis": "submitted"},
+                    "observed_at": observations[0]["observed_at"],
+                }
+            ],
+        )
+
+        self.assertEqual(
+            self.store.get_ci_observations("CI-DOES-NOT-EXIST"),
+            [],
+        )
     def test_04_ci_provenance_is_lightweight_and_plural(self):
         card = {
             "source_object_id": "SOURCE-004",

@@ -384,6 +384,62 @@ class CatalogStore:
 
         return observation_id
 
+    def get_ci_observations(
+        self,
+        ci_id: str,
+    ) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            """
+            SELECT
+                observation_id,
+                library_card_id,
+                observed_field,
+                observed_value_json,
+                interpreted_value_json,
+                context_json,
+                evidence_json,
+                observed_at
+            FROM catalog_observations
+            WHERE subject_type = 'CATALOGED_INSTANCE'
+              AND subject_id = ?
+            ORDER BY observed_field, observation_id
+            """,
+            (ci_id,),
+        ).fetchall()
+
+        observations = []
+
+        for row in rows:
+            observations.append(
+                {
+                    "observation_id": row["observation_id"],
+                    "library_card_id": row["library_card_id"],
+                    "field": row["observed_field"],
+                    "observed_value": json.loads(
+                        row["observed_value_json"]
+                    ),
+                    "interpreted_value": (
+                        None
+                        if row["interpreted_value_json"] is None
+                        else json.loads(
+                            row["interpreted_value_json"]
+                        )
+                    ),
+                    "context": (
+                        {}
+                        if row["context_json"] is None
+                        else json.loads(row["context_json"])
+                    ),
+                    "evidence": (
+                        {}
+                        if row["evidence_json"] is None
+                        else json.loads(row["evidence_json"])
+                    ),
+                    "observed_at": row["observed_at"],
+                }
+            )
+
+        return observations
     def create_entity(
         self,
         entity_type: str,
