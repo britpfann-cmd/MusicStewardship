@@ -98,7 +98,7 @@ def verify_standard(card):
         field=definition["Field"]
         cardinality=definition["Cardinality"]
         meaning=definition["Meaning"]
-        required=cardinality in ("1","1..n")
+        required=definition["Required"].strip().lower()=="yes"
 
         if field not in card:
             result.append(

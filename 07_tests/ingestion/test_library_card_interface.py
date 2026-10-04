@@ -129,3 +129,25 @@ def test_certified_registry_rejects_changed_content(tmp_path, monkeypatch):
         match="Certified Library Card interface content mismatch",
     ):
         lci.certified_interface("A")
+
+
+def test_certification_rejects_required_cardinality_disagreement(tmp_path):
+    import pytest
+
+    changed_path = tmp_path / "contradictory_required.csv"
+    shutil.copyfile(DEFINITION, changed_path)
+
+    text = changed_path.read_text(encoding="utf-8-sig")
+    text = text.replace(
+        "card_revision,1,",
+        "card_revision,0..1,",
+        1,
+    )
+    changed_path.write_text(text, encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Required/cardinality disagreement"):
+        certify_definition(
+            interface_id="ING-CARD-001",
+            revision="TEST",
+            definition_path=changed_path,
+        )

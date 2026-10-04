@@ -76,6 +76,18 @@ def _read_definition(path: Path) -> tuple[dict[str, str], ...]:
                 f"for field {row['Field']!r}"
             )
 
+
+        required=row["Required"].strip().lower()
+        expected_required=(
+            "yes" if row["Cardinality"] in {"1","1..n"} else "optional"
+        )
+        if required != expected_required:
+            raise ValueError(
+                f"Required/cardinality disagreement for field "
+                f"{row['Field']!r}: cardinality "
+                f"{row['Cardinality']!r} requires "
+                f"Required={expected_required!r}, got {row['Required']!r}"
+            )
     return rows
 
 
