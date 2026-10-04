@@ -140,22 +140,12 @@ def add_observation(
 
     observation_id = new_id("OBS")
 
-    context = {
-        "source_object_id": card.get("source_object_id"),
-        "source_object_key": card.get("source_object_key"),
-        "source_record_revision": card.get("source_record_revision"),
-        "c_processing_revision": card.get("c_processing_revision"),
-        "d_processing_revision": card.get("d_processing_revision"),
-    }
-
-    evidence = {
-        "source_context": card.get("source_context", []),
-        "evidence_summary": card.get("evidence_summary", []),
-        "residual_evidence": card.get("residual_evidence", []),
-        "construction_status": card.get("construction_status"),
-        "conflicts": card.get("conflicts", []),
-        "c_lineage": card.get("c_lineage", []),
-    }
+    # Observation context/evidence are reserved for information
+    # specific to this observation. Card-wide provenance, evidence,
+    # residuals, and lineage remain preserved on the Library Card
+    # and are reachable through library_card_id.
+    context = {}
+    evidence = {}
 
     store.conn.execute(
         """

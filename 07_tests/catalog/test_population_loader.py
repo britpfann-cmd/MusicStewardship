@@ -29,11 +29,8 @@ spec.loader.exec_module(loader)
 
 class CatalogPopulationLoaderTests(unittest.TestCase):
     def write_rev_a_population(self, path: Path) -> None:
-        fieldnames = [
-            field
-            for field, cardinality, meaning
-            in loader.library_card_import.FIELD_DEFINITIONS
-        ]
+        contract = loader.library_card_import.certified_interface("A")
+        fieldnames = list(contract.field_names)
 
         rows = []
 
@@ -51,7 +48,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     "source_object_id": f"TEST-{number}",
                     "source_object_key": f"TestSource:{number}.flac",
                     "source_record_revision": "1",
-                    "source_root": "",
+                    "source_root": "TestSource",
                     "relative_path": f"{number}.flac",
                     "filename": f"{number}.flac",
                     "extension": ".flac",
@@ -67,7 +64,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                 }
             )
 
-            for field in loader.library_card_import.JSON_ARRAY_FIELDS:
+            for field in contract.array_fields:
                 if row[field] == "":
                     row[field] = json.dumps([])
 
@@ -114,10 +111,42 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                 ).fetchone()[0]
 
                 self.assertEqual(active_links, 2)
+
+                observation_payloads = conn.execute(
+                    """
+                    SELECT context_json, evidence_json
+                    FROM catalog_observations
+                    """
+                ).fetchall()
+
+                self.assertEqual(len(observation_payloads), 4)
+                for context_json, evidence_json in observation_payloads:
+                    self.assertEqual(json.loads(context_json), {})
+                    self.assertEqual(json.loads(evidence_json), {})
+
+                preserved_cards = conn.execute(
+                    """
+                    SELECT DISTINCT lc.card_json
+                    FROM catalog_observations AS obs
+                    JOIN library_cards AS lc
+                      ON lc.library_card_id = obs.library_card_id
+                    """
+                ).fetchall()
+
+                self.assertEqual(len(preserved_cards), 2)
+                for (card_json,) in preserved_cards:
+                    card = json.loads(card_json)
+                    self.assertEqual(
+                        card["evidence_summary"],
+                        ["synthetic regression evidence"],
+                    )
+                    self.assertEqual(
+                        card["c_lineage"],
+                        ["TEST-LINEAGE"],
+                    )
             finally:
                 conn.close()
 
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
-
