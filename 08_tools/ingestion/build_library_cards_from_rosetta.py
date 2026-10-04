@@ -227,7 +227,7 @@ def main():
         "cards_missing":source_count-len(cards),
         "residual_nonempty":sum(bool(c["residual_evidence"]) for c in cards),
         "status":"PASS" if source_count==len(cards) else "FAIL",
-        "interface_revision":"A",
+        "interface_revision":contract.revision,
         "rosetta_run_id":args.run_id,
         "rosetta_observations":len(observations),
     }

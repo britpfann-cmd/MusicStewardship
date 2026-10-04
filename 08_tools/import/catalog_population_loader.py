@@ -80,16 +80,11 @@ def validate_and_decode(raw_card: dict[str, str]) -> dict[str, Any]:
         detail = "; ".join(f"{field}: {message}" for field, message in failures)
         raise ValueError(f"Library Card structural validation failed: {detail}")
 
+    contract = library_card_import.contract_for_card(raw_card)
     decoded = library_card_import.decode_card(raw_card)
 
-    if decoded.get("library_card_interface_revision") != "A":
-        raise ValueError(
-            "Unsupported Library Card interface revision: "
-            f"{decoded.get('library_card_interface_revision')!r}"
-        )
-
     decoded["d_processing_revision"] = D_PROCESSING_REVISION
-    decoded["d_import_interface_revision"] = "A"
+    decoded["d_import_interface_revision"] = contract.revision
 
     return decoded
 
