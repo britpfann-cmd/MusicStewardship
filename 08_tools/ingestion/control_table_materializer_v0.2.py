@@ -22,6 +22,7 @@ CONTROL_REQUIRED = {
 
 ENGINE_FIELDS = [
     "rule_id","source","source_element","source_field","source_pattern",
+    "semantic_term","representation_level",
     "information_class","operation","decoder","target_entity",
     "target_property","target_relationship","assurance",
     "preserve_source_value","confidence","status","rule",
@@ -67,6 +68,8 @@ def materialize(controls,evidence_label):
             "source_element":sem,
             "source_field":c.get("source_field",""),
             "source_pattern":c.get("source_name",""),
+            "semantic_term":sem,
+            "representation_level":c.get("representation_level",""),
             "information_class":info_class(c.get("representation_level","")),
             "operation":op,
             "decoder":c.get("decoder",""),

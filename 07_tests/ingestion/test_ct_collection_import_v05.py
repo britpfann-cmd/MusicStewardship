@@ -90,6 +90,29 @@ def test_ct_collection_import_v05(tmp_path):
         "Cadícamo, Enrique / Cobián, Juan Carlos"
     ]
 
+    # Rosetta semantic metadata survives into structured Library Card evidence.
+    evidence = json.loads(nostalgias["evidence_summary"])
+    structured = [e for e in evidence if isinstance(e, dict)]
+
+    filename_id = next(
+        e for e in structured
+        if e["rule_id"] == "CT-CTRL-015"
+    )
+    catalog_id = next(
+        e for e in structured
+        if e["rule_id"] == "CT-CTRL-019"
+    )
+
+    assert filename_id["semantic_term"] == "ct_source_identifier"
+    assert filename_id["representation_level"] == "source"
+    assert filename_id["target_entity"] == "Source Assertion"
+    assert filename_id["target_property"] == "ct_source_identifier"
+
+    assert catalog_id["semantic_term"] == "ct_source_identifier"
+    assert catalog_id["representation_level"] == "source"
+    assert catalog_id["target_entity"] == "Identifier"
+    assert catalog_id["target_property"] == "source_catalog_id"
+
     # Duplicate CT identifiers remain separate source records/cards.
     ct1515_a1 = [
         c for c in cards

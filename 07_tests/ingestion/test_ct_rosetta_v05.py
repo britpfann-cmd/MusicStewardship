@@ -175,3 +175,11 @@ def test_ct_identifier_channels_remain_distinct(tmp_path):
         "CT-CTRL-015": "CT1901-A1",
         "CT-CTRL-019": "CT1901-A1",
     }
+
+    filename_id = next(r for r in nost if r["rule_id"] == "CT-CTRL-015")
+    catalog_id = next(r for r in nost if r["rule_id"] == "CT-CTRL-019")
+
+    assert filename_id["semantic_term"] == "ct_source_identifier"
+    assert filename_id["representation_level"] == "source"
+    assert catalog_id["semantic_term"] == "ct_source_identifier"
+    assert catalog_id["representation_level"] == "source"

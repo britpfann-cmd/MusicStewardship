@@ -130,6 +130,8 @@ def main():
         rosetta_evidence=[
             {
                 "rule_id":o.get("rule_id",""),
+                "semantic_term":o.get("semantic_term",""),
+                "representation_level":o.get("representation_level",""),
                 "target_entity":o.get("target_entity",""),
                 "target_property":o.get("target_property",""),
                 "target_relationship":o.get("target_relationship",""),
