@@ -198,12 +198,23 @@ def load_population(
 
             card_id = store.accept_library_card(decoded)
 
+            # Level 0: acceptance/provenance sufficient to establish
+            # a persistent, discrete CatalogedInstance.
             ci_state = {
                 "source_object_id": decoded["source_object_id"],
                 "source_object_key": decoded["source_object_key"],
                 "entry_type": decoded.get("entry_type"),
                 "construction_status": decoded.get("construction_status"),
             }
+
+            # Level 1: initial usable interpretation. Begin with whatever
+            # obvious/likely catalog values arrived on the Library Card.
+            # Missing values do not prevent catalog admission; later
+            # discovery and reconciliation may revise this current state.
+            for field in OBSERVATION_FIELDS:
+                values = populated_values(decoded.get(field))
+                if values:
+                    ci_state[field] = values
 
             ci_id = store.create_cataloged_instance(
                 card_id,

@@ -19,13 +19,15 @@ The governing preservation rule is:
 
 Source observations, undecoded/residual material, provenance, earlier interpretations, and corrective history remain recoverable even as the current catalog understanding improves.
 
-### Layered information access
+### Information-level access
 
 “Lose nothing” does not require every operation to retrieve everything that has been preserved.
 
-MusicStewardship organizes information into four information levels according to operational role and expected retrieval frequency:
+MusicStewardship organizes information into five information levels, numbered 0 through 4, according to operational role and expected retrieval frequency:
 
-1. **Current operational state** — compact, immediately accessible information required for normal catalog use, search, reporting, analysis, and downstream applications. This level answers: **What do we currently believe?**
+0. **Acceptance and provenance** — the minimum persistent foundation established when a discrete submitted instance is accepted into the catalog. Level 0 preserves what was submitted, where it came from, and the identity needed to store and retrieve the resulting CatalogedInstance. Admission is intentionally a low bar: sparse or incomplete musical description does not prevent creation of a CatalogedInstance. This level answers: **What did we accept, and where did it come from?**
+
+1. **Current operational state** — compact, immediately accessible information required for normal catalog use, search, reporting, analysis, DJ harvesting, and other downstream applications. At initial ingestion, Level 1 may simply project obvious or likely useful values from the submitted Library Card. These are current usable descriptions, not claims of final authority. Later discovery, corroboration, and reconciliation may revise them. This level answers: **What do we currently believe?**
 
 2. **Structured evidence and corroboration** — source observations, assertions, provenance, semantic classifications, competing representations, and corroborating evidence used to support, question, or reconcile current interpretation. This level answers: **Why might we believe it?**
 
@@ -33,7 +35,7 @@ MusicStewardship organizes information into four information levels according to
 
 4. **Revision history** — prior catalog states, superseded interpretations, corrections, and other history sufficient to reconstruct how current understanding developed. This level answers: **How did our current understanding develop?**
 
-These are information-access and storage levels, not levels of truth or authority. Evidence in Level 2 is not inherently less valid than information exposed in Level 1, and residual material in Level 3 is not disposable merely because its meaning is not yet understood.
+These are information-access and storage levels, not levels of truth, authority, confidence, or completeness. Level 0 establishes acceptance and provenance without requiring descriptive completeness. A Level 1 value may initially have low confidence while still being useful as the current operational description. Evidence in Level 2 is not inherently less valid than information exposed in Level 1, and residual material in Level 3 is not disposable merely because its meaning is not yet understood.
 
 **Preservation depth and retrieval depth are independent.** MusicStewardship preserves the complete evidentiary and revision record while routine processing retrieves only the minimum information level required for the task. Higher information levels should not burden lower-level routine access.
 
@@ -379,4 +381,3 @@ The model must be tested against cases including:
 12. whole-population ingest failures and recurring exceptions.
 
 **Status:** Ready to drive the first provisional SQLite/loader implementation cycle. It remains a working model subject to population-driven refinement.
-

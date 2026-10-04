@@ -37,6 +37,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
         for number, title, date in (
             ("001", "Test Tango One", "1941-01-01"),
             ("002", "Test Tango Two", "1942-02-02"),
+            ("003", None, None),
         ):
             row = {field: "" for field in fieldnames}
 
@@ -53,8 +54,8 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     "filename": f"{number}.flac",
                     "extension": ".flac",
                     "entry_type": "file",
-                    "title": json.dumps([title]),
-                    "recording_date": json.dumps([date]),
+                    "title": json.dumps([title]) if title else json.dumps([]),
+                    "recording_date": json.dumps([date]) if date else json.dumps([]),
                     "source_context": json.dumps(["TEST"]),
                     "evidence_summary": json.dumps(["synthetic regression evidence"]),
                     "residual_evidence": json.dumps([]),
@@ -87,9 +88,9 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
             second = loader.load_population(csv_path, db_path)
 
             expected = {
-                "library_cards": 2,
-                "cataloged_instances": 2,
-                "cataloged_instance_revisions": 2,
+                "library_cards": 3,
+                "cataloged_instances": 3,
+                "cataloged_instance_revisions": 3,
                 "observations": 4,
                 "recordings": 0,
                 "performances": 0,
@@ -110,7 +111,53 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     """
                 ).fetchone()[0]
 
-                self.assertEqual(active_links, 2)
+                self.assertEqual(active_links, 3)
+
+                current_states = conn.execute(
+                    """
+                    SELECT state_json
+                    FROM current_cataloged_instance_revisions
+                    ORDER BY state_json
+                    """
+                ).fetchall()
+
+                self.assertEqual(len(current_states), 3)
+
+                states = [
+                    json.loads(state_json)
+                    for (state_json,) in current_states
+                ]
+
+                by_source_id = {
+                    state["source_object_id"]: state
+                    for state in states
+                }
+
+                self.assertEqual(
+                    by_source_id["TEST-001"]["title"],
+                    ["Test Tango One"],
+                )
+                self.assertEqual(
+                    by_source_id["TEST-001"]["recording_date"],
+                    ["1941-01-01"],
+                )
+                self.assertEqual(
+                    by_source_id["TEST-002"]["title"],
+                    ["Test Tango Two"],
+                )
+                self.assertEqual(
+                    by_source_id["TEST-002"]["recording_date"],
+                    ["1942-02-02"],
+                )
+
+                # Sparse evidence still establishes a discrete Level-0
+                # CatalogedInstance without inventing Level-1 values.
+                self.assertEqual(
+                    by_source_id["TEST-003"]["source_object_id"],
+                    "TEST-003",
+                )
+                self.assertNotIn("title", by_source_id["TEST-003"])
+                self.assertNotIn("recording_date", by_source_id["TEST-003"])
 
                 observation_payloads = conn.execute(
                     """
@@ -127,13 +174,14 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                 preserved_cards = conn.execute(
                     """
                     SELECT DISTINCT lc.card_json
-                    FROM catalog_observations AS obs
+                    FROM cataloged_instance_evidence AS cie
                     JOIN library_cards AS lc
-                      ON lc.library_card_id = obs.library_card_id
+                      ON lc.library_card_id = cie.library_card_id
+                    WHERE cie.relationship_status = 'ACTIVE'
                     """
                 ).fetchall()
 
-                self.assertEqual(len(preserved_cards), 2)
+                self.assertEqual(len(preserved_cards), 3)
                 for (card_json,) in preserved_cards:
                     card = json.loads(card_json)
                     self.assertEqual(
