@@ -72,6 +72,9 @@ def test_ct_collection_import_v05(tmp_path):
     )
 
     assert len(cards) == 8
+    assert {
+        card["source_root"] for card in cards
+    } == {r"\\Archive\Music\CracklingTunes"}
     assert report["status"] == "PASS"
     assert report["source_records"] == 8
     assert report["library_cards"] == 8
