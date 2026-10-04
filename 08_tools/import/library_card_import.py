@@ -107,25 +107,13 @@ def verify_standard(card):
             result.append((field,"PASS",f"Represented: {meaning}"))
 
     return result
-def verify_semantics(card):
-    try: decoded=decode_card(card)
-    except ValueError as exc:return [("semantic_decode","FAIL",str(exc))]
-    checks=[
-    ("filename_numeric_component",decoded.get("filename_numeric_component")==["01"],"01 remains a filename numeric component."),
-    ("filename_leading_text_candidate",decoded.get("filename_leading_text_candidate")==["Track"],"Track remains filename leading text."),
-    ("source_grouping_label",decoded.get("source_grouping_label")==["TANDA CALO BERON"],"Grouping label remains source_grouping_label."),
-    ("source_context",decoded.get("source_context")==["MUSICA CIUDADANA","1 - TANGOS","CALO MIGUEL"],"Directory context survives the exchange as ordered values."),
-    ("construction_status",decoded.get("construction_status")=="candidate","C construction status survives and remains distinct from D authority."),
-    ("source_object_id",bool(decoded.get("source_object_id")),"Stable source-object identity is present."),
-    ("c_processing_revision",decoded.get("c_processing_revision")=="source_record_builder.v1+library_card_exporter.revA-test","C processing revision is distinct from interface revision and source-record schema.")]
-    return [(name,"PASS" if ok else "FAIL",detail) for name,ok,detail in checks]
 def import_csv(cards_csv):
     cards=read_csv_table(cards_csv)
     if not cards: raise ValueError("No Library Card records found.")
     imported=[]; checks=[]
     for card in cards:
         imported_card=decode_card(card); imported_card["d_processing_revision"]=D_PROCESSING_REVISION; imported_card["d_import_interface_revision"]=card.get("library_card_interface_revision",""); imported.append(imported_card)
-        checks += verify_standard(card); checks += verify_semantics(card)
+        checks += verify_standard(card)
     return cards,imported,checks
 def import_workbook(workbook):
     info=package_info(workbook)
@@ -135,7 +123,7 @@ def import_workbook(workbook):
     imported=[]; checks=[]
     for card in cards:
         imported_card=decode_card(card); imported_card["d_processing_revision"]=D_PROCESSING_REVISION; imported_card["d_import_interface_revision"]=info["Interface revision"]; imported.append(imported_card)
-        checks += verify_standard(card); checks += verify_semantics(card)
+        checks += verify_standard(card)
     return cards,imported,checks
 def write_outputs(outdir,interface_revision,imported,checks):
     outdir.mkdir(parents=True,exist_ok=True)
