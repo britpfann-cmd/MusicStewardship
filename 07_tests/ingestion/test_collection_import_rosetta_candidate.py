@@ -46,6 +46,7 @@ def test_collection_import_rosetta_replay(tmp_path):
             "--bindings", str(BINDINGS),
             "--run-id", RUN_ID,
             "--public-map", str(PUBLIC_MAP),
+            "--interface-revision", "A",
             "--output-dir", str(output_dir),
         ],
         check=True,

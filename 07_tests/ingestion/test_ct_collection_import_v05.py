@@ -46,6 +46,7 @@ def test_ct_collection_import_v05(tmp_path):
             "--bindings", str(BINDINGS),
             "--run-id", RUN_ID,
             "--public-map", str(PUBLIC_MAP),
+            "--interface-revision", "A",
             "--output-dir", str(output_dir),
         ],
         check=True,

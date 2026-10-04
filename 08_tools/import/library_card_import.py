@@ -11,12 +11,14 @@ The workbook test package remains supported as a convenience wrapper.
 from __future__ import annotations
 import argparse,csv,json
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "04_src"))
+
+from library_card_interface import certified_interface
 from typing import Any
 D_PROCESSING_REVISION="library_card_import.revA-test"
-JSON_ARRAY_FIELDS={"title","artist","orchestra_or_album_artist","singer","recording_identifier","recording_date","genre","style","source_album","composer","conductor","filename_numeric_component","filename_leading_text_candidate","sequence_number_candidate","source_suffix","source_grouping_label","source_context","evidence_summary","residual_evidence","conflicts","c_lineage"}
-FIELD_DEFINITIONS=[
-("card_revision","1","Library Card revision"),("library_card_interface_revision","1","Public exchange contract revision"),("c_processing_revision","1","C processing revision"),("source_object_id","1","Stable source-object identity"),("source_object_key","1","Source asset key"),("source_record_revision","1","C source-record schema revision"),("source_root","1","Supplied source boundary"),("relative_path","1","Source-relative asset path"),("filename","1","Original source filename"),("extension","0..1","Source filename extension"),("entry_type","1","Source object type"),("title","0..n","Initial catalog title"),("artist","0..n","Initial artist/performance attribution"),("orchestra_or_album_artist","0..n","Initial ensemble/album-artist value"),("singer","0..n","Initial singer value"),("recording_identifier","0..n","Initial recording identifier"),("recording_date","0..n","Initial recording date/year"),("genre","0..n","Initial genre"),("style","0..n","Initial style"),("source_album","0..n","Source album/release description"),("composer","0..n","Initial composer"),("conductor","0..n","Initial conductor"),("filename_numeric_component","0..n","Filename numeric component(s)"),("filename_leading_text_candidate","0..n","Leading filename text"),("sequence_number_candidate","0..n","Candidate sequence number"),("source_suffix","0..n","Terminal filename suffix"),("source_grouping_label","0..n","Source grouping label"),("source_context","0..n","Source contextual interpretation"),("evidence_summary","0..n","Compact native evidence summary"),("residual_evidence","0..n","Preserved uninterpreted evidence"),("construction_status","1","C construction status"),("conflicts","0..n","C-detected construction conflicts"),("c_lineage","1..n","C lineage references")]
-
 def read_csv_table(path:Path):
     with path.open("r",newline="",encoding="utf-8-sig") as f:return list(csv.DictReader(f))
 def rows_from_workbook(path:Path,sheet:str):
@@ -36,25 +38,74 @@ def package_info(path:Path):
     for row in rows_from_workbook(path,"Package Info"):
         if len(row)>=2 and row[0] is not None: result[str(row[0])]="" if row[1] is None else str(row[1])
     return result
-def decode_public_value(field,value):
-    if value=="": return [] if field in JSON_ARRAY_FIELDS else ""
-    if field in JSON_ARRAY_FIELDS:
-        try: decoded=json.loads(value)
-        except json.JSONDecodeError as exc: raise ValueError(f"Field {field!r} must contain a JSON array in Rev A.") from exc
-        if not isinstance(decoded,list): raise ValueError(f"Field {field!r} must contain a JSON array in Rev A.")
+def contract_for_card(card):
+    revision=card.get("library_card_interface_revision","")
+    if not revision:
+        raise ValueError(
+            "Library Card does not declare library_card_interface_revision."
+        )
+    return certified_interface(revision)
+
+def decode_public_value(field,value,contract):
+    if value=="":
+        return [] if field in contract.array_fields else ""
+    if field in contract.array_fields:
+        try:
+            decoded=json.loads(value)
+        except json.JSONDecodeError as exc:
+            raise ValueError(
+                f"Field {field!r} must contain a JSON array in "
+                f"interface revision {contract.revision}."
+            ) from exc
+        if not isinstance(decoded,list):
+            raise ValueError(
+                f"Field {field!r} must contain a JSON array in "
+                f"interface revision {contract.revision}."
+            )
         return decoded
     return value
-def decode_card(card): return {field:decode_public_value(field,value) for field,value in card.items()}
+
+def decode_card(card):
+    contract=contract_for_card(card)
+    return {
+        field:decode_public_value(field,value,contract)
+        for field,value in card.items()
+    }
+
 def verify_standard(card):
+    contract=contract_for_card(card)
     result=[]
-    for field,cardinality,meaning in FIELD_DEFINITIONS:
+    for definition in contract.fields:
+        field=definition["Field"]
+        cardinality=definition["Cardinality"]
+        meaning=definition["Meaning"]
         required=cardinality in ("1","1..n")
-        if field not in card: result.append((field,"FAIL","Field absent from Library Card header.")); continue
-        if required and card[field]=="": result.append((field,"REVIEW","Required field is present but blank.")); continue
-        try: decoded=decode_public_value(field,card[field])
-        except ValueError as exc: result.append((field,"FAIL",str(exc))); continue
-        if cardinality in ("0..n","1..n") and not isinstance(decoded,list): result.append((field,"FAIL","Multi-valued field is not encoded as a JSON array."))
-        else: result.append((field,"PASS",f"Represented: {meaning}"))
+
+        if field not in card:
+            result.append(
+                (field,"FAIL","Field absent from Library Card header.")
+            )
+            continue
+
+        if required and card[field]=="":
+            result.append(
+                (field,"REVIEW","Required field is present but blank.")
+            )
+            continue
+
+        try:
+            decoded=decode_public_value(field,card[field],contract)
+        except ValueError as exc:
+            result.append((field,"FAIL",str(exc)))
+            continue
+
+        if cardinality in ("0..n","1..n") and not isinstance(decoded,list):
+            result.append(
+                (field,"FAIL","Multi-valued field is not encoded as a JSON array.")
+            )
+        else:
+            result.append((field,"PASS",f"Represented: {meaning}"))
+
     return result
 def verify_semantics(card):
     try: decoded=decode_card(card)
@@ -78,7 +129,7 @@ def import_csv(cards_csv):
     return cards,imported,checks
 def import_workbook(workbook):
     info=package_info(workbook)
-    if info.get("Interface revision")!="A": raise ValueError("This prototype expects Library Card interface revision A.")
+    certified_interface(info.get("Interface revision",""))
     cards=table_from_workbook(workbook,"Library Cards")
     if not cards: raise ValueError("No Library Card records found.")
     imported=[]; checks=[]
@@ -96,6 +147,6 @@ def main():
     ap=argparse.ArgumentParser(); source=ap.add_mutually_exclusive_group(required=True); source.add_argument("--csv",type=Path); source.add_argument("--workbook",type=Path); ap.add_argument("--output-dir",type=Path,required=True); args=ap.parse_args()
     if args.csv: _,imported,checks=import_csv(args.csv); interface_revision=imported[0].get("library_card_interface_revision","") if imported else ""
     else: info=package_info(args.workbook); _,imported,checks=import_workbook(args.workbook); interface_revision=info.get("Interface revision","")
-    if interface_revision!="A": raise ValueError(f"Unsupported Library Card interface revision: {interface_revision!r}")
+    certified_interface(interface_revision)
     write_outputs(args.output_dir,interface_revision,imported,checks)
 if __name__=="__main__": main()

@@ -10,6 +10,12 @@ source-specific interpretation.
 from __future__ import annotations
 import argparse, csv, hashlib, json
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "04_src"))
+
+from library_card_interface import certified_interface
 
 ARRAY_FIELDS = set()
 
@@ -63,6 +69,7 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("source_csv",type=Path)
     ap.add_argument("--public-map",required=True,type=Path)
+    ap.add_argument("--interface-revision",required=True)
     ap.add_argument("--observations",required=True,type=Path)
     ap.add_argument("--run-id",required=True)
     ap.add_argument("--output",required=True,type=Path)
@@ -70,7 +77,15 @@ def main():
     args=ap.parse_args()
 
     source=read_csv(args.source_csv)
-    fields=field_defs(args.public_map)
+    contract=certified_interface(args.interface_revision)
+    fields=list(contract.field_names)
+
+    mapped_fields=field_defs(args.public_map)
+    if mapped_fields != fields:
+        raise ValueError(
+            "C-side public map does not match certified "
+            f"{contract.interface_id} revision {contract.revision}"
+        )
 
     observations=[
         o for o in read_csv(args.observations)
@@ -88,8 +103,8 @@ def main():
         rel=row.get("relative_path","")
         card={f:"" for f in fields}
         card["card_revision"]="0"
-        card["library_card_interface_revision"]="A"
-        card["c_processing_revision"]="common_rosetta_recombination.revA"
+        card["library_card_interface_revision"]=contract.revision
+        card["c_processing_revision"]="common_rosetta_recombination"
         card["source_object_id"]=stable_id(sid,rel)
         card["source_object_key"]=f"{sid}:{rel}"
         card["source_record_revision"]="source_ingest.v2"
@@ -193,9 +208,3 @@ def main():
 
 if __name__=="__main__":
     main()
-
-
-
-
-
-

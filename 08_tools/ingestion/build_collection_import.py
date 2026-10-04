@@ -24,6 +24,7 @@ def main():
     ap.add_argument("--bindings",type=Path,required=True)
     ap.add_argument("--run-id",required=True)
     ap.add_argument("--public-map",type=Path,required=True)
+    ap.add_argument("--interface-revision",required=True)
     ap.add_argument("--output-dir",type=Path,required=True)
     args=ap.parse_args()
 
@@ -55,6 +56,7 @@ def main():
          str(INGEST / "build_library_cards_from_rosetta.py"),
          str(ingest_csv),
          "--public-map",str(args.public_map),
+         "--interface-revision",args.interface_revision,
          "--observations",str(rosetta_state/"observations.csv"),
          "--run-id",args.run_id,
          "--output",str(card_csv),
