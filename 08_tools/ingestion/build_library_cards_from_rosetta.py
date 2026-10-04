@@ -29,9 +29,43 @@ def write_csv(path, rows, fields):
         w=csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         w.writeheader(); w.writerows(rows)
 
-def field_defs(path):
+def validate_public_map(path, contract):
     rows=read_csv(path)
-    return [r["public_field"] for r in rows]
+    definitions=list(contract.fields)
+
+    if len(rows) != len(definitions):
+        raise ValueError(
+            "C-side public map field count does not match certified "
+            f"{contract.interface_id} revision {contract.revision}: "
+            f"{len(rows)} map rows vs {len(definitions)} certified fields"
+        )
+
+    for position, (row, definition) in enumerate(
+        zip(rows, definitions), start=1
+    ):
+        expected_required=str(definition["Required"]).strip().lower()
+        actual_required=str(row.get("required","")).strip().lower()
+
+        checks = (
+            ("interface_revision", row.get("interface_revision",""),
+             contract.revision),
+            ("public_field", row.get("public_field",""),
+             definition["Field"]),
+            ("cardinality", row.get("cardinality",""),
+             definition["Cardinality"]),
+            ("required", actual_required, expected_required),
+        )
+
+        for attribute, actual, expected in checks:
+            if actual != expected:
+                raise ValueError(
+                    f"C-side public map row {position} {attribute} mismatch "
+                    f"for certified {contract.interface_id} revision "
+                    f"{contract.revision}: expected {expected!r}, "
+                    f"got {actual!r}"
+                )
+
+    return rows
 
 def parse_kv(text, key):
     if not text:
@@ -80,12 +114,7 @@ def main():
     contract=certified_interface(args.interface_revision)
     fields=list(contract.field_names)
 
-    mapped_fields=field_defs(args.public_map)
-    if mapped_fields != fields:
-        raise ValueError(
-            "C-side public map does not match certified "
-            f"{contract.interface_id} revision {contract.revision}"
-        )
+    validate_public_map(args.public_map, contract)
 
     observations=[
         o for o in read_csv(args.observations)
