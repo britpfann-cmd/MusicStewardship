@@ -448,6 +448,62 @@ or contradict them.
 
 Candidate analysis therefore remains report-only at this stage and has no
 identity effect.
+### Candidate promotion and processing floor
+
+An initially empty catalog has no established entities at any confidence level.
+Entity discovery must therefore begin with the observations and representations
+present in accepted source populations rather than requiring a previously
+established entity.
+
+Potentially entity-bearing observations may be retained as candidates for
+association with entities such as Person, Ensemble, Work, Performance, and
+Recording. Candidate discovery is deliberately permissive: evidence is not
+discarded merely because it is insufficient to establish identity.
+
+Candidate representations may be grouped as evidence accumulates. Such grouping
+is itself an identity hypothesis, not proof of identity. Multiple names or
+representations may later be associated with one entity, and an earlier grouping
+may later be split or revised as additional evidence becomes available.
+
+Confidence applies to an identity conclusion or association, not permanently to
+the entity itself. Different assertions involving the same entity may therefore
+carry different confidence.
+
+Population-processing orchestration shall support a **promotion floor**. The
+promotion floor specifies the minimum confidence required for processing to
+materialize an entity or identity association automatically. Candidates below
+the floor remain preserved and available for later reconciliation; they are not
+discarded or treated as negative evidence.
+
+The promotion floor controls catalog-changing action, not discovery. Candidate
+discovery should continue across the population regardless of the selected
+floor.
+
+Initial confidence levels should be ordinal rather than presented as calibrated
+numeric probabilities. Numerical confidence scores may be introduced later if
+their meaning can be empirically calibrated.
+
+Curated source populations may justify a relatively high-confidence bootstrap:
+obvious candidate entities and associations that meet the selected promotion
+floor can populate an initially empty catalog, while ambiguous cases remain
+candidates for subsequent research or reconciliation.
+
+Thus the bootstrap progression is:
+
+    source observations
+        -> candidate representations
+        -> candidate grouping and evidence assessment
+        -> promotion-floor decision
+        -> provisional entity creation where warranted
+        -> association of candidate representations with the entity
+        -> later corroboration, revision, merge, or split
+
+This preserves the governing distinction:
+
+**Discovery proposes. The promotion floor governs automatic action. The catalog
+records the resulting entities and associations without discarding the evidence
+from which they were derived.**
+
 ## 14. Current source-to-E-R mapping
 
 Existing TTT prototype structures remain useful input evidence but are not treated as final ontology:
