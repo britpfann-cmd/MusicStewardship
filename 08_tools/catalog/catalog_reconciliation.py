@@ -24,6 +24,25 @@ def create_provisional_recording(
     if not reason.strip():
         raise ValueError("An explicit reconciliation reason is required.")
 
+    missing_ci_ids = [
+        ci_id
+        for ci_id in cataloged_instance_ids
+        if store.conn.execute(
+            """
+            SELECT 1
+            FROM cataloged_instances
+            WHERE cataloged_instance_id = ?
+            """,
+            (ci_id,),
+        ).fetchone() is None
+    ]
+
+    if missing_ci_ids:
+        raise ValueError(
+            "Unknown CatalogedInstance ID(s): "
+            + ", ".join(missing_ci_ids)
+        )
+
     try:
         recording_id = store.create_entity(
             "RECORDING",

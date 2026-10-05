@@ -148,3 +148,45 @@ def test_provisional_recording_rolls_back_on_association_failure():
     ).fetchone()[0] == 0
 
     store.close()
+
+def test_provisional_recording_rejects_nonexistent_ci():
+    store = CatalogStore()
+
+    card = {
+        "source_object_id": "TEST-VALID",
+        "source_object_key": "test:valid",
+        "source_record_revision": "1",
+    }
+    card_id = store.accept_library_card(card)
+    valid_ci = store.create_cataloged_instance(
+        card_id,
+        state={"title": ["Example Tango"]},
+    )
+
+    try:
+        reconciliation.create_provisional_recording(
+            store,
+            cataloged_instance_ids=[
+                valid_ci,
+                "CI-DOES-NOT-EXIST",
+            ],
+            reason="Test nonexistent CI rejection",
+            evidence={"decision_basis": "test"},
+        )
+        assert False, "Expected nonexistent CatalogedInstance rejection"
+    except ValueError:
+        pass
+
+    assert store.conn.execute(
+        "SELECT COUNT(*) FROM recordings"
+    ).fetchone()[0] == 0
+
+    assert store.conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM catalog_associations
+        WHERE association_type = 'CATALOGED_INSTANCE_RECORDING'
+        """
+    ).fetchone()[0] == 0
+
+    store.close()
