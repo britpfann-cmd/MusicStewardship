@@ -475,6 +475,7 @@ class CatalogStore:
         self,
         entity_type: str,
         data: dict[str, Any] | None = None,
+        commit: bool = True,
     ) -> str:
         tables = {
             "RECORDING": ("recordings", "recording_id", "REC"),
@@ -501,7 +502,8 @@ class CatalogStore:
                 t,
             ),
         )
-        self.conn.commit()
+        if commit:
+            self.conn.commit()
         return entity_id
 
     def assert_association(
@@ -515,6 +517,7 @@ class CatalogStore:
         reason: str = "",
         evidence: dict[str, Any] | None = None,
         supersedes: str | None = None,
+        commit: bool = True,
     ) -> str:
         association_id = new_id("ASC")
 
@@ -549,5 +552,6 @@ class CatalogStore:
                 now(),
             ),
         )
-        self.conn.commit()
+        if commit:
+            self.conn.commit()
         return association_id
