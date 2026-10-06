@@ -1,0 +1,18 @@
+source_element,source_field,notes
+source identity,relative_path,TangoTunes source-relative identity
+source file,relative_path,complete source-relative path
+filename,filename,original filename
+title,TITLE,embedded TangoTunes title
+filename title,filename_title_candidate,title representation derived from filename
+artist,ARTIST,embedded performer representation
+album_artist,ALBUM_ARTIST,embedded album-artist/ensemble evidence
+composer,COMPOSER,complete native TangoTunes composer/author expression
+recording_date,DATE,embedded source date
+genre,GENRE,embedded TangoTunes genre
+album,ALBUM,embedded album/release title
+track,TRACK,embedded track value
+comment,COMMENT,embedded source comment
+publisher,PUBLISHER,embedded publisher
+source_media,SOURCEMEDIA,embedded source medium
+filename identifier,filename_identifier,identifier representation derived from filename when parsed
+filename parse status,filename_parse_status,result of filename grammar

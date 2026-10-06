@@ -59,7 +59,8 @@ def parse_filename(filename: str) -> dict[str, str]:
     )
 
     if not m:
-        result["filename_title_candidate"] = stem
+        # Preserve the undecoded filename through the source record.
+        # Do not present the whole stem as a decoded title candidate.
         result["filename_parse_status"] = "NO_PATTERN"
         return result
 
@@ -125,6 +126,7 @@ def main() -> int:
 
     output_fields = [
         "source",
+        "source_id",
         "source_root",
         "relative_path",
         "filename",
@@ -187,6 +189,7 @@ def main() -> int:
 
             staged.update({
                 "source": args.source_name,
+                "source_id": args.source_name,
                 "source_root": row.get("source_root", ""),
                 "relative_path": row.get("relative_path", ""),
                 "filename": row.get("filename", ""),
@@ -223,3 +226,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
