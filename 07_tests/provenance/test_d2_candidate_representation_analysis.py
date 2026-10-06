@@ -50,7 +50,7 @@ def make_fixture(db):
        None,"{}","{}","2026-10-06T00:00:00"),
 
       ("o5","lc1","CATALOGED_INSTANCE","ci1","composer_expression",
-       json.dumps(["Carlos López"],ensure_ascii=False),
+       json.dumps(["Juan Pérez"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
       # Ambiguous/multiple contributor expression: preserve, but do not
@@ -93,6 +93,7 @@ def test_d2_candidate_representation_analysis(tmp_path):
     reps=read_jsonl(out/"candidate_representations.jsonl")
     rels=read_jsonl(out/"same_ci_relationships.jsonl")
     groups=read_jsonl(out/"candidate_representation_groups.jsonl")
+    candidate_sets=read_jsonl(out/"candidate_sets.jsonl")
     summary=json.loads(
         (out/"summary.json").read_text(encoding="utf-8")
     )
@@ -114,7 +115,7 @@ def test_d2_candidate_representation_analysis(tmp_path):
         for r in people
     } == {
         ("author","author_expression","Juan Pérez"),
-        ("composer","composer_expression","Carlos López")
+        ("composer","composer_expression","Juan Pérez")
     }
 
     # D2 must not reinterpret raw source-specific composer syntax.
@@ -137,5 +138,33 @@ def test_d2_candidate_representation_analysis(tmp_path):
     assert pg[0]["cataloged_instance_count"]==2
     assert pg[0]["identity_asserted"] is False
 
+    # Candidate sets consolidate comparison methods by representation membership.
+    assert summary["candidate_set_count"]==2
+    assert summary["candidate_sets_by_entity_type"]=={
+        "Work":1,
+        "Person":1
+    }
+    assert summary["cross_ci_candidate_sets_by_entity_type"]=={
+        "Work":1,
+        "Person":0
+    }
+
+    work_sets=[s for s in candidate_sets if s["entity_type"]=="Work"]
+    assert len(work_sets)==1
+    assert work_sets[0]["cataloged_instance_count"]==2
+    assert work_sets[0]["identity_asserted"] is False
+    assert set(work_sets[0]["discovery_methods"])=={
+        "unicode",
+        "accent_case",
+        "punctuation_spacing"
+    }
+
+    person_sets=[s for s in candidate_sets if s["entity_type"]=="Person"]
+    assert len(person_sets)==1
+    assert person_sets[0]["roles"]==["author","composer"]
+    assert person_sets[0]["identity_asserted"] is False
     assert summary["identity_decisions_made"]==0
     assert summary["entities_created"]==0
+
+
+
