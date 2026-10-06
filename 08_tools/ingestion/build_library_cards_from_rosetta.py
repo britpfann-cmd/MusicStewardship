@@ -148,6 +148,9 @@ def main():
         rosetta_obs=observations_by_record.get((sid,rel),[])
         semantic_targets={
             ("Composition","title"):"title",
+            ("Composition","alternate_title"):"filename_leading_text_candidate",
+            ("Source Assertion","source_artist"):"artist",
+            ("Source Assertion","source_composer"):"composer",
             ("Recording","date"):"recording_date",
             ("Ensemble","source_album_artist"):"orchestra_or_album_artist",
             ("Release","title"):"source_album",
@@ -237,3 +240,4 @@ def main():
 
 if __name__=="__main__":
     main()
+

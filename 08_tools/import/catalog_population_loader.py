@@ -52,7 +52,7 @@ spec.loader.exec_module(library_card_import)
 
 D_PROCESSING_REVISION = "catalog_population_loader.v0.1"
 
-OBSERVATION_FIELDS = (
+CURRENT_STATE_FIELDS = (
     "title",
     "artist",
     "orchestra_or_album_artist",
@@ -64,6 +64,11 @@ OBSERVATION_FIELDS = (
     "source_album",
     "composer",
     "conductor",
+)
+
+OBSERVATION_FIELDS = (
+    *CURRENT_STATE_FIELDS,
+    "filename_leading_text_candidate",
 )
 
 
@@ -106,6 +111,54 @@ def populated_values(value: Any) -> list[Any]:
     return [value]
 
 
+def rosetta_level2_observations(
+    evidence_summary: Any,
+) -> list[dict[str, Any]]:
+    """Return canonical Level-2 observations preserved by Rosetta."""
+    result = []
+
+    for item in populated_values(evidence_summary):
+        if not isinstance(item, dict):
+            continue
+
+        field = (
+            str(item.get("semantic_term") or "").strip()
+            or str(item.get("target_property") or "").strip()
+        )
+        value = item.get("decoded_value")
+
+        if not field or not populated_values(value):
+            continue
+
+        result.append(
+            {
+                "field": field,
+                "observed_value": value,
+                "context": {
+                    key: item.get(key)
+                    for key in (
+                        "target_entity",
+                        "target_property",
+                        "target_relationship",
+                        "representation_level",
+                    )
+                    if item.get(key) not in (None, "")
+                },
+                "evidence": {
+                    key: item.get(key)
+                    for key in (
+                        "rule_id",
+                        "source_value",
+                        "assurance",
+                        "evidence_basis",
+                    )
+                    if item.get(key) not in (None, "")
+                },
+            }
+        )
+
+    return result
+
 def load_population(
     csv_path: Path,
     db_path: Path,
@@ -136,7 +189,7 @@ def load_population(
             # obvious/likely catalog values arrived on the Library Card.
             # Missing values do not prevent catalog admission; later
             # discovery and reconciliation may revise this current state.
-            for field in OBSERVATION_FIELDS:
+            for field in CURRENT_STATE_FIELDS:
                 values = populated_values(decoded.get(field))
                 if values:
                     ci_state[field] = values
@@ -160,10 +213,42 @@ def load_population(
                         observed_value=value,
                         commit=False,
                     )
-                    stats["observations"] += 1
-                    field_counts[field] += 1
+                    stats["observation_attempts"] += 1
 
+            # Level 2: materialize structured Rosetta evidence generically.
+            # Semantic interpretation belongs to Rosetta; this loader carries
+            # canonical observations forward without source-specific knowledge.
+            for observation in rosetta_level2_observations(
+                decoded.get("evidence_summary")
+            ):
+                field = observation["field"]
+                value = observation["observed_value"]
+
+                store.add_observation(
+                    library_card_id=card_id,
+                    subject_type="CATALOGED_INSTANCE",
+                    subject_id=ci_id,
+                    field=field,
+                    observed_value=value,
+                    context=observation["context"],
+                    evidence=observation["evidence"],
+                    commit=False,
+                )
+                stats["observation_attempts"] += 1
             store.conn.commit()
+
+        field_counts = Counter(
+            {
+                row[0]: row[1]
+                for row in store.conn.execute(
+                    """
+                    SELECT observed_field, COUNT(*)
+                    FROM catalog_observations
+                    GROUP BY observed_field
+                    """
+                ).fetchall()
+            }
+        )
 
         db_counts = {
             "library_cards": store.conn.execute(
@@ -227,3 +312,8 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+
+
+

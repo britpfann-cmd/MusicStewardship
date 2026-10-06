@@ -57,7 +57,25 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     "title": json.dumps([title]) if title else json.dumps([]),
                     "recording_date": json.dumps([date]) if date else json.dumps([]),
                     "source_context": json.dumps(["TEST"]),
-                    "evidence_summary": json.dumps(["synthetic regression evidence"]),
+                    "evidence_summary": json.dumps(
+                        [
+                            "synthetic regression evidence",
+                            {
+                                "rule_id": "TEST-D-001",
+                                "semantic_term": "test_decoded_expression",
+                                "representation_level": "TEST",
+                                "target_entity": "Test Entity",
+                                "target_property": "test_decoded_expression",
+                                "target_relationship": "test_relationship",
+                                "source_value": "Raw Test Value",
+                                "decoded_value": "Decoded Test Value",
+                                "assurance": "DECODED",
+                                "evidence_basis": "generic Rosetta regression",
+                            },
+                        ]
+                        if number == "001"
+                        else ["synthetic regression evidence"]
+                    ),
                     "residual_evidence": json.dumps(
                         ["UNINTERPRETED-TEST-003"]
                         if number == "003"
@@ -95,7 +113,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                 "library_cards": 3,
                 "cataloged_instances": 3,
                 "cataloged_instance_revisions": 3,
-                "observations": 4,
+                "observations": 5,
                 "recordings": 0,
                 "performances": 0,
                 "works": 0,
@@ -167,10 +185,49 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                     """
                 ).fetchall()
 
-                self.assertEqual(len(observation_payloads), 4)
-                for context_json, evidence_json in observation_payloads:
-                    self.assertEqual(json.loads(context_json), {})
-                    self.assertEqual(json.loads(evidence_json), {})
+                self.assertEqual(len(observation_payloads), 5)
+
+                empty_payloads = [
+                    (context_json, evidence_json)
+                    for context_json, evidence_json in observation_payloads
+                    if json.loads(context_json) == {}
+                    and json.loads(evidence_json) == {}
+                ]
+                self.assertEqual(len(empty_payloads), 4)
+
+                rosetta_observation = conn.execute(
+                    """
+                    SELECT observed_value_json, context_json, evidence_json
+                    FROM catalog_observations
+                    WHERE observed_field = 'test_decoded_expression'
+                    """
+                ).fetchone()
+
+                self.assertIsNotNone(rosetta_observation)
+                observed_value_json, context_json, evidence_json = rosetta_observation
+
+                self.assertEqual(
+                    json.loads(observed_value_json),
+                    "Decoded Test Value",
+                )
+                self.assertEqual(
+                    json.loads(context_json),
+                    {
+                        "target_entity": "Test Entity",
+                        "target_property": "test_decoded_expression",
+                        "target_relationship": "test_relationship",
+                        "representation_level": "TEST",
+                    },
+                )
+                self.assertEqual(
+                    json.loads(evidence_json),
+                    {
+                        "rule_id": "TEST-D-001",
+                        "source_value": "Raw Test Value",
+                        "assurance": "DECODED",
+                        "evidence_basis": "generic Rosetta regression",
+                    },
+                )
 
                 preserved_cards = conn.execute(
                     """
@@ -185,9 +242,27 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
                 self.assertEqual(len(preserved_cards), 3)
                 for source_object_id, card_json in preserved_cards:
                     card = json.loads(card_json)
+                    expected_evidence = ["synthetic regression evidence"]
+
+                    if source_object_id == "TEST-001":
+                        expected_evidence.append(
+                            {
+                                "rule_id": "TEST-D-001",
+                                "semantic_term": "test_decoded_expression",
+                                "representation_level": "TEST",
+                                "target_entity": "Test Entity",
+                                "target_property": "test_decoded_expression",
+                                "target_relationship": "test_relationship",
+                                "source_value": "Raw Test Value",
+                                "decoded_value": "Decoded Test Value",
+                                "assurance": "DECODED",
+                                "evidence_basis": "generic Rosetta regression",
+                            }
+                        )
+
                     self.assertEqual(
                         card["evidence_summary"],
-                        ["synthetic regression evidence"],
+                        expected_evidence,
                     )
                     self.assertEqual(
                         card["c_lineage"],
@@ -205,3 +280,7 @@ class CatalogPopulationLoaderTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+
+
