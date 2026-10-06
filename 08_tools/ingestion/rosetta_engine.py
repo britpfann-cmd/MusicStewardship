@@ -29,7 +29,7 @@ OBS_FIELDS = ["run_id","source_id","source_record","source_element","source_fiel
              "target_entity","target_property","target_relationship","assurance",
              "preserve_source_value","decoded_value","status",
              "processing_outcome","outcome_reason","residual","evidence_basis"]
-ENGINE_VERSION = "0.4-processing-outcome"
+ENGINE_VERSION = "0.5-named-regex-output"
 
 
 def read_csv(path: Path):
@@ -77,6 +77,19 @@ def regex_extract(text, pattern, findall=False):
     if not m: return [], "NO_MATCH"
     return [m.group(1).strip()] if m.lastindex else [m.group(0).strip()], "EMITTED"
 
+def regex_named_extract(text, pattern):
+    """Return non-empty named regex captures as (name, value) pairs."""
+    if not pattern: return [], "NO_PATTERN"
+    try: rx = re.compile(pattern, re.I)
+    except re.error as exc: return [("__error__", f"REGEX_ERROR:{exc}")], "ERROR"
+    if not rx.groupindex:
+        return [("__error__", "REGEX_ERROR:named capture required")], "ERROR"
+    m = rx.search(text)
+    if not m: return [], "NO_MATCH"
+    values = [(name, (m.group(name) or "").strip()) for name in rx.groupindex]
+    values = [(name, value) for name, value in values if value]
+    return values, "EMITTED" if values else "NO_MATCH"
+
 def classify_processing_outcome(rule, execution_status):
     """
     Translate low-level generic operation status into the controlled
@@ -116,6 +129,7 @@ def classify_processing_outcome(rule, execution_status):
 
 def apply(rule, value, row):
     op=rule["operation"].upper(); dec=(rule.get("decoder") or "scalar").lower(); text=value or ""; pattern=(rule.get("decoder_pattern") or "").strip()
+    if dec == "regex_named": return regex_named_extract(text, pattern)
     if op == "IGNORE": return [], "IGNORED"
     if op in {"COPY","RENAME","REFERENCE","ASSERT","SOURCE_CONTEXT","LOOKUP"}: return [text], "EMITTED"
     if op == "STANDARDIZE": return [text.strip()], "EMITTED"
@@ -215,11 +229,19 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
                         rule, status
                     )
 
-                    if decoded:
+                    named_output = (rule.get("decoder") or "").lower() == "regex_named"
+                    if decoded and not named_output:
                         semantic_values.setdefault(elem,[])
                         semantic_values[elem].extend(decoded)
 
                     for item in decoded:
+                        output_name, output_value = item if named_output else ("", item)
+                        if named_output and output_name == "__error__":
+                            output_name = ""
+                        semantic_term = output_name or rule.get("semantic_term","")
+                        target_property = output_name or rule["target_property"]
+                        if output_value and semantic_term:
+                            semantic_values.setdefault(semantic_term,[]).append(output_value)
                         new_obs.append({
                             "run_id":run_id,
                             "source_id":sid,
@@ -228,17 +250,17 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
                             "source_field":field,
                             "source_value":resolved_value,
                             "rule_id":rule["rule_id"],
-                            "semantic_term":rule.get("semantic_term",""),
+                            "semantic_term":semantic_term,
                             "representation_level":rule.get("representation_level",""),
                             "information_class":rule["information_class"],
                             "operation":rule["operation"],
                             "decoder":rule["decoder"],
                             "target_entity":rule["target_entity"],
-                            "target_property":rule["target_property"],
+                            "target_property":target_property,
                             "target_relationship":rule["target_relationship"],
                             "assurance":rule["assurance"],
                             "preserve_source_value":rule["preserve_source_value"],
-                            "decoded_value":item,
+                            "decoded_value":output_value,
                             "status":status,
                             "processing_outcome":processing_outcome,
                             "outcome_reason":outcome_reason,
