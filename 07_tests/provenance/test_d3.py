@@ -38,12 +38,13 @@ class TestD3(unittest.TestCase):
         self.assertFalse(result['identity_asserted'])
         self.assertEqual(result['entities_created'], 0)
 
-    def test_same_role_unresolved(self):
+    def test_same_role_contextual(self):
         a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
         b = rep('b', 'ci2', 'Francisco Bohigas', 'Person'); b['role'] = 'author'
         c = rep('c', 'ci1', 'Another Author', 'Person'); c['role'] = 'author'
         result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
-        self.assertEqual([x['representation_id'] for x in result['unresolved_relevant']], ['c'])
+        self.assertEqual([x['representation_id'] for x in result['contextual_associations']], ['c'])
+        self.assertEqual(result['unresolved_relevant'], [])
 
     def test_matching_name_across_roles(self):
         a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
@@ -53,12 +54,34 @@ class TestD3(unittest.TestCase):
         self.assertEqual([x['representation_id'] for x in result['supporting_related']], ['c'])
         self.assertEqual(result['contextual_associations'], [])
 
-    def test_unknown_role_unresolved(self):
+    def test_unknown_role_contextual(self):
         a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
         b = rep('b', 'ci2', 'Francisco Bohigas', 'Person'); b['role'] = 'author'
         c = rep('c', 'ci1', 'Unknown Contributor', 'Person')
         result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
-        self.assertEqual(len(result['unresolved_relevant']), 1)
+        self.assertEqual([x['representation_id'] for x in result['contextual_associations']], ['c'])
+        self.assertEqual(result['unresolved_relevant'], [])
+
+    def test_mixed_supporting_roles_other_name_contextual(self):
+        a = rep('a', 'ci1', 'Virgilio San Clemente', 'Person'); a['role'] = 'author'
+        b = rep('b', 'ci2', 'Virgilio San Clemente', 'Person'); b['role'] = 'composer'
+        c = rep('c', 'ci1', 'Maruja Pacheco Huergo', 'Person'); c['role'] = 'composer'
+        result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
+        self.assertEqual([x['representation_id'] for x in result['contextual_associations']], ['c'])
+        self.assertEqual(result['unresolved_relevant'], [])
+        self.assertEqual(result['supporting_related'], [])
+        self.assertFalse(result['identity_asserted'])
+        self.assertEqual(result['entities_created'], 0)
+
+    def test_different_names_not_identity_support(self):
+        a = rep('a', 'ci1', 'Juan Canaro', 'Person'); a['role'] = 'composer'
+        b = rep('b', 'ci2', 'Juan Canaro', 'Person'); b['role'] = 'author'
+        c = rep('c', 'ci1', 'Osvaldo Sosa Cordero', 'Person'); c['role'] = 'author'
+        result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
+        self.assertEqual(result['supporting_member_ids'], ['a', 'b'])
+        self.assertEqual(result['supporting_related'], [])
+        self.assertEqual([x['representation_id'] for x in result['contextual_associations']], ['c'])
+        self.assertEqual(result['potentially_conflicting'], [])
 
 if __name__ == '__main__':
     unittest.main()

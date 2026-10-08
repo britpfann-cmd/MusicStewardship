@@ -74,13 +74,12 @@ def build(representations, candidate_sets):
                 elif any(annotated_match(r, m) for m in members):
                     related.append({'representation_id': r['representation_id'], 'cataloged_instance_id': ci, 'comparison_bases': ['SOURCE_TITLE_ANNOTATION_V']})
                 else:
-                    # Different explicit contributor roles are co-occurring context,
-                    # not competing identity claims. Unknown/same roles remain unresolved.
-                    member_roles = {m.get('role') for m in members if m.get('role')}
-                    role = r.get('role')
+                    # A different Person name co-occurring on the same source
+                    # instance is contextual, regardless of contributor role.
+                    # This is neither a same-person nor a different-person claim.
                     entry = {'representation_id': r['representation_id'], 'cataloged_instance_id': ci}
-                    if entity_type == 'Person' and role and member_roles and role not in member_roles:
-                        contextual.append({**entry, 'assessment': 'DIFFERENT_CONTRIBUTOR_ROLE_CONTEXT', 'role': role})
+                    if entity_type == 'Person':
+                        contextual.append({**entry, 'assessment': 'DIFFERENT_CONTRIBUTOR_NAME_CONTEXT', 'role': r.get('role')})
                     else:
                         unresolved.append({**entry, 'assessment': 'UNRESOLVED_DIFFERENCE_NOT_PROVEN_CONFLICT'})
         observed = [r['observed_value'] for r in members]
@@ -89,7 +88,7 @@ def build(representations, candidate_sets):
         origins = sorted({r['representation_source'] for r in members if r.get('representation_source')})
         roles = sorted({r['role'] for r in members if r.get('role')})
         output.append({
-            'd3_version': '0.2', 'candidate_set_id': candidate['candidate_set_id'],
+            'd3_version': '0.3', 'candidate_set_id': candidate['candidate_set_id'],
             'representation_domain': DOMAIN[entity_type], 'group_status': 'NON_NAME_EXPRESSION' if non_name else ('CROSS_INSTANCE_LIKELY_SAME' if len(ci_ids) > 1 else 'WITHIN_INSTANCE_EVIDENCE'),
             'identity_asserted': False, 'entities_created': 0,
             'supporting_member_ids': sorted(member_ids), 'supporting_related': sorted(related, key=lambda x: x['representation_id']),
@@ -106,7 +105,7 @@ def build(representations, candidate_sets):
     return output
 
 def main():
-    p = argparse.ArgumentParser(description='Read-only D3 v0.2 grouping evidence report')
+    p = argparse.ArgumentParser(description='Read-only D3 v0.3 grouping evidence report')
     p.add_argument('--input-dir', type=Path, required=True)
     p.add_argument('--output-dir', type=Path, required=True)
     args = p.parse_args()
@@ -116,7 +115,7 @@ def main():
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_jsonl(args.output_dir / 'd3_groups.jsonl', groups)
     counts = Counter((g['representation_domain'], g['group_status']) for g in groups)
-    summary = {'d3_version': '0.2', 'input_candidate_sets': len(sets), 'output_groups': len(groups),
+    summary = {'d3_version': '0.3', 'input_candidate_sets': len(sets), 'output_groups': len(groups),
                'group_counts': {f'{k[0]}:{k[1]}': v for k, v in sorted(counts.items())},
                'groups_with_related_evidence': sum(bool(g['supporting_related']) for g in groups),
                'groups_with_unresolved_differences': sum(bool(g['unresolved_relevant']) for g in groups),
