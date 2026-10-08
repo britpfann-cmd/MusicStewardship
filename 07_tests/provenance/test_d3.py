@@ -28,5 +28,37 @@ class TestD3(unittest.TestCase):
         sets = [candidate('a','b'),dict(candidate('b','c'), candidate_set_id='set_two')]
         self.assertEqual(len(build(reps, sets)), 2)
 
+    def test_different_roles_contextual(self):
+        a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
+        b = rep('b', 'ci2', 'Francisco Bohigas', 'Person'); b['role'] = 'author'
+        c = rep('c', 'ci1', 'Alejandro Michetti', 'Person'); c['role'] = 'composer'
+        result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
+        self.assertEqual([x['representation_id'] for x in result['contextual_associations']], ['c'])
+        self.assertEqual(result['unresolved_relevant'], [])
+        self.assertFalse(result['identity_asserted'])
+        self.assertEqual(result['entities_created'], 0)
+
+    def test_same_role_unresolved(self):
+        a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
+        b = rep('b', 'ci2', 'Francisco Bohigas', 'Person'); b['role'] = 'author'
+        c = rep('c', 'ci1', 'Another Author', 'Person'); c['role'] = 'author'
+        result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
+        self.assertEqual([x['representation_id'] for x in result['unresolved_relevant']], ['c'])
+
+    def test_matching_name_across_roles(self):
+        a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
+        b = rep('b', 'ci2', 'Francisco Bohigas', 'Person'); b['role'] = 'author'
+        c = rep('c', 'ci1', 'Francisco Bohigas', 'Person'); c['role'] = 'composer'
+        result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
+        self.assertEqual([x['representation_id'] for x in result['supporting_related']], ['c'])
+        self.assertEqual(result['contextual_associations'], [])
+
+    def test_unknown_role_unresolved(self):
+        a = rep('a', 'ci1', 'Francisco Bohigas', 'Person'); a['role'] = 'author'
+        b = rep('b', 'ci2', 'Francisco Bohigas', 'Person'); b['role'] = 'author'
+        c = rep('c', 'ci1', 'Unknown Contributor', 'Person')
+        result = build([a, b, c], [candidate('a', 'b', kind='Person')])[0]
+        self.assertEqual(len(result['unresolved_relevant']), 1)
+
 if __name__ == '__main__':
     unittest.main()
