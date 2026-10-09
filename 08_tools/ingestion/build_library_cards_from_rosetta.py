@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Common Rosetta recombination -> Rev A Library Card.
+"""Common Rosetta recombination -> certified Rev A or Rev B Library Card.
 
-The public Library Card field set is defined by the authoritative Rev A map.
+The public Library Card field set is defined by the authoritative revision-specific public map.
 Source-specific semantic interpretation is supplied by Rosetta observations.
 Common recombination assembles semantics having legitimate Rev A destinations
 and preserves other source/Rosetta evidence without inventing additional
@@ -202,8 +202,23 @@ def main():
         card["entry_type"]="audio" if row.get("asset_acceptance")=="RETAIN" else ""
         residual=[]
 
+        # Rev B adds explicit source provenance and full semantic observations.
+        # Rev A remains byte-for-byte equivalent in its public field values.
+        if contract.revision == "B":
+            card["source_id"] = sid
+            card["source_record"] = (rel or row.get("filename", ""))
+            if not sid or not card["source_record"]:
+                raise ValueError("Rev B requires source_id and source_record")
+
         # Common recombination of source-specific Rosetta observations.
         rosetta_obs=observations_by_record.get((sid,rel),[])
+        if contract.revision == "B":
+            # Preserve the complete observation records, not only the reduced
+            # evidence_summary projection used in Rev A.
+            card["semantic_observations"] = json.dumps(
+                rosetta_obs, ensure_ascii=False
+            )
+
         semantic_targets={
             ("Composition","title"):"title",
             ("Composition","alternate_title"):"filename_leading_text_candidate",

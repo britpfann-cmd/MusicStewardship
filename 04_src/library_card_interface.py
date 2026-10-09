@@ -138,6 +138,15 @@ def certify_definition(
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 CERTIFIED_INTERFACES = {
+    ("ING-CARD-001", "B"): {
+        "definition_path": (
+            _REPO_ROOT
+            / "01_docs"
+            / "05_Ingestion"
+            / "MusicStewardship_Library_Card_Field_Definitions_RevB.csv"
+        ),
+        "certificate": "sha256:68b15f6a39171397df699b4df1c8eaa07cf2b88bdcc6c4068615d13fe61aca11",
+    },
     ("ING-CARD-001", "A"): {
         "definition_path": (
             _REPO_ROOT
