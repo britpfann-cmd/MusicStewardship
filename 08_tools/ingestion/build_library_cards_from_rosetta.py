@@ -99,12 +99,65 @@ def stable_id(source_id, relative_path):
     raw=f"{source_id}\0{relative_path}".encode("utf-8")
     return hashlib.sha256(raw).hexdigest()[:24]
 
+def select_current_observations(observation_rows, processing_rows):
+    """Select observations belonging to the latest COMPLETE work-item attempt.
+
+    Processing history remains append-only. A COMPLETE attempt with zero
+    observations supersedes an earlier successful attempt. Failed attempts do
+    not replace the last successful attempt.
+    """
+    latest = {}
+    attempt_keys = set()
+    for log in processing_rows:
+        if log.get("status") != "COMPLETE":
+            continue
+        work = log.get("work_item_id", "")
+        key = (log.get("run_id", ""), log.get("source_id", ""),
+               log.get("source_record", ""), log.get("rule_id", ""))
+        if not all(key) or not work:
+            raise ValueError("Incomplete COMPLETE processing-log entry")
+        if key in attempt_keys:
+            raise ValueError(
+                "Ambiguous processing history: repeated run/source/record/rule "
+                f"identity {key!r}"
+            )
+        attempt_keys.add(key)
+        latest[work] = log
+
+    selected_keys = {
+        (entry["run_id"], entry["source_id"],
+         entry["source_record"], entry["rule_id"])
+        for entry in latest.values()
+    }
+    selected = [o for o in observation_rows if
+                (o.get("run_id", ""), o.get("source_id", ""),
+                 o.get("source_record", ""), o.get("rule_id", ""))
+                in selected_keys]
+
+    counts = {}
+    for o in selected:
+        key = (o["run_id"], o["source_id"], o["source_record"], o["rule_id"])
+        counts[key] = counts.get(key, 0) + 1
+    for entry in latest.values():
+        key = (entry["run_id"], entry["source_id"],
+               entry["source_record"], entry["rule_id"])
+        expected = int(entry.get("observation_count", "0") or "0")
+        if counts.get(key, 0) != expected:
+            raise ValueError(
+                f"Processing history observation-count mismatch for {key!r}: "
+                f"expected {expected}, found {counts.get(key, 0)}"
+            )
+    return selected
+
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("source_csv",type=Path)
     ap.add_argument("--public-map",required=True,type=Path)
     ap.add_argument("--interface-revision",required=True)
     ap.add_argument("--observations",required=True,type=Path)
+    ap.add_argument("--processing-log",type=Path,
+                    help="Use latest successful work-item observations across runs")
     ap.add_argument("--run-id",required=True)
     ap.add_argument("--output",required=True,type=Path)
     ap.add_argument("--report",required=True,type=Path)
@@ -116,10 +169,15 @@ def main():
 
     validate_public_map(args.public_map, contract)
 
-    observations=[
-        o for o in read_csv(args.observations)
-        if o.get("run_id")==args.run_id
-    ]
+    all_observations = read_csv(args.observations)
+    if args.processing_log is not None:
+        observations = select_current_observations(
+            all_observations, read_csv(args.processing_log)
+        )
+    else:
+        # Legacy Rev A behavior, preserved for existing callers.
+        observations = [o for o in all_observations
+                        if o.get("run_id") == args.run_id]
     observations_by_record={}
     for o in observations:
         key=(o.get("source_id",""),o.get("source_record",""))
@@ -149,7 +207,6 @@ def main():
         semantic_targets={
             ("Composition","title"):"title",
             ("Composition","alternate_title"):"filename_leading_text_candidate",
-            ("Source Assertion","source_artist"):"artist",
             ("Source Assertion","source_composer"):"composer",
             ("Recording","date"):"recording_date",
             ("Ensemble","source_album_artist"):"orchestra_or_album_artist",
@@ -233,6 +290,8 @@ def main():
         "interface_revision":contract.revision,
         "rosetta_run_id":args.run_id,
         "rosetta_observations":len(observations),
+        "observation_selection": ("latest_complete" if args.processing_log
+                                  else "run_id"),
     }
     args.report.parent.mkdir(parents=True,exist_ok=True)
     args.report.write_text(json.dumps(report,indent=2),encoding="utf-8")

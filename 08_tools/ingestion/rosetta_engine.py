@@ -176,12 +176,54 @@ def load_state(path):
     if not path.exists(): return []
     return read_csv(path)
 
+def restore_semantics(semantic_values, rule, observations):
+    """Rehydrate both element and named/declared semantic outputs on a skip."""
+    named = (rule.get("decoder") or "").lower() == "regex_named"
+    for obs in observations:
+        value = obs.get("decoded_value", "")
+        if not value:
+            continue
+        if not named:
+            semantic_values.setdefault(rule["source_element"], []).append(value)
+        term = obs.get("semantic_term", "")
+        if term:
+            semantic_values.setdefault(term, []).append(value)
+
+
+def prior_observations(log_rows, obs_rows):
+    """Index observations by the latest successful work-item attempt."""
+    latest = {r["work_item_id"]: r for r in log_rows
+              if r.get("status") == "COMPLETE"}
+    by_attempt = {}
+    for o in obs_rows:
+        key = (o.get("run_id"), o.get("source_id"),
+               o.get("source_record"), o.get("rule_id"))
+        by_attempt.setdefault(key, []).append(o)
+    selected = {}
+    for wid, r in latest.items():
+        key = (r.get("run_id"), r.get("source_id"),
+               r.get("source_record"), r.get("rule_id"))
+        observations = by_attempt.get(key, [])
+        if len(observations) != int(r.get("observation_count") or 0):
+            raise ValueError(f"Incomplete historical observations for {wid}")
+        selected[wid] = observations
+    return selected
+
+
 def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",force=False):
     state_dir=Path(state_dir); state_dir.mkdir(parents=True,exist_ok=True)
     log_path=state_dir/"processing_log.csv"; obs_path=state_dir/"observations.csv"
     old=load_state(log_path)
     completed={r["work_item_id"]:r for r in old if r.get("status")=="COMPLETE"}
-    run_id=run_id or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    existing_obs = read_csv(obs_path) if obs_path.exists() else []
+    previous_outputs = prior_observations(old, existing_obs)
+    # A run ID identifies one invocation, even when that invocation emits no rows.
+    # Microsecond precision avoids ordinary same-second collisions.
+    run_id = run_id or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    if any(r.get("run_id") == run_id for r in old) or any(
+        o.get("run_id") == run_id for o in existing_obs
+    ):
+        raise ValueError(f"Rosetta run_id already exists: {run_id}")
     bind={b["source_element"]:b["source_field"] for b in bindings}
     new_log=[]; new_obs=[]; skipped=0; processed=0
     for row_no,row in enumerate(source_rows,start=2):
@@ -206,13 +248,33 @@ def run(source_rows,rules,bindings,state_dir,run_id=None,rosetta_version="v0.2",
             resolved_values = semantic_values.get(input_semantic, []) if input_semantic and not direct_field else [value]
             resolved_values = [v for v in resolved_values if v]
 
+            # An absent input invalidates any previous successful output.
+            # Record the zero-result state so old observations cannot be current.
             if not resolved_values:
+                wid = work_id(sid, source_record, rule["rule_id"])
+                prior = completed.get(wid)
+                empty_fp = fingerprint("")
+                if prior and prior.get("input_fingerprint") != empty_fp:
+                    new_log.append({
+                        "run_id": run_id, "work_item_id": wid,
+                        "source_id": sid, "source_record": source_record,
+                        "rule_id": rule["rule_id"], "source_element": elem,
+                        "source_field": field, "input_fingerprint": empty_fp,
+                        "status": "COMPLETE", "attempt": int(prior.get("attempt", 0)) + 1,
+                        "started_at": datetime.now(timezone.utc).isoformat(),
+                        "completed_at": datetime.now(timezone.utc).isoformat(),
+                        "observation_count": 0, "exception": "",
+                        "engine_version": ENGINE_VERSION,
+                        "rosetta_version": rosetta_version,
+                    })
+                    processed += 1
                 continue
 
             combined_value = "\n".join(str(v) for v in resolved_values)
             wid=work_id(sid,source_record,rule["rule_id"]); fp=fingerprint(combined_value)
             prior=completed.get(wid)
             if prior and prior.get("input_fingerprint")==fp and not force:
+                restore_semantics(semantic_values, rule, previous_outputs[wid])
                 skipped+=1; continue
 
             started=datetime.now(timezone.utc).isoformat()
