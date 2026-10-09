@@ -12,9 +12,15 @@ def make_fixture(db):
       library_card_id TEXT PRIMARY KEY,
       source_object_key TEXT NOT NULL
     );
+    CREATE TABLE library_card_revisions (
+      library_card_revision_id TEXT PRIMARY KEY,
+      library_card_id TEXT NOT NULL,
+      revision_number INTEGER NOT NULL
+    );
     CREATE TABLE catalog_observations (
       observation_id TEXT PRIMARY KEY,
       library_card_id TEXT,
+      library_card_revision_id TEXT,
       subject_type TEXT NOT NULL,
       subject_id TEXT,
       observed_field TEXT NOT NULL,
@@ -31,42 +37,47 @@ def make_fixture(db):
         [("lc1","SourceA:one.aif"),("lc2","SourceA:two.aif")]
     )
 
+    con.executemany(
+        "INSERT INTO library_card_revisions VALUES (?,?,?)",
+        [("lcr1","lc1",1),("lcr2","lc2",1)]
+    )
+
     rows=[
-      ("o1","lc1","CATALOGED_INSTANCE","ci1","title",
+      ("o1","lc1","lcr1","CATALOGED_INSTANCE","ci1","title",
        json.dumps(["Bar exposición -v"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
-      ("o2","lc1","CATALOGED_INSTANCE","ci1",
+      ("o2","lc1","lcr1","CATALOGED_INSTANCE","ci1",
        "filename_leading_text_candidate",
        json.dumps(["Bar exposicion"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
-      ("o3","lc2","CATALOGED_INSTANCE","ci2","title",
+      ("o3","lc2","lcr2","CATALOGED_INSTANCE","ci2","title",
        json.dumps(["Bar exposicion"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
-      ("o4","lc1","CATALOGED_INSTANCE","ci1","author_expression",
+      ("o4","lc1","lcr1","CATALOGED_INSTANCE","ci1","author_expression",
        json.dumps(["Juan Pérez"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
-      ("o5","lc1","CATALOGED_INSTANCE","ci1","composer_expression",
+      ("o5","lc1","lcr1","CATALOGED_INSTANCE","ci1","composer_expression",
        json.dumps(["Juan Pérez"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
       # Ambiguous/multiple contributor expression: preserve, but do not
       # automatically form a single Person representation.
-      ("o6","lc2","CATALOGED_INSTANCE","ci2","composer_expression",
+      ("o6","lc2","lcr2","CATALOGED_INSTANCE","ci2","composer_expression",
        json.dumps(["Carlos López y Juan Pérez"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00"),
 
       # Raw source syntax must not be decoded by D2.
-      ("o7","lc2","CATALOGED_INSTANCE","ci2","composer",
+      ("o7","lc2","lcr2","CATALOGED_INSTANCE","ci2","composer",
        json.dumps(["Com: Source Specific Name"],ensure_ascii=False),
        None,"{}","{}","2026-10-06T00:00:00")
     ]
 
     con.executemany(
-        "INSERT INTO catalog_observations VALUES (?,?,?,?,?,?,?,?,?,?)",
+        "INSERT INTO catalog_observations VALUES (?,?,?,?,?,?,?,?,?,?,?)",
         rows
     )
     con.commit()
@@ -168,3 +179,69 @@ def test_d2_candidate_representation_analysis(tmp_path):
 
 
 
+
+def test_d2_uses_latest_library_card_revision(tmp_path):
+    db = tmp_path / "revisions.sqlite"
+    out = tmp_path / "d2_revisions"
+    make_fixture(db)
+
+    con = sqlite3.connect(db)
+
+    # A second submission of the same Library Card.
+    con.execute(
+        "INSERT INTO library_card_revisions VALUES (?,?,?)",
+        ("lcr1_rev2", "lc1", 2)
+    )
+
+    # An updated title interpretation in revision 2.
+    con.execute(
+        """
+        INSERT INTO catalog_observations
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+        """,
+        (
+            "o8", "lc1", "lcr1_rev2",
+            "CATALOGED_INSTANCE", "ci1", "title",
+            json.dumps(["Revised title"]),
+            None, "{}", "{}", "2026-10-09T00:00:00"
+        )
+    )
+
+    con.commit()
+    con.close()
+
+    result = subprocess.run(
+        [
+            sys.executable, str(SCRIPT),
+            "--db", str(db),
+            "--output-dir", str(out)
+        ],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True
+    )
+
+    assert result.returncode == 0, result.stderr
+
+    reps = read_jsonl(out / "candidate_representations.jsonl")
+
+    # Historical observations remain stored but are not
+    # selected for current-state D2 comparison.
+    observation_ids = {r["observation_id"] for r in reps}
+
+    assert "o8" in observation_ids
+    assert "o1" not in observation_ids
+    assert "o2" not in observation_ids
+    assert "o4" not in observation_ids
+    assert "o5" not in observation_ids
+
+    # Revision 1 observations from the other card remain current.
+    assert "o3" in observation_ids
+
+    con = sqlite3.connect(db)
+    stored = con.execute(
+        "SELECT COUNT(*) FROM catalog_observations"
+    ).fetchone()[0]
+    con.close()
+
+    assert stored == 8

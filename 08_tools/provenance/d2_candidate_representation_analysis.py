@@ -28,7 +28,14 @@ def load_title_representations(db:Path):
         SELECT o.observation_id,o.library_card_id,o.subject_id AS cataloged_instance_id,
                o.observed_field,o.observed_value_json,lc.source_object_key
         FROM catalog_observations o JOIN library_cards lc ON lc.library_card_id=o.library_card_id
+        JOIN library_card_revisions r
+          ON r.library_card_revision_id=o.library_card_revision_id
         WHERE o.subject_type='CATALOGED_INSTANCE'
+          AND r.revision_number = (
+              SELECT MAX(r2.revision_number)
+              FROM library_card_revisions r2
+              WHERE r2.library_card_id=r.library_card_id
+          )
           AND o.observed_field IN ('title','filename_leading_text_candidate')
         ORDER BY o.subject_id,o.observed_field,o.observation_id
         """).fetchall()
@@ -66,7 +73,14 @@ def load_person_representations(db:Path):
                lc.source_object_key
         FROM catalog_observations o
         JOIN library_cards lc ON lc.library_card_id=o.library_card_id
+        JOIN library_card_revisions r
+          ON r.library_card_revision_id=o.library_card_revision_id
         WHERE o.subject_type='CATALOGED_INSTANCE'
+          AND r.revision_number = (
+              SELECT MAX(r2.revision_number)
+              FROM library_card_revisions r2
+              WHERE r2.library_card_id=r.library_card_id
+          )
           AND o.observed_field IN ('author_expression','composer_expression')
         ORDER BY o.subject_id,o.observed_field,o.observation_id
         """).fetchall()
