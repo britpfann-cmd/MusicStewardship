@@ -27,6 +27,26 @@ class CatalogStore:
             encoding="utf-8-sig"
         )
         self.conn.executescript(schema)
+        # Existing v0.1 databases predate the observation revision FK.
+        columns = {row[1] for row in self.conn.execute("PRAGMA table_info(catalog_observations)")}
+        if "library_card_revision_id" not in columns:
+            self.conn.execute("ALTER TABLE catalog_observations ADD COLUMN library_card_revision_id TEXT REFERENCES library_card_revisions(library_card_revision_id)")
+            self.conn.commit()
+        # Backfill the original submissions on legacy databases, preserving
+        # their original received_at and full stored card_json.
+        self.conn.execute("""
+            INSERT INTO library_card_revisions
+            (library_card_revision_id, library_card_id, revision_number,
+             interface_revision, c_processing_revision, d_processing_revision,
+             card_json, received_at)
+            SELECT 'LCR-' || library_card_id, library_card_id, 1,
+                   interface_revision, c_processing_revision, d_processing_revision,
+                   card_json, received_at
+            FROM library_cards AS lc
+            WHERE NOT EXISTS (SELECT 1 FROM library_card_revisions AS r
+                              WHERE r.library_card_id = lc.library_card_id)
+        """)
+        self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
@@ -54,40 +74,78 @@ class CatalogStore:
             ),
         ).fetchone()
 
+        submitted_json = json.dumps(card, ensure_ascii=False, sort_keys=True)
         if existing:
-            return existing["library_card_id"]
+            card_id = existing["library_card_id"]
+            previous = self.conn.execute(
+                "SELECT revision_number, card_json FROM library_card_revisions "
+                "WHERE library_card_id = ? ORDER BY revision_number DESC LIMIT 1",
+                (card_id,),
+            ).fetchone()
+            if previous is not None and json.loads(previous["card_json"]) == card:
+                return card_id
+            revision_number = (previous["revision_number"] if previous else 0) + 1
+            timestamp = now()
+            self.conn.execute("""
+                INSERT INTO library_card_revisions
+                (library_card_revision_id, library_card_id, revision_number,
+                 interface_revision, c_processing_revision, d_processing_revision,
+                 card_json, received_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (new_id("LCR"), card_id, revision_number,
+                  card.get("library_card_interface_revision"),
+                  card.get("c_processing_revision"),
+                  card.get("d_processing_revision"), submitted_json, timestamp))
+            self.conn.execute("""
+                UPDATE library_cards
+                SET source_object_key = ?, interface_revision = ?,
+                    c_processing_revision = ?, d_processing_revision = ?,
+                    received_at = ?, card_json = ?
+                WHERE library_card_id = ?
+            """, (card["source_object_key"], card.get("library_card_interface_revision"),
+                  card.get("c_processing_revision"), card.get("d_processing_revision"),
+                  timestamp, submitted_json, card_id))
+            self.conn.commit()
+            return card_id
 
         card_id = new_id("CARD")
-
-        self.conn.execute(
-            """
-            INSERT INTO library_cards (
-                library_card_id,
-                source_object_id,
-                source_object_key,
-                source_record_revision,
-                interface_revision,
-                c_processing_revision,
-                d_processing_revision,
-                received_at,
-                card_json
-            )
+        timestamp = now()
+        self.conn.execute("""
+            INSERT INTO library_cards
+            (library_card_id, source_object_id, source_object_key,
+             source_record_revision, interface_revision, c_processing_revision,
+             d_processing_revision, received_at, card_json)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                card_id,
-                card["source_object_id"],
-                card["source_object_key"],
-                card["source_record_revision"],
-                card.get("library_card_interface_revision"),
-                card.get("c_processing_revision"),
-                card.get("d_processing_revision"),
-                now(),
-                json.dumps(card, ensure_ascii=False),
-            ),
-        )
+        """, (card_id, card["source_object_id"], card["source_object_key"],
+              card["source_record_revision"], card.get("library_card_interface_revision"),
+              card.get("c_processing_revision"), card.get("d_processing_revision"),
+              timestamp, submitted_json))
+        self.conn.execute("""
+            INSERT INTO library_card_revisions
+            (library_card_revision_id, library_card_id, revision_number,
+             interface_revision, c_processing_revision, d_processing_revision,
+             card_json, received_at) VALUES (?, ?, 1, ?, ?, ?, ?, ?)
+        """, (new_id("LCR"), card_id, card.get("library_card_interface_revision"),
+              card.get("c_processing_revision"), card.get("d_processing_revision"),
+              submitted_json, timestamp))
         self.conn.commit()
         return card_id
+
+    def latest_library_card_revision_id(self, library_card_id: str) -> str:
+        row = self.conn.execute(
+            "SELECT library_card_revision_id FROM library_card_revisions "
+            "WHERE library_card_id = ? ORDER BY revision_number DESC LIMIT 1",
+            (library_card_id,),
+        ).fetchone()
+        if row is None:
+            raise ValueError(f"Unknown Library Card: {library_card_id}")
+        return row["library_card_revision_id"]
+
+    def get_library_card_revision_history(self, library_card_id: str) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            "SELECT * FROM library_card_revisions WHERE library_card_id = ? "
+            "ORDER BY revision_number", (library_card_id,),
+        ).fetchall()
+        return [dict(row) | {"card": json.loads(row["card_json"])} for row in rows]
 
     def find_active_ci_for_library_card(
         self,
@@ -305,6 +363,7 @@ class CatalogStore:
         self,
         *,
         library_card_id: str | None,
+        library_card_revision_id: str | None = None,
         subject_type: str,
         subject_id: str | None,
         field: str,
@@ -319,27 +378,23 @@ class CatalogStore:
             ensure_ascii=False,
         )
 
-        existing = self.conn.execute(
-            """
-            SELECT observation_id
+        context_json = json.dumps(context or {}, ensure_ascii=False, sort_keys=True)
+        evidence_json = json.dumps(evidence or {}, ensure_ascii=False, sort_keys=True)
+        # Distinguish evidence from different source rules/revisions, even
+        # when the decoded field and value are identical.
+        existing = self.conn.execute("""
+            SELECT observation_id, context_json, evidence_json
             FROM catalog_observations
             WHERE library_card_id IS ?
-              AND subject_type = ?
-              AND subject_id IS ?
-              AND observed_field = ?
-              AND observed_value_json = ?
-            """,
-            (
-                library_card_id,
-                subject_type,
-                subject_id,
-                field,
-                observed_value_json,
-            ),
-        ).fetchone()
-
-        if existing is not None:
-            return existing["observation_id"]
+              AND library_card_revision_id IS ?
+              AND subject_type = ? AND subject_id IS ?
+              AND observed_field = ? AND observed_value_json = ?
+        """, (library_card_id, library_card_revision_id, subject_type,
+              subject_id, field, observed_value_json)).fetchall()
+        for candidate in existing:
+            if (json.loads(candidate["context_json"] or "{}") == (context or {})
+                    and json.loads(candidate["evidence_json"] or "{}") == (evidence or {})):
+                return candidate["observation_id"]
 
         observation_id = new_id("OBS")
 
@@ -354,6 +409,7 @@ class CatalogStore:
             INSERT INTO catalog_observations (
                 observation_id,
                 library_card_id,
+                library_card_revision_id,
                 subject_type,
                 subject_id,
                 observed_field,
@@ -363,11 +419,12 @@ class CatalogStore:
                 evidence_json,
                 observed_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 observation_id,
                 library_card_id,
+                library_card_revision_id,
                 subject_type,
                 subject_id,
                 field,

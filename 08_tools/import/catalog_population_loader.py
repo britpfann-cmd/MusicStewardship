@@ -1,9 +1,9 @@
-"""Load Rev A Library Cards into the MusicStewardship Catalog v0.1.
+"""Load certified Rev A/B Library Cards into the MusicStewardship Catalog v0.1.
 
 This is a population loader, not an identity resolver.
 
 It:
-* validates the Rev A Library Card structural contract,
+* validates the certified Library Card structural contract,
 * decodes the established public CSV representation,
 * preserves each decoded Library Card,
 * creates one CatalogedInstance for each accepted source card,
@@ -50,7 +50,7 @@ library_card_import = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(library_card_import)
 
 
-D_PROCESSING_REVISION = "catalog_population_loader.v0.1"
+D_PROCESSING_REVISION = "catalog_population_loader.v0.2"
 
 CURRENT_STATE_FIELDS = (
     "title",
@@ -178,6 +178,7 @@ def load_population(
             decoded = validate_and_decode(raw_card)
 
             card_id = store.accept_library_card(decoded)
+            card_revision_id = store.latest_library_card_revision_id(card_id)
 
             # Level 0 is structural: the persistent CatalogedInstance,
             # its active evidence relationship, and the preserved Library
@@ -197,7 +198,7 @@ def load_population(
             ci_id = store.create_cataloged_instance(
                 card_id,
                 ci_state,
-                reason="Initial CatalogedInstance from Rev A Library Card",
+                reason=f"Initial CatalogedInstance from Rev {decoded['library_card_interface_revision']} Library Card",
             )
 
             stats["library_cards"] += 1
@@ -207,6 +208,7 @@ def load_population(
                 for value in populated_values(decoded.get(field)):
                     store.add_observation(
                         library_card_id=card_id,
+                        library_card_revision_id=card_revision_id,
                         subject_type="CATALOGED_INSTANCE",
                         subject_id=ci_id,
                         field=field,
@@ -215,26 +217,51 @@ def load_population(
                     )
                     stats["observation_attempts"] += 1
 
-            # Level 2: materialize structured Rosetta evidence generically.
-            # Semantic interpretation belongs to Rosetta; this loader carries
-            # canonical observations forward without source-specific knowledge.
-            for observation in rosetta_level2_observations(
-                decoded.get("evidence_summary")
-            ):
-                field = observation["field"]
-                value = observation["observed_value"]
-
-                store.add_observation(
-                    library_card_id=card_id,
-                    subject_type="CATALOGED_INSTANCE",
-                    subject_id=ci_id,
-                    field=field,
-                    observed_value=value,
-                    context=observation["context"],
-                    evidence=observation["evidence"],
-                    commit=False,
-                )
-                stats["observation_attempts"] += 1
+            # Rev B carries complete Rosetta records; Rev A carries a compact
+            # evidence_summary projection. Never ingest both for one card.
+            revision = decoded["library_card_interface_revision"]
+            if revision == "B":
+                semantic_items = decoded.get("semantic_observations", [])
+                for item in semantic_items:
+                    if not isinstance(item, dict):
+                        raise ValueError("Rev B semantic_observations must contain objects")
+                    field = str(item.get("semantic_term") or item.get("target_property") or "").strip()
+                    if not field:
+                        # The complete item is still retained in the card revision.
+                        continue
+                    value = item.get("decoded_value")
+                    if value in (None, ""):
+                        value = item.get("source_value")
+                    if value in (None, ""):
+                        continue
+                    store.add_observation(
+                        library_card_id=card_id,
+                        library_card_revision_id=card_revision_id,
+                        subject_type="CATALOGED_INSTANCE",
+                        subject_id=ci_id,
+                        field=field,
+                        observed_value=value,
+                        context={key: item[key] for key in (
+                            "target_entity", "target_property", "target_relationship",
+                            "representation_level") if item.get(key) not in (None, "")},
+                        evidence={"rosetta_observation": item},
+                        commit=False,
+                    )
+                    stats["observation_attempts"] += 1
+            else:
+                for observation in rosetta_level2_observations(decoded.get("evidence_summary")):
+                    store.add_observation(
+                        library_card_id=card_id,
+                        library_card_revision_id=card_revision_id,
+                        subject_type="CATALOGED_INSTANCE",
+                        subject_id=ci_id,
+                        field=observation["field"],
+                        observed_value=observation["observed_value"],
+                        context=observation["context"],
+                        evidence=observation["evidence"],
+                        commit=False,
+                    )
+                    stats["observation_attempts"] += 1
             store.conn.commit()
 
         field_counts = Counter(

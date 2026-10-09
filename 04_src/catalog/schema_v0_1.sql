@@ -13,6 +13,21 @@ CREATE TABLE IF NOT EXISTS library_cards (
     UNIQUE(source_object_id, source_record_revision)
 );
 
+CREATE TABLE IF NOT EXISTS library_card_revisions (
+    library_card_revision_id TEXT PRIMARY KEY,
+    library_card_id TEXT NOT NULL REFERENCES library_cards(library_card_id),
+    revision_number INTEGER NOT NULL,
+    interface_revision TEXT,
+    c_processing_revision TEXT,
+    d_processing_revision TEXT,
+    card_json TEXT NOT NULL,
+    received_at TEXT NOT NULL,
+    UNIQUE(library_card_id, revision_number)
+);
+
+CREATE INDEX IF NOT EXISTS idx_library_card_revisions_card
+ON library_card_revisions(library_card_id);
+
 CREATE INDEX IF NOT EXISTS idx_library_cards_source_object
 ON library_cards(source_object_id);
 
@@ -85,6 +100,7 @@ CREATE TABLE IF NOT EXISTS works (
 CREATE TABLE IF NOT EXISTS catalog_observations (
     observation_id TEXT PRIMARY KEY,
     library_card_id TEXT,
+    library_card_revision_id TEXT REFERENCES library_card_revisions(library_card_revision_id),
     subject_type TEXT NOT NULL,
     subject_id TEXT,
     observed_field TEXT NOT NULL,
