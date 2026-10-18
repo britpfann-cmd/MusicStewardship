@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import json
 import sqlite3
 import subprocess
@@ -9,31 +10,72 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = REPO_ROOT / "08_tools" / "provenance" / "d2_entity_candidate_recognition.py"
-OBSERVATIONS = REPO_ROOT / "99_sandbox" / "d2_observations_test.csv"
-ENTITIES = REPO_ROOT / "99_sandbox" / "d2_entity_index_test.csv"
-
-OUTPUT = REPO_ROOT / "99_sandbox" / "d2_candidate_results_test.jsonl"
-DATABASE = REPO_ROOT / "99_sandbox" / "d2_test_verification.sqlite"
 
 
-def run_d2() -> list[dict]:
-    if OUTPUT.exists():
-        OUTPUT.unlink()
+def write_d2_inputs(tmp_path: Path) -> tuple[Path, Path]:
+    """Reproduce the five recognition cases without reading research artifacts."""
+    observations = tmp_path / "observations.csv"
+    entities = tmp_path / "entity_index.csv"
+    observation_fields = [
+        "source", "collection", "collection_type", "source_record_id",
+        "entity_type", "observed_value", "context_json", "evidence_json",
+    ]
+    cases = [
+        ("A", "Composition", "El choclo", "compositions", "test fixture"),
+        ("A", "Person", "Héctor Mauré", "artists", "test fixture"),
+        ("B", "Person", "Hector Maure", "artists", "test variant"),
+        ("A", "Person", "Test Ambiguous", "artists", "test ambiguity"),
+        ("A", "Composition", "Unknown composition", "compositions", "test no match"),
+    ]
+    with observations.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(observation_fields)
+        for number, (source, entity_type, value, folder, basis) in enumerate(cases, 1):
+            writer.writerow([
+                f"TestSource-{source}", f"Collection-{source}", "restorer",
+                f"OBS-{number:03d}", entity_type, value,
+                json.dumps({"folder": folder}), json.dumps({"basis": basis}),
+            ])
 
-    if DATABASE.exists():
-        DATABASE.unlink()
+    entity_fields = [
+        "entity_id", "entity_type", "observed_name", "name_source",
+        "source_record_id", "association_status", "preferred_name", "short_name",
+    ]
+    entity_rows = [
+        ("ENT-COMP-001", "Composition", "El choclo", "TestSource-A",
+         "TEST-001", "confirmed", "El choclo", "El choclo"),
+        ("ENT-PERSON-001", "Person", "Héctor Mauré", "TestSource-A",
+         "TEST-002", "confirmed", "Héctor Mauré", "Mauré"),
+        ("ENT-PERSON-001", "Person", "Hector Maure", "TestSource-B",
+         "TEST-003", "confirmed", "Héctor Mauré", "Mauré"),
+        ("ENT-PERSON-002", "Person", "Test Ambiguous", "TestSource-A",
+         "TEST-004", "confirmed", "Test Ambiguous A", "Ambig A"),
+        ("ENT-PERSON-003", "Person", "Test Ambiguous", "TestSource-B",
+         "TEST-005", "confirmed", "Test Ambiguous B", "Ambig B"),
+    ]
+    with entities.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(entity_fields)
+        writer.writerows(entity_rows)
+    return observations, entities
+
+
+def run_d2(tmp_path: Path) -> list[dict]:
+    observations, entities = write_d2_inputs(tmp_path)
+    output = tmp_path / "d2_candidate_results_test.jsonl"
+    database = tmp_path / "d2_test_verification.sqlite"
 
     command = [
         sys.executable,
         str(SCRIPT),
         "--observations",
-        str(OBSERVATIONS),
+        str(observations),
         "--entities",
-        str(ENTITIES),
+        str(entities),
         "--output",
-        str(OUTPUT),
+        str(output),
         "--db",
-        str(DATABASE),
+        str(database),
     ]
 
     completed = subprocess.run(
@@ -51,13 +93,13 @@ def run_d2() -> list[dict]:
 
     return [
         json.loads(line)
-        for line in OUTPUT.read_text(encoding="utf-8").splitlines()
+        for line in output.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
 
 
-def test_d2_recognition_contract():
-    results = run_d2()
+def test_d2_recognition_contract(tmp_path: Path):
+    results = run_d2(tmp_path)
 
     assert len(results) == 5
 
@@ -109,12 +151,12 @@ def test_d2_recognition_contract():
         assert result["provenance"]["source_record_id"] == result["source_record_id"]
 
 
-def test_d2_does_not_create_entities_or_associations():
+def test_d2_does_not_create_entities_or_associations(tmp_path: Path):
     # run_d2() is intentionally called again so this test is independently
     # executable rather than depending on another test's execution order.
-    run_d2()
+    run_d2(tmp_path)
 
-    db = sqlite3.connect(DATABASE)
+    db = sqlite3.connect(tmp_path / "d2_test_verification.sqlite")
 
     try:
         entity_count = db.execute(
@@ -134,9 +176,3 @@ def test_d2_does_not_create_entities_or_associations():
     assert entity_count == 0
     assert observation_count == 5
     assert association_count == 0
-
-
-if __name__ == "__main__":
-    test_d2_recognition_contract()
-    test_d2_does_not_create_entities_or_associations()
-    print("D2 verification: PASS")
