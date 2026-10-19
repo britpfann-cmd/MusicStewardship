@@ -4,7 +4,10 @@
 
 **Repository:** `C:\Projects\MusicStewardship`
 
-**Current development baseline:** `d36e62f` (application baseline `04b95e5`)
+**Current committed baseline:** `e10c37d` (application baseline `04b95e5`)
+
+**Current working milestone:** Research backup utility implemented, not committed;
+314 regression tests passing, including 20 new isolated backup tests.
 
 **Status:** Evidence-based development snapshot; not an architecture amendment.
 
@@ -163,6 +166,34 @@ executed/collected count; the verified 294-test baseline above is the current
 execution record. Passing this suite does not establish full-source completeness,
 resolve the investigation candidates below, or certify production architecture.
 No tests were rerun for the documentation-only Phase 5 update.
+
+### Research preservation utility — implemented, not yet accepted on the NAS
+
+[research_backup.py](../08_tools/maintenance/research_backup.py) and its
+[operating notes](../08_tools/maintenance/RESEARCH_BACKUP.md) implement versioned
+capture directly beneath Z:, explicit expected-UNC mapping validation, full project
+and Git history preservation, a Git bundle, SQLite backup-API snapshots, SHA-256
+manifests, and isolated restoration verification before COMPLETE.json.
+
+Only virtual environments identified by pyvenv.cfg and disposable Python caches
+are excluded when untracked; tracked content takes precedence. Research/runtime/
+transfer artifacts are included independently of .gitignore. Raw SQLite files and
+sidecars are retained separately from logical snapshots. Live source databases are
+never opened by SQLite; the API works from isolated capture copies.
+
+Verification: 20 temporary-only backup tests passed; the final complete suite passed
+**314 tests in 59.50 seconds, zero failures**. The earlier 294-test baseline remains
+the historical pre-backup-tool result. Tests use disposable repositories and mocked
+share mappings; they never access the actual Z: drive or persistent research data.
+An initial WAL-mode test failure was corrected by publishing standalone snapshots;
+failure-path tests verify that unsuccessful backups are not marked complete.
+
+No real backup, NAS dry-run, scheduling, Dropbox setup, or commit was performed.
+Before first use, the architect must identify the expected Synology UNC share root,
+confirm destination/local temporary capacity and access controls, and arrange a
+quiescent capture window. Actual SMB mapping/permissions/durability and a first
+on-device restore rehearsal remain unverified. Source-change detection is not an
+exclusive lock or a filesystem snapshot. Refer to the operating notes for limits.
 
 ## 4. Git snapshot
 
@@ -330,6 +361,22 @@ These are recommendations for architect direction, not authorization to implemen
   source documents, and research artifacts remain unchanged. No tests were rerun
   for this documentation-only correction; the verified baseline remains 294 passing.
 - Next: architect review of the open questions before any architecture-changing work.
+
+### 2026-10-18 — Verified research backup utility implementation
+
+- Added a standard-library maintenance utility, operating notes, and 20 temporary-
+  only tests. No existing application code, architectural sources, or research files
+  were changed. Updated this state document at the completed implementation milestone.
+- Final regression: 314 passed in 59.50 seconds with the explicit .venv interpreter,
+  bytecode disabled, and pytest caching disabled. CLI help was also checked.
+- Independent dated destination sets never reuse existing backups; unsuccessful
+  publication leaves an incomplete set for human review. Only disposable local
+  capture/restore directories are cleaned automatically.
+- GitHub synchronization at e10c37d was previously verified; this new utility and
+  state update are uncommitted and have not been pushed. No real backup was run.
+- Next: architect supplies the expected UNC root and authorizes destination dry-run
+  validation before any real backup; arrange capacity, writer quiescence, and restore
+  acceptance checks. Existing architecture questions remain open.
 
 ## 10. Lightweight session continuity and authorization
 
